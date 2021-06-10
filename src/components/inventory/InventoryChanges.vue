@@ -11,9 +11,6 @@
           prop="productId"
           label="产品编号"
           width="180">
-          <template slot-scope="scope">
-            <span type="text" v-text="scope.row.productId" @click="openeditwin(scope.row.productId)"></span>
-          </template>
         </el-table-column>
         <el-table-column
           prop="productName"
@@ -46,23 +43,40 @@
           prop="thirdKindName"
           label="III及分类">
         </el-table-column>
-    <!--    <el-table-column
+        <el-table-column
           label="复核"
           width="100">
           <template slot-scope="scope">
             <el-button type="text" @click="openeditwin(scope.row.productId)">复核</el-button>
           </template>
-        </el-table-column>-->
+        </el-table-column>
       </el-table>
     </div>
     <!--制作安全库配置单2复核-->
     <div id="div02" v-show="hidden">
-<!--      <div class="div04">
-        <el-button @click="showHidden"  style="background-color: pink;">返回</el-button>
-      </div>-->
+      <!--      <div class="div03">
+              <el-popconfirm
+                title="确定提交吗？"
+                @confirm="addSCll"
+              >
+                <el-button slot="reference" style="background-color: pink;">复核</el-button>
+              </el-popconfirm>
+            </div>
+            <div class="div04">
+              <el-button @click="showHidden"  style="background-color: pink;">返回</el-button>
+            </div>-->
+
       <el-form  size="small" :inline="true" v-model="scellform">
         <el-row>
-          <el-col :span="21"><h3>安全库存配置单</h3></el-col>
+          <el-col :span="1">
+            <el-popconfirm
+              title="确定提交吗？"
+              @confirm="addSCll"
+            >
+              <el-button slot="reference" style="background-color: pink;">复核</el-button>
+            </el-popconfirm>
+          </el-col>
+          <el-col :span="20"><h3>安全库存配置单</h3></el-col>
           <el-col :span="3">
             <el-button @click="showHidden"  style="background-color: pink;">返回</el-button>
           </el-col>
@@ -224,7 +238,7 @@
 
 <script>
     export default {
-        name: "InventoryQuery",
+        name: "InventoryChanges",
       data(){
         return {
           tableData:[],
@@ -279,7 +293,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SCell/queryAllSCell2.May", params).then(function (response) {
+          this.$axios.post("SCell/queryAllSCell.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
             console.log()
@@ -311,7 +325,6 @@
         },
         //显示隐藏
         showHidden(){
-          alert("显示隐藏")
           this.show=!this.show;
           this.hidden=!this.hidden;
         },
@@ -350,6 +363,32 @@
           params.append("productId", productId);
           this.$axios.post("SCell/queryByIdSCell2.May", params).then(function (response) {
             _this.dfileform=response.data;
+          }).catch();
+        },
+        addSCll(){
+          var _this=this;
+          this.scellform.amount=0;
+          var params = new URLSearchParams();
+          params.append("id",_this.scellform.id);//id
+          params.append("checker",_this.scellform.register);//审核人
+          params.append("checkTime",_this.scellform.checkTime);//审核时间
+          console.log(this.scellform.storageUnit)
+          this.$axios.post("SCell/amendCheckTag.May",params).then(function (response) {
+            if (response.data == true) {
+              _this.$notify({
+                title: '成功',
+                message: '审核成功',
+                type: 'success'
+              });
+            } else {
+              _this.$notify({
+                title: '失败',
+                message: '审核失败',
+                type: 'danger'
+              });
+            }
+            this.getdata();
+            _this.$forceUpdate();
           }).catch();
         }
       },
@@ -398,12 +437,9 @@
     left: 95px;
     background: pink;
   }
-/*
   .div04{
     position: absolute;
-    left: 600px;
+    left: 1200px;
   }
-*/
 
 </style>
-

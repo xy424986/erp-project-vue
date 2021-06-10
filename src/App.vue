@@ -90,6 +90,9 @@
   import Design_bill_review from "./components/production_management/process_design/Design_bill_review";
   import Design_bill_change from "./components/production_management/process_design/Design_bill_change";
   import Design_list_query from "./components/production_management/process_design/Design_list_query";
+  /**
+   * 库存
+   */
   import CustomizeTheInstallation from "./components/inventory/CustomizeTheInstallation";
   import SafetyStockReview from "./components/inventory/SafetyStockReview";
   import InventoryQuery from "./components/inventory/InventoryQuery";
@@ -167,7 +170,10 @@
       Design_of_single,
       Design_bill_review,
       Design_bill_change,
-      Design_list_query
+      Design_list_query,
+      CustomizeTheInstallation,
+      SafetyStockReview,
+      InventoryQuery
     },
     // 钩子调用函数
     created() {
