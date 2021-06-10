@@ -190,7 +190,7 @@
 
   /*  左侧菜单栏样式*/
   .el-menu-vertical-demo:not(.el-menu--collapse) {
-    width: 200px;
+    /*width: 123px;*/
     min-height: 400px;
   }
 
