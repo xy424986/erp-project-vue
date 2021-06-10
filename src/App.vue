@@ -90,6 +90,9 @@
   import Design_bill_review from "./components/production_management/process_design/Design_bill_review";
   import Design_bill_change from "./components/production_management/process_design/Design_bill_change";
   import Design_list_query from "./components/production_management/process_design/Design_list_query";
+  import CustomizeTheInstallation from "./components/inventory/CustomizeTheInstallation";
+  import SafetyStockReview from "./components/inventory/SafetyStockReview";
+  import InventoryQuery from "./components/inventory/InventoryQuery";
 
   export default {
     name: 'app',
