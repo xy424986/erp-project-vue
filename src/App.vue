@@ -29,7 +29,8 @@
                 {{childMenu2.name}}
               </el-menu-item>
 
-              <el-submenu v-if="childMenu2.childMenu.length > 0" :index="childMenu2.id" v-for="childMenu2 in childMenu1.childMenu">
+              <el-submenu v-if="childMenu2.childMenu.length > 0" :index="childMenu2.id"
+                          v-for="childMenu2 in childMenu1.childMenu">
                 <i :class="childMenu2.imageUrl"></i>
                 <span slot="title">{{childMenu2.name}}</span>
 
@@ -86,11 +87,13 @@
 </template>
 
 <script>
+  // 生产管理导入组件start
   import Design_of_single from "./components/production_management/process_design/Design_of_single";
   import Design_bill_review from "./components/production_management/process_design/Design_bill_review";
   import Design_bill_change from "./components/production_management/process_design/Design_bill_change";
   import Design_list_query from "./components/production_management/process_design/Design_list_query";
-
+  // 生产管理导入组件close
+  //aaa
   export default {
     name: 'app',
     data() {
