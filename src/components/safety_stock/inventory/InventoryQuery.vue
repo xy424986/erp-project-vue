@@ -311,7 +311,6 @@
         },
         //显示隐藏
         showHidden(){
-          alert("显示隐藏")
           this.show=!this.show;
           this.hidden=!this.hidden;
         },

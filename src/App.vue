@@ -97,10 +97,11 @@
   /**
    * 库存
    */
-  import CustomizeTheInstallation from "./components/inventory/CustomizeTheInstallation";
-  import SafetyStockReview from "./components/inventory/SafetyStockReview";
-  import InventoryQuery from "./components/inventory/InventoryQuery";
-
+  import CustomizeTheInstallation from "./components/safety_stock/inventory/CustomizeTheInstallation";
+  import SafetyStockReview from "./components/safety_stock/inventory/SafetyStockReview";
+  import InventoryQuery from "./components/safety_stock/inventory/InventoryQuery";
+  import InventoryChanges from "./components/safety_stock/inventory/InventoryChanges";
+  import Storage from "./components/safety_stock/warehouse_management/Storage";
   export default {
     name: 'app',
     data() {
@@ -177,7 +178,9 @@
       Design_list_query,
       CustomizeTheInstallation,
       SafetyStockReview,
-      InventoryQuery
+      InventoryQuery,
+      InventoryChanges,
+      Storage
     },
     // 钩子调用函数
     created() {

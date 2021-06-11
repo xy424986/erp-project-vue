@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--制作安全库配置单1复核-->
-    <div id="div01" v-show="show">
+    <div id="div01"  v-show="show">
       <el-table
         :data="tableData"
         height="250"
@@ -44,196 +44,183 @@
           label="III及分类">
         </el-table-column>
         <el-table-column
-          label="复核"
+          label="变更"
           width="100">
           <template slot-scope="scope">
-            <el-button type="text" @click="openeditwin(scope.row.productId)">复核</el-button>
+            <el-button type="text" @click="openeditwin(scope.row.productId)">变更</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!--制作安全库配置单2复核-->
     <div id="div02" v-show="hidden">
-      <!--      <div class="div03">
+        <el-form  size="small" :inline="true" v-model="scellform">
+          <el-row>
+            <el-col :span="1">
               <el-popconfirm
                 title="确定提交吗？"
                 @confirm="addSCll"
               >
                 <el-button slot="reference" style="background-color: pink;">复核</el-button>
               </el-popconfirm>
-            </div>
-            <div class="div04">
-              <el-button @click="showHidden"  style="background-color: pink;">返回</el-button>
-            </div>-->
-
-      <el-form  size="small" :inline="true" v-model="scellform">
-        <el-row>
-          <el-col :span="1">
-            <el-popconfirm
-              title="确定提交吗？"
-              @confirm="addSCll"
-            >
-              <el-button slot="reference" style="background-color: pink;">复核</el-button>
-            </el-popconfirm>
-          </el-col>
-          <el-col :span="20"><h3>安全库存配置单</h3></el-col>
-          <el-col :span="3">
-            <el-button @click="showHidden"  style="background-color: pink;">返回</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4"><div></div></el-col>
-          <el-col :span="7" :offset="3">
-            <div>
-              <el-form-item label="库存编号:">
-                <el-input type="text" v-model="scellform.storeId" readonly="readonly"/>
-              </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="4"><div></div></el-col>
-          <el-col :span="7" :offset="3">
-            <div><!--产品名称：笔记本-->
-              <el-form-item label="产品名称:">
-                <el-input type="text" v-model="scellform.productName" readonly="readonly"/>
-              </el-form-item>
-            </div>
-          </el-col>
-          <el-col :span="7" :offset="2"><div><!--产品编号：1000000-->
-            <el-form-item label="产品编号:">
-              <el-input type="text" v-model="scellform.productId" readonly="readonly"/>
-            </el-form-item>
-          </div></el-col>
-          <el-col :span="6"><div></div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="22" :offset="1"><!--<div class="inline">库存下限数：</div>-->
-            <el-form-item label="库存下限数:">
-              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.minAmount" :clearable="true"/></div>
-            </el-form-item>
-            <!--<div class="inline">库存报警上限数：</div>-->
-            <el-form-item label="库存报警上限数:">
-              <div class="inline div02_01" :clearable="true"><el-input type="text" readonly="readonly" v-model="scellform.maxAmount" class="el-input" :clearable="true"/></div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="2"><div></div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12" :offset="1">
-            <div class="inline">
-              <!--设置B/N或S/N：-->
-              <el-form-item label="设置B/N或S/N:">
-                <el-select style="border: 1px solid #DCDFE6;" class="drop-downBox " v-model="value" >
-                  <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </div>
-
-          </el-col>
-          <el-col :span="2"><div></div></el-col>
-          <el-col :span="10" >
-            <!--<div class="inline">设计人：</div>-->
-            <el-form-item label="设计人:">
-              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.theDesigner" :clearable="true"/></div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!--表格-->
-        <el-row>
-          <el-col :span="2"><div></div></el-col>
-          <el-col :span="20" :offset="2">
-            <div>
-              <el-table
-                :data="dfileform"
-                border
-                height="140"
-                style="width: 100%"
-                :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-                :cell-style="cellStyle">
-                <el-table-column
-                  width="60"
-                  prop="id"
-                  label="序号">
-                </el-table-column>
-                <el-table-column
-                  width="80"
-                  label="库房名称">
-                  <span>成品库</span>
-                </el-table-column>
-                <el-table-column
-                  width="140"
-                  prop="css"
-                  label="储存地址地址编号">
-                  <el-input v-model="css" readonly="readonly"></el-input>
-                </el-table-column>
-                <el-table-column
-                  prop="ass"
-                  label="储存地址名称">
-                  <el-input v-model="ass" readonly="readonly"></el-input>
-                </el-table-column>
-                <el-table-column
-                  width="100"
-                  label="储存单元简称">
-                  <template slot-scope="scope" >
-                    <el-input v-model="scellform.storageUnitAbbreviation" readonly="readonly"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  width="110"
-                  label="最大储蓄量">
-                  <template slot-scope="scope" >
-                    <el-input v-model="scellform.maxCapacityAmount" readonly="readonly"></el-input>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  width="100"
-                  label="储存单位">
-                  <template slot-scope="scope">
-                    <el-input v-model="scellform.storageUnit" readonly="readonly"></el-input>
-                  </template>
-
-                </el-table-column>
-              </el-table>
-            </div>
-          </el-col>
-          <el-col :span="2"><div></div></el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="14" :push="1">
-            <!--<div class="inline">登记人：</div>-->
-            <el-form-item label="复核人:">
-              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.register" /></div>
-            </el-form-item>
-          </el-col>
-          <el-col :span="7" :pull="2">
-            <!--<div class="inline">登记时间：</div>-->
-            <el-form-item label="复核时间:">
-              <div class="inline">
-                <el-input type="text" v-model="scellform.registerTime" readonly="readonly"/>
+            </el-col>
+            <el-col :span="20"><h3>安全库存配置单</h3></el-col>
+            <el-col :span="3">
+              <el-button  @click="showHidden" style="background-color: pink;">返回</el-button>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="4"><div></div></el-col>
+            <el-col :span="7" :offset="3">
+              <div>
+                <el-form-item label="库存编号:">
+                  <el-input type="text" v-model="scellform.storeId" readonly="readonly"/>
+                </el-form-item>
               </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24" :offset="3">
-            <div class="aa">
-              <el-form-item label="配置要求:" style="width: 80%; display: block;">
-                <el-input type="textarea" :rows="2" resize="none"  placeholder="请输入内容" style="width: 100%" v-model="scellform.config" readonly="readonly">
-                </el-input>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="4"><div></div></el-col>
+            <el-col :span="7" :offset="3">
+              <div><!--产品名称：笔记本-->
+                <el-form-item label="产品名称:">
+                  <el-input type="text" v-model="scellform.productName" readonly="readonly"/>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="7" :offset="2"><div><!--产品编号：1000000-->
+              <el-form-item label="产品编号:">
+                <el-input type="text" v-model="scellform.productId" readonly="readonly"/>
               </el-form-item>
-            </div>
-          </el-col>
-        </el-row>
-      </el-form>
-    </div >
+            </div></el-col>
+            <el-col :span="6"><div></div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="22" :offset="1"><!--<div class="inline">库存下限数：</div>-->
+              <el-form-item label="库存下限数:">
+                <div class="inline div02_01"><el-input type="text" v-model="scellform.minAmount" :clearable="true"/></div>
+              </el-form-item>
+              <!--<div class="inline">库存报警上限数：</div>-->
+              <el-form-item label="库存报警上限数:">
+                <div class="inline div02_01" :clearable="true"><el-input type="text"  v-model="scellform.maxAmount" class="el-input" :clearable="true"/></div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="2"><div></div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12" :offset="1">
+              <div class="inline">
+                <!--设置B/N或S/N：-->
+                <el-form-item label="设置B/N或S/N:">
+                  <el-select style="border: 1px solid #DCDFE6;" class="drop-downBox " v-model="value" >
+                    <el-option
+                      v-for="item in options"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </div>
 
-  </div>
+            </el-col>
+            <el-col :span="2"><div></div></el-col>
+            <el-col :span="10" >
+              <!--<div class="inline">设计人：</div>-->
+              <el-form-item label="设计人:">
+                <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.theDesigner" :clearable="true"/></div>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!--表格-->
+          <el-row>
+            <el-col :span="2"><div></div></el-col>
+            <el-col :span="20" :offset="2">
+              <div>
+                <el-table
+                  :data="dfileform"
+                  border
+                  height="140"
+                  style="width: 100%"
+                  :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                  :cell-style="cellStyle">
+                  <el-table-column
+                    width="60"
+                    prop="id"
+                    label="序号">
+                  </el-table-column>
+                  <el-table-column
+                    width="80"
+                    label="库房名称">
+                    <span>成品库</span>
+                  </el-table-column>
+                  <el-table-column
+                    width="140"
+                    prop="css"
+                    label="储存地址地址编号">
+                    <el-input v-model="css" readonly="readonly"></el-input>
+                  </el-table-column>
+                  <el-table-column
+                    prop="ass"
+                    label="储存地址名称">
+                    <el-input v-model="ass" readonly="readonly"></el-input>
+                  </el-table-column>
+                  <el-table-column
+                    width="100"
+                    label="储存单元简称">
+                    <template slot-scope="scope" >
+                      <el-input v-model="scellform.storageUnitAbbreviation"></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    width="110"
+                    label="最大储蓄量">
+                    <template slot-scope="scope" >
+                      <el-input v-model="scellform.maxCapacityAmount" ></el-input>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    width="100"
+                    label="储存单位">
+                    <template slot-scope="scope">
+                      <el-input v-model="scellform.storageUnit" ></el-input>
+                    </template>
+
+                  </el-table-column>
+                </el-table>
+              </div>
+            </el-col>
+            <el-col :span="2"><div></div></el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="14" :push="1">
+              <!--<div class="inline">登记人：</div>-->
+              <el-form-item label="变更人:">
+                <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.register" /></div>
+              </el-form-item>
+            </el-col>
+            <el-col :span="7" :pull="2">
+              <!--<div class="inline">登记时间：</div>-->
+              <el-form-item label="变更时间:">
+                <div class="inline">
+                  <el-input type="text" v-model="scellform.registerTime" readonly="readonly"/>
+                </div>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="24" :offset="3">
+              <div class="aa">
+                <el-form-item label="配置要求:" style="width: 80%; display: block;">
+                  <el-input type="textarea" :rows="2" resize="none"  placeholder="请输入内容" style="width: 100%" v-model="scellform.config" >
+                  </el-input>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+        </el-form>
+    </div>
+    </div>
 </template>
 
 <script>
@@ -255,7 +242,6 @@
             label: '否'
           }],
           value:"否",
-          show:true,
           hidden:false,
           updateTime:"",
           scellform:{
@@ -280,20 +266,29 @@
             theDesigner:"",//设计人
             checkTime:"",//复核时间
             checker:"",//复核人
-            productClass:"",
-            type:""
+            id:""
           },
           ass:"",
-          css:""
+          css:"",
+          drawer: false,
+          direction: 'rtl',
+          show:true
         }
       },
       methods: {
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {});
+        },
         getdata() {   //制作安全库配置单1获取数据
           var _this = this;
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SCell/queryAllSCell.May", params).then(function (response) {
+          this.$axios.post("SCell/queryAllSCell2.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
             console.log()
@@ -340,9 +335,6 @@
           var date1 =Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
           this.scellform.checkTime = date1;
         },
-        getStr(point) {
-          return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
-        },
         openeditwin(productId){//获取数据
           var _this=this;
           this.showHidden();
@@ -370,20 +362,24 @@
           this.scellform.amount=0;
           var params = new URLSearchParams();
           params.append("id",_this.scellform.id);//id
-          params.append("checker",_this.scellform.register);//审核人
-          params.append("checkTime",_this.scellform.checkTime);//审核时间
+          params.append("config",_this.scellform.config);//配置要求
+          params.append("minAmount",_this.scellform.minAmount);//库存报警下限数
+          params.append("maxAmount",_this.scellform.maxAmount);//库存报警上限数
+          params.append("maxCapacityAmount",_this.scellform.maxCapacityAmount);//最大存储量
+          params.append("storageUnit",_this.scellform.storageUnit);//储存单元
+          params.append("storageUnitAbbreviation",_this.scellform.storageUnitAbbreviation);//储存单元简称
           console.log(this.scellform.storageUnit)
-          this.$axios.post("SCell/amendCheckTag.May",params).then(function (response) {
+          this.$axios.post("SCell/amendSCll.May",params).then(function (response) {
             if (response.data == true) {
               _this.$notify({
                 title: '成功',
-                message: '审核成功',
+                message: '修改成功',
                 type: 'success'
               });
             } else {
               _this.$notify({
                 title: '失败',
-                message: '审核失败',
+                message: '修改失败',
                 type: 'danger'
               });
             }
