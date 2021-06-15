@@ -238,4 +238,38 @@
     line-height: 320px;
   }
 
+  /*hhy*/
+  .inline{/*转换行内元素*/
+    display: inline-block;
+  }
+
+  .div02_01{/*div下边框*/
+    border-bottom:1px solid black;
+    width: 300px;
+    text-align:left;
+  }
+  .drop-downBox{
+    width: 333px;
+  }
+  .el-input__inner{
+    border: none;
+  }
+  .aa .el-form-item--small .el-form-item__content,
+  .el-form-item--small .el-form-item__labe {
+    width: 83%;
+  }
+  .yanse{
+    background-color:yellow;
+  }
+  .div03{
+    position: absolute;
+    left: 95px;
+    background: pink;
+  }
+  .div04{
+    position: absolute;
+    left: 1200px;
+  }
+
+
 </style>

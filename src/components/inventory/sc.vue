@@ -187,11 +187,6 @@
       }
     },
     methods: {
-      //设置表头的颜色
-      rowClass({row, rowIndex}) {
-        console.log(rowIndex) //表头行标号为0
-        return 'background:red'
-      },
       //设置指定行、列、具体单元格颜色
       cellStyle({row, column, rowIndex, columnIndex}) {
         var arr=[4,5,6];
