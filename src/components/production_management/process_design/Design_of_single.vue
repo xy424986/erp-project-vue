@@ -155,7 +155,7 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <!--表格-->
+          <!--设计单表格-->
           <el-row>
             <el-col :span="2">
               <div></div>
@@ -172,23 +172,24 @@
                   <el-table-column
                     width="50"
                     prop="id"
-                    label="序号">
+                    label="选中">
+                    <checkbox_button></checkbox_button>
                   </el-table-column>
                   <el-table-column
                     width="100"
                     label="工序名称">
-                    <span>成品库</span>
+                    <span>{{procedureName}}</span>
                   </el-table-column>
                   <el-table-column
                     width="100"
                     prop="css"
                     label="工序编号">
-                    <el-input v-model="css" readonly="readonly"></el-input>
+                    <el-input v-model="procedureId" readonly="readonly"></el-input>
                   </el-table-column>
                   <el-table-column
                     prop="ass"
                     label="描述">
-                    <el-input v-model="ass" readonly="readonly"></el-input>
+                    <el-input v-model="procedureDescribe" readonly="readonly"></el-input>
                   </el-table-column>
                   <el-table-column
                     width="100"
@@ -225,7 +226,7 @@
               <div></div>
             </el-col>
           </el-row>
-          <!--/表格-->
+          <!--/-设计单表格-->
           <el-row>
             <el-col :span="13" :push="1" >
               <!--<div class="inline">登记人：</div>-->
@@ -459,18 +460,22 @@
     </el-drawer>
     <!--    /抽屉样式-->
 
-    <!-- Dialog-Table -->
-    <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+    <!-- 添加工序Dialog-Table -->
+    <el-dialog title="添加工序" :visible.sync="dialogTableVisible">
       <el-table :data="mDesignProcedureDetailsData">
         <el-table-column property="procedureId" label="工序编号" width="150"></el-table-column>
         <el-table-column property="procedureName" label="工序名称" width="200"></el-table-column>
         <el-table-column property="procedureDescribe" label="工序描述"></el-table-column>
-        <el-table-column label="添加">
-          <el-button size="mini" round type="primary" icon="el-icon-check" @click="">添加</el-button>
-        </el-table-column>
+
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+            <el-button size="mini" round type="primary" icon="el-icon-check" @click="addProcess(scope.$index, scope.row)">添加</el-button>
+        </template>
+          </el-table-column>
+
       </el-table>
     </el-dialog>
-    <!-- /Dialog-Table -->
+    <!-- /添加工序Dialog-Table -->
   </div>
 </template>
 
@@ -480,6 +485,10 @@
     name: "Design_of_single",
     data() {
       return {
+        //设计单表格数据绑定
+        procedureName: '',//工序名称
+        procedureId: '',//工序编号
+        procedureDescribe: '',//工序描述
         //点开设计单赋值绑定
         productName:'',//产品名称
         productId:'',//产品编号
@@ -534,7 +543,13 @@
       }
     },
     methods: {
-      //
+      //添加工序
+      addProcess(a, b){
+        this.procedureName = b.procedureName;
+        this.procedureId = b.procedureId;
+        this.procedureDescribe = b.procedureDescribe;
+      },
+      //显示添加工序可选数据
       getMDesignProcedureDetailsData() {
         this.dialogTableVisible = true;
         this.$axios.get("/MDesignProcedureDetails/queryByChangeState.action").then(response => {
@@ -653,4 +668,5 @@
   /*  position: absolute;*/
   /*  left: 1200px;*/
   /*}*/
+
 </style>
