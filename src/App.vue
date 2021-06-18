@@ -12,8 +12,7 @@
                  class="el-menu-vertical-demo"
                  @open="handleOpen"
                  @close="handleClose"
-                 :collapse="isCollapse"
-                 unique-opened="true">
+                 :collapse="isCollapse">
           <el-submenu :index="parentMenu.id+''" v-for="parentMenu in menuTable">
             <template slot="title">
               <i :class="parentMenu.imageUrl"></i>
