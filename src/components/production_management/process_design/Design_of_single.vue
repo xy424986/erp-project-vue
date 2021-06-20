@@ -411,6 +411,8 @@
     name: "Design_of_single",
     data() {
       return {
+        //定制产品生产工序设计单id
+        dFileId: 0,
         //工序制作单表单绑定
         processData: [],
         procedureForm: {
@@ -491,6 +493,7 @@
               "costPrice":this.procedureForm.costPrice,
               "register":this.procedureForm.registrant,
               "procedureDescribe1":this.procedureForm.designRequirements,
+              "dFileId":this.dFileId
               }
             )
           )
@@ -506,7 +509,7 @@
             // this.addDate();
             this.$message({
               type: 'success',
-              message: '已提交!'
+              message: response.data
             });
             console.log(JSON.stringify(newArr))
           }).catch();
@@ -537,6 +540,7 @@
         this.drawer = true;
         this.productName = b.productName;
         this.productId = b.productId;
+        this.dFileId = b.id;
       },
       //抽屉关闭方法
       handleClose(done) {
@@ -575,11 +579,12 @@
         var params = new URLSearchParams();
         params.append("pageNumber", this.pageNumber);
         params.append("pageSize", this.pageSize);
-
+        params.append("designProcedureTag", "G001-0");
         this.$axios.post("/DFile/queryByState.action", params).then(response => {
           this.tableData = response.data.records;
           this.total = response.data.total;
           this.addDate();
+          this.getData();
         }).catch();
       }
     },
