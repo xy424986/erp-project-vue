@@ -270,4 +270,12 @@
     left: 1200px;
   }
 
+  /**
+  hhy
+   */
+  a{
+    text-decoration: none;
+    color: purple;
+  }
+
 </style>

@@ -65,7 +65,7 @@
       size="80%">
       <!--      内容-->
       <div class="content">
-        <el-form size="small" :inline="true" v-model="procedureForm">
+        <el-form size="small" :inline="true">
           <el-row>
             <el-col :span="2" :offset="18">
               <el-button size="mini" round type="warning" icon="el-icon-close" @click="innerDrawer = false">驳回
@@ -103,9 +103,9 @@
           <el-row>
             <el-col :span="9" :offset="2">
               <el-form-item label="产品名称:">
-<!--                <div class="inline div02_01">-->
-                  <el-input type="text" v-model="productName" readonly :clearable="true"/>
-<!--                </div>-->
+                <!--                <div class="inline div02_01">-->
+                <el-input type="text" v-model="productName" readonly :clearable="true"/>
+                <!--                </div>-->
               </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -124,7 +124,7 @@
             <el-col :span="20" :offset="2">
               <div>
                 <el-table
-                  :data="processData"
+                  :data="mDPDData"
                   border
                   height="244"
                   style="width: 100%"
@@ -137,46 +137,37 @@
                   <el-table-column
                     width="100"
                     label="工序名称"
-                    prop="typeName">
+                    prop="procedureName">
                   </el-table-column>
                   <el-table-column
                     width="100"
                     label="工序编号"
-                    prop="typeId">
-                    <!--                    <el-input v-model="" readonly="readonly"></el-input>-->
+                    prop="procedureId">
                   </el-table-column>
                   <el-table-column
                     label="描述"
-                    prop="describe1">
-                    <!--                    <el-input v-model="describe1" readonly="readonly"></el-input>-->
+                    prop="procedureDescribe">
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工时数">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.manHour" readonly></el-input>
-                    </template>
+                    label="工时数"
+                    prop="labourHourAmount">
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工时单位">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.manHourUnit" readonly></el-input>
-                    </template>
+                    label="工时单位"
+                    prop="amountUnit">
+
                   </el-table-column>
                   <el-table-column
                     width="120"
-                    label="单位工时成本">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.costPrice" readonly></el-input>
-                    </template>
+                    label="单位工时成本"
+                    prop="costPrice">
                   </el-table-column>
                   <el-table-column
                     width="150"
-                    label="工时成本小计（元）">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.subtotal" readonly></el-input>
-                    </template>
+                    label="工时成本小计（元）"
+                    prop="subtotal">
                   </el-table-column>
                 </el-table>
               </div>
@@ -198,9 +189,9 @@
           <el-row>
             <el-col :span="13" :push="1">
               <el-form-item label="审核人:">
-<!--                <div class="inline div02_01">-->
-                  <el-input type="text" v-model="procedureForm.registrant" readonly="readonly"/>
-<!--                </div>-->
+                <!--                <div class="inline div02_01">-->
+                <el-input type="text" v-model="registrant" readonly="readonly"/>
+                <!--                </div>-->
               </el-form-item>
             </el-col>
             <el-col :span="9" :pull="2">
@@ -256,25 +247,14 @@
     name: "Design_bill_review",
     data() {
       return {
+        //审核表单内表格数据绑定
+        mDPDData: [],
         //定制产品生产工序设计单id
         dFileId: 0,
         //工序制作单表单绑定
         processData: [],
-        procedureForm: {
-          manHour: '',//工时数
-          manHourUnit: '',//工时单位
-          costPrice: '',//单位工时成本
-          subtotal: '',//工时成本小计
-          designRequirements: '',//设计要求
-          registrant: '何海云',//登记人
-          registrationTime: '',//登记时间
-          productName: '',//产品名称
-          productId: '',//产品编号
-          procedureName: '',//工序名称
-          procedureId: '',//工序编号
-          procedureDescribe: '',//工序描述
-        },
         //审核单表格数据绑定
+        registrant: '何海云',//审核人
         costPriceSum: 0,//工时总成本
         designer: '',//设计人
         procedureName: '',//工序名称
@@ -321,47 +301,28 @@
           this.manufactureConfigProcedureListData = response.data;
         }).catch();
       },
-      //提交工序设计单
+      //审核工序设计单
       submit() {
-        var arr = this.processData;
-        let newArr = [];
-        arr.map((item, index) => {
-          newArr.push(
-            Object.assign({}, item, {
-                "productName": this.productName,
-                "productId": this.productId,
-                "designer": this.procedureForm.designer,
-                "procedureName": item.typeName,
-                "procedureId": item.typeId,
-                "procedureDescribe": item.describe1,
-                "labourHourAmount": this.procedureForm.manHour,
-                "amountUnit": this.procedureForm.manHourUnit,
-                "costPrice": this.procedureForm.costPrice,
-                "register": this.procedureForm.registrant,
-                "procedureDescribe1": this.procedureForm.designRequirements,
-                "dFileId": this.dFileId
-              }
-            )
-          )
-        });
 
-        this.$confirm('此操作将永久提交该文件, 是否继续?', '提示', {
+        this.$confirm('审核通过进行下一环节, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.post("/mDesignProcedure/insert.action", JSON.stringify(newArr),
-            {headers: {"Content-Type": "application/json"}}).then(response => {
-            // this.addDate();
+          var params = new URLSearchParams();
+          params.append("id", this.mDPId);
+          params.append("checkTag", "S001-1");
+          // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+          this.$axios.post("/mDesignProcedure/audit.action", params).then(response => {
+            this.getData();
             this.$message({
               type: 'success',
               message: response.data
             });
-            console.log(JSON.stringify(newArr))
           }).catch();
           this.$message({
             type: 'success',
-            message: '已提交!'
+            message: '已发送请求!'
           });
           this.innerDrawer = false;
           this.drawer = false;
@@ -390,6 +351,15 @@
         this.costPriceSum = b.costPriceSum;
         this.procedureDescribe = b.procedureDescribe;
         this.dFileId = b.id;
+        this.mDPId = b.id;
+
+        var params = new URLSearchParams();
+        params.append("pId", b.id);
+        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
+          this.mDPDData = response.data;
+        }).catch();
+
       },
       //抽屉关闭方法
       handleClose(done) {
@@ -428,12 +398,11 @@
         var params = new URLSearchParams();
         params.append("pageNumber", this.pageNumber);
         params.append("pageSize", this.pageSize);
-        params.append("CHECK_TAG", "S001-0");
+        params.append("checkTag", "S001-0");
         this.$axios.post("/mDesignProcedure/queryByState.action", params).then(response => {
           this.tableData = response.data.records;
           this.total = response.data.total;
           this.addDate();
-          this.getData();
         }).catch();
       }
     },
