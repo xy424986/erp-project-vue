@@ -74,7 +74,7 @@
       size="80%">
       <!--      内容-->
       <div class="content">
-        <el-form size="small" :inline="true" v-model="scallForm">
+        <el-form size="small" :inline="true" v-model="procedureForm">
           <el-row>
             <el-col :span="3">
               <el-button size="mini" round type="success" icon="el-icon-circle-plus-outline"
@@ -109,48 +109,11 @@
               <div></div>
             </el-col>
           </el-row>
-<!--          <el-row>-->
-<!--            <el-col :span="22" :offset="1">&lt;!&ndash;<div class="inline">库存下限数：</div>&ndash;&gt;-->
-<!--              <el-form-item label="设计人:">-->
-<!--                <div class="inline div02_01">-->
-<!--                  <el-input type="text" v-model="scallForm.minAmount" :clearable="true"/>-->
-<!--                </div>-->
-<!--              </el-form-item>-->
-<!--              &lt;!&ndash;<div class="inline">库存报警上限数：</div>&ndash;&gt;-->
-<!--              <el-form-item label="库存报警上限数:">-->
-<!--                <div class="inline div02_01" :clearable="true">-->
-<!--                  <el-input type="text" v-model="scallForm.maxAmount" class="el-input" :clearable="true"/>-->
-<!--                </div>-->
-<!--              </el-form-item>-->
-<!--            </el-col>-->
-<!--            <el-col :span="2">-->
-<!--              <div></div>-->
-<!--            </el-col>-->
-<!--          </el-row>-->
           <el-row>
-<!--            <el-col :span="12" :offset="1">-->
-<!--              <div class="inline">-->
-<!--                &lt;!&ndash;设置B/N或S/N：&ndash;&gt;-->
-<!--                <el-form-item label="设置B/N或S/N:">-->
-<!--                  <el-select style="border: 1px solid #DCDFE6;" class="drop-downBox " v-model="value">-->
-<!--                    <el-option-->
-<!--                      v-for="item in options"-->
-<!--                      :key="item.value"-->
-<!--                      :label="item.label"-->
-<!--                      :value="item.value">-->
-<!--                    </el-option>-->
-<!--                  </el-select>-->
-<!--                </el-form-item>-->
-<!--              </div>-->
-
-<!--            </el-col>-->
-<!--            <el-col :span="2">-->
-<!--              <div></div>-->
-<!--            </el-col>-->
             <el-col :span="10" :offset="2">
               <el-form-item label="设计人:">
                 <div class="inline div02_01">
-                  <el-input type="text" v-model="scallForm.theDesigner" :clearable="true"/>
+                  <el-input type="text" v-model="procedureForm.designer" :clearable="true"/>
                 </div>
               </el-form-item>
             </el-col>
@@ -163,60 +126,56 @@
             <el-col :span="20" :offset="2">
               <div>
                 <el-table
-                  :data="dFileForm"
+                  :data="processData"
                   border
-                  height="140"
+                  height="244"
                   style="width: 100%"
-                  :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-                  :cell-style="cellStyle">
+                  :header-cell-style="{background:'#eef1f6',color:'#606266'}">
                   <el-table-column
                     width="50"
                     prop="id"
                     label="选中">
-                    <checkbox_button></checkbox_button>
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工序名称">
-                    <span>{{procedureName}}</span>
+                    label="工序名称"
+                    prop="typeName">
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    prop="css"
-                    label="工序编号">
-                    <el-input v-model="procedureId" readonly="readonly"></el-input>
+                    label="工序编号"
+                    prop="typeId">
                   </el-table-column>
                   <el-table-column
-                    prop="ass"
-                    label="描述">
-                    <el-input v-model="procedureDescribe" readonly="readonly"></el-input>
+                    label="描述"
+                    prop="describe1">
                   </el-table-column>
                   <el-table-column
                     width="100"
                     label="工时数">
                     <template slot-scope="scope">
-                      <el-input v-model="scallForm.storageUnitAbbreviation"></el-input>
+                      <el-input v-model="procedureForm.manHour" style="height: 10px"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     width="100"
                     label="工时单位">
                     <template slot-scope="scope">
-                      <el-input v-model="scallForm.maxCapacityAmount"></el-input>
+                      <el-input v-model="procedureForm.manHourUnit"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     width="120"
                     label="单位工时成本">
                     <template slot-scope="scope">
-                      <el-input v-model="scallForm.storageUnit"></el-input>
+                      <el-input v-model="procedureForm.costPrice"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     width="150"
                     label="工时成本小计（元）">
                     <template slot-scope="scope">
-                      <el-input v-model="scallForm.storageUnit"></el-input>
+                      <el-input v-model="procedureForm.subtotal" readonly></el-input>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -228,11 +187,10 @@
           </el-row>
           <!--/-设计单表格-->
           <el-row>
-            <el-col :span="13" :push="1" >
-              <!--<div class="inline">登记人：</div>-->
+            <el-col :span="13" :push="1">
               <el-form-item label="登记人:">
                 <div class="inline div02_01">
-                  <el-input type="text" v-model="scallForm.register" readonly="readonly"/>
+                  <el-input type="text" v-model="procedureForm.registrant" readonly="readonly"/>
                 </div>
               </el-form-item>
             </el-col>
@@ -250,7 +208,7 @@
               <div class="aa">
                 <el-form-item label="设计要求:" style="width: 80%; display: block;">
                   <el-input type="textarea" :rows="4" resize="none" placeholder="请输入内容" style="width: 100%"
-                            v-model="scallForm.config">
+                            v-model="procedureForm.designRequirements">
                   </el-input>
                 </el-form-item>
               </div>
@@ -276,9 +234,9 @@
           :before-close="handleClose"
           :visible.sync="innerDrawer"
           size="80%">
-          <!--          子内容-->
+<!--                    子内容-->
           <div class="content">
-            <el-form size="small" :inline="true" v-model="scallForm">
+            <el-form size="small" :inline="true" v-model="procedureForm">
               <hr>
               <el-row>
                 <el-col :span="4">
@@ -287,14 +245,14 @@
                 <el-col :span="7" :offset="3">
                   <div><!--产品名称：笔记本-->
                     <el-form-item label="产品名称:">
-<!--                      <el-input type="text" v-model="scallForm.productName" readonly="readonly"/>-->
+                      <el-input type="text" v-model="productName" readonly="readonly"/>
                     </el-form-item>
                   </div>
                 </el-col>
                 <el-col :span="7" :offset="2">
                   <div><!--产品编号：1000000-->
                     <el-form-item label="产品编号:">
-<!--                      <el-input type="text" v-model="scallForm.productId" readonly="readonly"/>-->
+                      <el-input type="text" v-model="productId" readonly="readonly"/>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -303,53 +261,15 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="22" :offset="1"><!--<div class="inline">库存下限数：</div>-->
-                  <el-form-item label="库存下限数:">
-                    <div class="inline div02_01">
-                      <el-input type="text" v-model="scallForm.minAmount" :clearable="true"/>
-                    </div>
-                  </el-form-item>
-                  <!--<div class="inline">库存报警上限数：</div>-->
-                  <el-form-item label="库存报警上限数:">
-                    <div class="inline div02_01" :clearable="true">
-                      <el-input type="text" v-model="scallForm.maxAmount" class="el-input" :clearable="true"/>
-                    </div>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="2">
-                  <div></div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="12" :offset="1">
-                  <div class="inline">
-                    <!--设置B/N或S/N：-->
-                    <el-form-item label="设置B/N或S/N:">
-                      <el-select style="border: 1px solid #DCDFE6;" class="drop-downBox " v-model="value">
-                        <el-option
-                          v-for="item in options"
-                          :key="item.value"
-                          :label="item.label"
-                          :value="item.value">
-                        </el-option>
-                      </el-select>
-                    </el-form-item>
-                  </div>
-
-                </el-col>
-                <el-col :span="2">
-                  <div></div>
-                </el-col>
-                <el-col :span="10">
-                  <!--<div class="inline">设计人：</div>-->
+                <el-col :span="10" :offset="2">
                   <el-form-item label="设计人:">
                     <div class="inline div02_01">
-                      <el-input type="text" v-model="scallForm.theDesigner" :clearable="true"/>
+                      <el-input type="text" v-model="procedureForm.designer" readonly :clearable="true"/>
                     </div>
                   </el-form-item>
                 </el-col>
               </el-row>
-              <!--表格-->
+              <!--设计单表格-->
               <el-row>
                 <el-col :span="2">
                   <div></div>
@@ -357,54 +277,59 @@
                 <el-col :span="20" :offset="2">
                   <div>
                     <el-table
-                      :data="dFileForm"
+                      :data="processData"
                       border
-                      height="140"
+                      height="244"
                       style="width: 100%"
-                      :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-                      :cell-style="cellStyle">
+                      :header-cell-style="{background:'#eef1f6',color:'#606266'}">
                       <el-table-column
-                        width="60"
+                        width="50"
                         prop="id"
-                        label="序号">
-                      </el-table-column>
-                      <el-table-column
-                        width="80"
-                        label="库房名称">
-                        <span>成品库</span>
-                      </el-table-column>
-                      <el-table-column
-                        width="140"
-                        prop="css"
-                        label="储存地址地址编号">
-                        <el-input v-model="css" readonly="readonly"></el-input>
-                      </el-table-column>
-                      <el-table-column
-                        prop="ass"
-                        label="储存地址名称">
-                        <el-input v-model="ass" readonly="readonly"></el-input>
+                        label="选中">
                       </el-table-column>
                       <el-table-column
                         width="100"
-                        label="储存单元简称">
-                        <template slot-scope="scope">
-                          <el-input v-model="scallForm.storageUnitAbbreviation"></el-input>
-                        </template>
+                        label="工序名称"
+                        prop="typeName">
                       </el-table-column>
                       <el-table-column
-                        width="110"
-                        label="最大储蓄量">
+                        width="100"
+                        label="工序编号"
+                        prop="typeId">
+                        <!--                    <el-input v-model="" readonly="readonly"></el-input>-->
+                      </el-table-column>
+                      <el-table-column
+                        label="描述"
+                        prop="describe1">
+                        <!--                    <el-input v-model="describe1" readonly="readonly"></el-input>-->
+                      </el-table-column>
+                      <el-table-column
+                        width="100"
+                        label="工时数">
                         <template slot-scope="scope">
-                          <el-input v-model="scallForm.maxCapacityAmount"></el-input>
+                          <el-input v-model="procedureForm.manHour" readonly></el-input>
                         </template>
                       </el-table-column>
                       <el-table-column
                         width="100"
-                        label="储存单位">
+                        label="工时单位">
                         <template slot-scope="scope">
-                          <el-input v-model="scallForm.storageUnit"></el-input>
+                          <el-input v-model="procedureForm.manHourUnit" readonly></el-input>
                         </template>
-
+                      </el-table-column>
+                      <el-table-column
+                        width="120"
+                        label="单位工时成本">
+                        <template slot-scope="scope">
+                          <el-input v-model="procedureForm.costPrice" readonly></el-input>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        width="150"
+                        label="工时成本小计（元）">
+                        <template slot-scope="scope">
+                          <el-input v-model="procedureForm.subtotal" readonly></el-input>
+                        </template>
                       </el-table-column>
                     </el-table>
                   </div>
@@ -413,31 +338,30 @@
                   <div></div>
                 </el-col>
               </el-row>
-              <!--/表格-->
+              <!--/-设计单表格-->
               <el-row>
-                <el-col :span="14" :push="1">
-                  <!--<div class="inline">登记人：</div>-->
+                <el-col :span="13" :push="1">
                   <el-form-item label="登记人:">
                     <div class="inline div02_01">
-                      <el-input type="text" v-model="scallForm.register" readonly="readonly"/>
+                      <el-input type="text" v-model="procedureForm.registrant" readonly="readonly"/>
                     </div>
                   </el-form-item>
                 </el-col>
-                <el-col :span="7" :pull="2">
+                <el-col :span="9" :pull="2">
                   <!--<div class="inline">登记时间：</div>-->
                   <el-form-item label="登记时间:">
                     <div class="inline">
-                      <el-input type="text" v-model="scallForm.registerTime" readonly="readonly"/>
+                      <el-input type="text" v-model="registrationTime" readonly="readonly"/>
                     </div>
                   </el-form-item>
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="24" :offset="3">
+                <el-col :span="24" :offset="2">
                   <div class="aa">
-                    <el-form-item label="配置要求:" style="width: 80%; display: block;">
+                    <el-form-item label="设计要求:" style="width: 80%; display: block;">
                       <el-input type="textarea" :rows="4" resize="none" placeholder="请输入内容" style="width: 100%"
-                                v-model="scallForm.config">
+                                v-model="procedureForm.designRequirements" readonly>
                       </el-input>
                     </el-form-item>
                   </div>
@@ -462,16 +386,18 @@
 
     <!-- 添加工序Dialog-Table -->
     <el-dialog title="添加工序" :visible.sync="dialogTableVisible">
-      <el-table :data="mDesignProcedureDetailsData">
-        <el-table-column property="procedureId" label="工序编号" width="150"></el-table-column>
-        <el-table-column property="procedureName" label="工序名称" width="200"></el-table-column>
-        <el-table-column property="procedureDescribe" label="工序描述"></el-table-column>
+      <el-table :data="manufactureConfigProcedureListData">
+        <el-table-column property="typeId" label="工序编号" width="150"></el-table-column>
+        <el-table-column property="typeName" label="工序名称" width="200"></el-table-column>
+        <el-table-column property="describe1" label="工序描述"></el-table-column>
 
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-            <el-button size="mini" round type="primary" icon="el-icon-check" @click="addProcess(scope.$index, scope.row)">添加</el-button>
-        </template>
-          </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini" round type="primary" icon="el-icon-check"
+                       @click="addProcess(scope.$index, scope.row.id)">添加
+            </el-button>
+          </template>
+        </el-table-column>
 
       </el-table>
     </el-dialog>
@@ -485,51 +411,37 @@
     name: "Design_of_single",
     data() {
       return {
+        //定制产品生产工序设计单id
+        dFileId: 0,
+        //工序制作单表单绑定
+        processData: [],
+        procedureForm: {
+          manHour: '',//工时数
+          manHourUnit: '',//工时单位
+          costPrice: '',//单位工时成本
+          subtotal: '',//工时成本小计
+          designRequirements: '',//设计要求
+          registrant: '何海云',//登记人
+          registrationTime: '',//登记时间
+          productName: '',//产品名称
+          productId: '',//产品编号
+          procedureName: '',//工序名称
+          procedureId: '',//工序编号
+          procedureDescribe: '',//工序描述
+        },
         //设计单表格数据绑定
+        designer: '',//设计人
         procedureName: '',//工序名称
         procedureId: '',//工序编号
         procedureDescribe: '',//工序描述
         //点开设计单赋值绑定
-        productName:'',//产品名称
-        productId:'',//产品编号
-        registrationTime: new Date(),//登记时间
+        productName: '',//产品名称
+        productId: '',//产品编号
+        registrationTime: '',//登记时间
         // Dialog-Table
         //工序选择数据
-        mDesignProcedureDetailsData: [],
+        manufactureConfigProcedureListData: [],
         dialogTableVisible: false,
-        //form表单
-        ass: "",
-        css: "",
-        options: [{
-          value: '1',
-          label: '是'
-        }, {
-          value: '0',
-          label: '否'
-        }],
-        value: "否",
-        dFileForm: [],
-        scallForm: {
-          config: "",//配置要求
-          register: '',//登记人
-          registerTime: "",//登记时间
-          minAmount: 0,//库存报警下限数
-          maxAmount: 0,//库存报警上限数
-          maxCapacityAmount: 0,//最大存储量
-          amount: 0,//当前存储量
-          thirdKindName: "",//产品III级分类名称
-          thirdKindId: "",//产品III级分类编号
-          secondKindName: "",//产品II级分类名称
-          secondKindId: "",//产品II级分类编号
-          firstKindName: "",//产品I级分类名称
-          firstKindId: "",//产品I级分类编号
-          productName: "",//产品名称
-          productId: "",//产品编号
-          storeId: "",//库存编号
-          storageUnit: "",//储存单元
-          storageUnitAbbreviation: "",//储存单元简称
-          theDesigner: ""//设计人
-        },
         //抽屉绑定
         drawer: false,
         innerDrawer: false,
@@ -544,23 +456,77 @@
     },
     methods: {
       //添加工序
-      addProcess(a, b){
-        this.procedureName = b.procedureName;
-        this.procedureId = b.procedureId;
-        this.procedureDescribe = b.procedureDescribe;
+      addProcess(index, ids) {
+        if (this.processData.length > 0) {
+          var obj = this.processData.find(item => {
+            return item.id == ids;
+          });
+          if (obj == null) {
+            this.processData.push(this.manufactureConfigProcedureListData[index]);
+          }
+        } else {
+          this.processData.push(this.manufactureConfigProcedureListData[index]);
+        }
       },
       //显示添加工序可选数据
       getMDesignProcedureDetailsData() {
         this.dialogTableVisible = true;
-        this.$axios.get("/MDesignProcedureDetails/queryByChangeState.action").then(response => {
-          this.mDesignProcedureDetailsData = response.data;
+        this.$axios.get("/ManufactureConfigProcedureList/queryAll.action").then(response => {
+          this.manufactureConfigProcedureListData = response.data;
         }).catch();
       },
       //提交工序设计单
       submit() {
-        this.innerDrawer = false;
-        this.drawer = false;
+        var arr = this.processData;
+        let newArr = [];
+        arr.map((item, index)=>{
+          newArr.push(
+            Object.assign({}, item, {
+              "productName":this.productName,
+              "productId":this.productId,
+              "designer":this.procedureForm.designer,
+              "procedureName":item.typeName,
+              "procedureId":item.typeId,
+              "procedureDescribe":item.describe1,
+              "labourHourAmount":this.procedureForm.manHour,
+              "amountUnit":this.procedureForm.manHourUnit,
+              "costPrice":this.procedureForm.costPrice,
+              "register":this.procedureForm.registrant,
+              "procedureDescribe1":this.procedureForm.designRequirements,
+              "dFileId":this.dFileId
+              }
+            )
+          )
+        });
+
+        this.$confirm('此操作将永久提交该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post("/mDesignProcedure/insert.action", JSON.stringify(newArr),
+            {headers:{"Content-Type":"application/json"}}).then(response => {
+            // this.addDate();
+            this.$message({
+              type: 'success',
+              message: response.data
+            });
+            console.log(JSON.stringify(newArr))
+          }).catch();
+          this.$message({
+            type: 'success',
+            message: '已提交!'
+          });
+          this.innerDrawer = false;
+          this.drawer = false;
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
       },
+
       addSCll() {
       },
       //抽屉内容
@@ -569,20 +535,12 @@
         console.log(rowIndex) //表头行标号为0
         return 'background:red'
       },
-      //设置指定行、列、具体单元格颜色
-      cellStyle({row, column, rowIndex, columnIndex}) {
-        var arr = [4, 5, 6];
-        for (var i = 0; i < arr.length; i++) {
-          if (columnIndex === arr[i]) { //指定坐标rowIndex ：行，columnIndex ：列
-            return 'background:yellow' //rgb(105,0,7)
-          }
-        }
-      },
       //打开抽屉
       drawerOpen(a, b) {
         this.drawer = true;
         this.productName = b.productName;
         this.productId = b.productId;
+        this.dFileId = b.id;
       },
       //抽屉关闭方法
       handleClose(done) {
@@ -601,15 +559,32 @@
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
       },
+      //获取当前年月日
+      addDate() {
+        let date = new Date();
+        let Y = date.getFullYear();
+        let M = this.getStr(date.getMonth() + 1);
+        let D = this.getStr(date.getDate());
+        let hours = date.getHours();
+        let minutes = this.getStr(date.getMinutes());
+        let seconds = this.getStr(date.getSeconds());
+        var date1 = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
+        this.registrationTime = date1;
+      },
+      getStr(point) {
+        return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
+      },
       //获取定制产品数据
       getData() {
         var params = new URLSearchParams();
         params.append("pageNumber", this.pageNumber);
         params.append("pageSize", this.pageSize);
-
+        params.append("designProcedureTag", "G001-0");
         this.$axios.post("/DFile/queryByState.action", params).then(response => {
           this.tableData = response.data.records;
           this.total = response.data.total;
+          this.addDate();
+          this.getData();
         }).catch();
       }
     },
@@ -626,7 +601,7 @@
     font-weight: bold;
     margin: auto;
     width: 992px;
-    height: 555px;
+    height: 600px;
     text-align: center;
     color: #2c3e50;
     /*margin-top: 2px;*/
