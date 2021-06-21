@@ -86,6 +86,19 @@
 </template>
 
 <script>
+  //产品档案导入组件close
+  import Product_file_change from "./components/product design/Product_file_change";
+  import Product_file_delete from "./components/product design/Product_file_delete";
+  import Product_file_query from "./components/product design/Product_file_query";
+  import Product_file_registration from "./components/product design/Product_file_registration";
+  import Product_file_registration_review from "./components/product design/Product_file_registration_review";
+
+  //产品物料设计导入组件close
+  import Make_material_composition_design_sheet from './components/Product_material_composition_design/Make_material_composition_design_sheet'
+  import Review_of_material_composition_design_sheet from './components/Product_material_composition_design/Review_of_material_composition_design_sheet'
+  import Material_composition_design_sheet_query from './components/Product_material_composition_design/Material_composition_design_sheet_query'
+  import Change_of_material_composition_design_order from './components/Product_material_composition_design/Change_of_material_composition_design_order'
+
   // 生产管理导入组件start
   import Design_of_single from "./components/production_management/process_design/Design_of_single";
   import Design_bill_review from "./components/production_management/process_design/Design_bill_review";
@@ -188,7 +201,16 @@
       chouti,
       OutboundScheduling,
       WarehousingRegistration,
-      WarehouseQueries
+      WarehouseQueries,
+      Product_file_query,
+      Product_file_delete,
+      Product_file_change,
+      Product_file_registration,
+      Product_file_registration_review,
+      Make_material_composition_design_sheet,
+      Review_of_material_composition_design_sheet,
+      Material_composition_design_sheet_query,
+      Change_of_material_composition_design_order
     },
     // 钩子调用函数
     created() {
