@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--制作安全库配置单1复核-->
-    <div id="div01" v-show="show">
+    <div id="div01">
       <el-table
         :data="tableData"
         height="250"
@@ -46,25 +46,20 @@
           prop="thirdKindName"
           label="III及分类">
         </el-table-column>
-    <!--    <el-table-column
-          label="复核"
-          width="100">
-          <template slot-scope="scope">
-            <el-button type="text" @click="openeditwin(scope.row.productId)">复核</el-button>
-          </template>
-        </el-table-column>-->
       </el-table>
     </div>
     <!--制作安全库配置单2复核-->
-    <div id="div02" v-show="hidden">
-<!--      <div class="div04">
-        <el-button @click="showHidden"  style="background-color: pink;">返回</el-button>
-      </div>-->
+    <!--    抽屉样式-->
+    <el-drawer
+      :visible.sync="drawer"
+      :before-close="handleClose"
+      size="80%">
+    <div id="div02">
       <el-form  size="small" :inline="true" v-model="scellform">
         <el-row>
           <el-col :span="21"><h3>安全库存配置单</h3></el-col>
           <el-col :span="3">
-            <el-button @click="showHidden"  style="background-color: pink;">返回</el-button>
+            <el-button  @click="handleClose"  size="mini" round type="primary" icon="el-icon-check">返回</el-button>
           </el-col>
         </el-row>
         <el-row>
@@ -218,7 +213,7 @@
         </el-row>
       </el-form>
     </div >
-
+    </el-drawer>
   </div>
 </template>
 
@@ -270,7 +265,9 @@
             type:""
           },
           ass:"",
-          css:""
+          css:"",
+          drawer: false,
+          innerDrawer: false
         }
       },
       methods: {
@@ -284,6 +281,15 @@
             _this.total = response.data.total;
             console.log()
           }).catch();
+        },
+        handleClose(done) {
+          this.$confirm('确认关闭？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {
+              this.drawer=false;
+            });
         },
         handleSizeChange(val) {  //页size变更
           this.pagesize = val;
@@ -340,6 +346,7 @@
             _this.css=_this.scellform.firstKindId+"-"+_this.scellform.secondKindId+"-"+_this.scellform.thirdKindId;
             _this.openeditwin2(productId);
             _this.addDate(_this.scellform);
+            _this.drawer=true;
             console.log()
           }).catch();
         },

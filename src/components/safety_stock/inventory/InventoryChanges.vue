@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--制作安全库配置单1复核-->
-    <div id="div01"  v-show="show">
+    <div id="div01">
       <el-table
         :data="tableData"
         height="250"
@@ -47,13 +47,18 @@
           label="变更"
           width="100">
           <template slot-scope="scope">
-            <el-button type="text" @click="openeditwin(scope.row.productId)">变更</el-button>
+            <el-button size="mini" round type="primary" icon="el-icon-check" @click="openeditwin(scope.row.productId)">变更</el-button>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <!--制作安全库配置单2复核-->
-    <div id="div02" v-show="hidden">
+    <!--    抽屉样式-->
+    <el-drawer
+      :visible.sync="drawer"
+      :before-close="handleClose"
+      size="80%">
+    <div id="div02">
         <el-form  size="small" :inline="true" v-model="scellform">
           <el-row>
             <el-col :span="1">
@@ -61,12 +66,12 @@
                 title="确定提交吗？"
                 @confirm="addSCll"
               >
-                <el-button slot="reference" style="background-color: pink;">复核</el-button>
+                <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">复核</el-button>
               </el-popconfirm>
             </el-col>
             <el-col :span="20"><h3>安全库存配置单</h3></el-col>
             <el-col :span="3">
-              <el-button  @click="showHidden" style="background-color: pink;">返回</el-button>
+              <el-button  @click="handleClose" size="mini" round type="primary" icon="el-icon-check">返回</el-button>
             </el-col>
           </el-row>
           <el-row>
@@ -220,6 +225,7 @@
           </el-row>
         </el-form>
     </div>
+    </el-drawer>
     </div>
 </template>
 
@@ -271,18 +277,11 @@
           ass:"",
           css:"",
           drawer: false,
-          direction: 'rtl',
-          show:true
+          show:true,
+          innerDrawer: false
         }
       },
       methods: {
-        handleClose(done) {
-          this.$confirm('确认关闭？')
-            .then(_ => {
-              done();
-            })
-            .catch(_ => {});
-        },
         getdata() {   //制作安全库配置单1获取数据
           var _this = this;
           var params = new URLSearchParams();
@@ -335,6 +334,9 @@
           var date1 =Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
           this.scellform.checkTime = date1;
         },
+        getStr(point) {
+          return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
+        },
         openeditwin(productId){//获取数据
           var _this=this;
           this.showHidden();
@@ -346,8 +348,18 @@
             _this.css=_this.scellform.firstKindId+"-"+_this.scellform.secondKindId+"-"+_this.scellform.thirdKindId;
             _this.openeditwin2(productId);
             _this.addDate(_this.scellform);
+            _this.drawer = true;
             console.log()
           }).catch();
+        },
+        handleClose(done) {
+          this.$confirm('还有未保存的工作哦确定关闭吗？')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {
+              this.drawer=false;
+            });
         },
         openeditwin2(productId){//获取数据
           var _this=this;

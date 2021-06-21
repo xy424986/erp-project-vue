@@ -102,6 +102,11 @@
   import InventoryQuery from "./components/safety_stock/inventory/InventoryQuery";
   import InventoryChanges from "./components/safety_stock/inventory/InventoryChanges";
   import Storage from "./components/safety_stock/warehouse_management/Storage";
+  import chouti from "./components/safety_stock/warehouse_management/chouti";
+  import OutboundScheduling from "./components/safety_stock/warehouse_management/OutboundScheduling";
+  import WarehousingRegistration from "./components/safety_stock/put_in_storage/WarehousingRegistration";
+  import WarehouseQueries from "./components/safety_stock/put_in_storage/WarehouseQueries";
+
   export default {
     name: 'app',
     data() {
@@ -180,7 +185,11 @@
       SafetyStockReview,
       InventoryQuery,
       InventoryChanges,
-      Storage
+      Storage,
+      chouti,
+      OutboundScheduling,
+      WarehousingRegistration,
+      WarehouseQueries
     },
     // 钩子调用函数
     created() {
