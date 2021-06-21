@@ -234,7 +234,7 @@
           :before-close="handleClose"
           :visible.sync="innerDrawer"
           size="80%">
-<!--                    子内容-->
+          <!--                    子内容-->
           <div class="content">
             <el-form size="small" :inline="true" v-model="procedureForm">
               <hr>
@@ -406,192 +406,192 @@
 </template>
 
 <script>
-  export default {
-    //定制产品生产工序设计单
-    name: "Design_of_single",
-    data() {
-      return {
-        //定制产品生产工序设计单id
-        dFileId: 0,
-        //工序制作单表单绑定
-        processData: [],
-        procedureForm: {
-          manHour: '',//工时数
-          manHourUnit: '',//工时单位
-          costPrice: '',//单位工时成本
-          subtotal: '',//工时成本小计
-          designRequirements: '',//设计要求
-          registrant: '何海云',//登记人
-          registrationTime: '',//登记时间
-          productName: '',//产品名称
-          productId: '',//产品编号
+    export default {
+      //定制工序物料设计单
+        name: "Customize_process_material_design_list",
+      data() {
+        return {
+          //定制产品生产工序设计单id
+          dFileId: 0,
+          //工序制作单表单绑定
+          processData: [],
+          procedureForm: {
+            manHour: '',//工时数
+            manHourUnit: '',//工时单位
+            costPrice: '',//单位工时成本
+            subtotal: '',//工时成本小计
+            designRequirements: '',//设计要求
+            registrant: '何海云',//登记人
+            registrationTime: '',//登记时间
+            productName: '',//产品名称
+            productId: '',//产品编号
+            procedureName: '',//工序名称
+            procedureId: '',//工序编号
+            procedureDescribe: '',//工序描述
+          },
+          //设计单表格数据绑定
+          designer: '',//设计人
           procedureName: '',//工序名称
           procedureId: '',//工序编号
           procedureDescribe: '',//工序描述
-        },
-        //设计单表格数据绑定
-        designer: '',//设计人
-        procedureName: '',//工序名称
-        procedureId: '',//工序编号
-        procedureDescribe: '',//工序描述
-        //点开设计单赋值绑定
-        productName: '',//产品名称
-        productId: '',//产品编号
-        registrationTime: '',//登记时间
-        // Dialog-Table
-        //工序选择数据
-        manufactureConfigProcedureListData: [],
-        dialogTableVisible: false,
-        //抽屉绑定
-        drawer: false,
-        innerDrawer: false,
-        // 表格绑定
-        tableData: [],
-        search: '',
-        //分页绑定
-        pageNumber: 1,//页码
-        pageSize: 10,//数据条数
-        total: 0,//总数据条数
-      }
-    },
-    methods: {
-      //添加工序
-      addProcess(index, ids) {
-        if (this.processData.length > 0) {
-          var obj = this.processData.find(item => {
-            return item.id == ids;
-          });
-          if (obj == null) {
-            this.processData.push(this.manufactureConfigProcedureListData[index]);
-          }
-        } else {
-          this.processData.push(this.manufactureConfigProcedureListData[index]);
+          //点开设计单赋值绑定
+          productName: '',//产品名称
+          productId: '',//产品编号
+          registrationTime: '',//登记时间
+          // Dialog-Table
+          //工序选择数据
+          manufactureConfigProcedureListData: [],
+          dialogTableVisible: false,
+          //抽屉绑定
+          drawer: false,
+          innerDrawer: false,
+          // 表格绑定
+          tableData: [],
+          search: '',
+          //分页绑定
+          pageNumber: 1,//页码
+          pageSize: 10,//数据条数
+          total: 0,//总数据条数
         }
       },
-      //显示添加工序可选数据
-      getMDesignProcedureDetailsData() {
-        this.dialogTableVisible = true;
-        this.$axios.get("/ManufactureConfigProcedureList/queryAll.action").then(response => {
-          this.manufactureConfigProcedureListData = response.data;
-        }).catch();
-      },
-      //提交工序设计单
-      submit() {
-        var arr = this.processData;
-        let newArr = [];
-        arr.map((item, index)=>{
-          newArr.push(
-            Object.assign({}, item, {
-              "productName":this.productName,
-              "productId":this.productId,
-              "designer":this.procedureForm.designer,
-              "procedureName":item.typeName,
-              "procedureId":item.typeId,
-              "procedureDescribe":item.describe1,
-              "labourHourAmount":this.procedureForm.manHour,
-              "amountUnit":this.procedureForm.manHourUnit,
-              "costPrice":this.procedureForm.costPrice,
-              "register":this.procedureForm.registrant,
-              "procedureDescribe1":this.procedureForm.designRequirements,
-              "dFileId":this.dFileId
-              }
+      methods: {
+        //添加工序
+        addProcess(index, ids) {
+          if (this.processData.length > 0) {
+            var obj = this.processData.find(item => {
+              return item.id == ids;
+            });
+            if (obj == null) {
+              this.processData.push(this.manufactureConfigProcedureListData[index]);
+            }
+          } else {
+            this.processData.push(this.manufactureConfigProcedureListData[index]);
+          }
+        },
+        //显示添加工序可选数据
+        getMDesignProcedureDetailsData() {
+          this.dialogTableVisible = true;
+          this.$axios.get("/ManufactureConfigProcedureList/queryAll.action").then(response => {
+            this.manufactureConfigProcedureListData = response.data;
+          }).catch();
+        },
+        //提交工序设计单
+        submit() {
+          var arr = this.processData;
+          let newArr = [];
+          arr.map((item, index)=>{
+            newArr.push(
+              Object.assign({}, item, {
+                  "productName":this.productName,
+                  "productId":this.productId,
+                  "designer":this.procedureForm.designer,
+                  "procedureName":item.typeName,
+                  "procedureId":item.typeId,
+                  "procedureDescribe":item.describe1,
+                  "labourHourAmount":this.procedureForm.manHour,
+                  "amountUnit":this.procedureForm.manHourUnit,
+                  "costPrice":this.procedureForm.costPrice,
+                  "register":this.procedureForm.registrant,
+                  "procedureDescribe1":this.procedureForm.designRequirements,
+                  "dFileId":this.dFileId
+                }
+              )
             )
-          )
-        });
+          });
 
-        this.$confirm('此操作将永久提交该文件, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$axios.post("/mDesignProcedure/insert.action", JSON.stringify(newArr),
-            {headers:{"Content-Type":"application/json"}}).then(response => {
-            // this.addDate();
+          this.$confirm('此操作将永久提交该文件, 是否继续?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.$axios.post("/mDesignProcedure/insert.action", JSON.stringify(newArr),
+              {headers:{"Content-Type":"application/json"}}).then(response => {
+              // this.addDate();
+              this.$message({
+                type: 'success',
+                message: response.data
+              });
+              console.log(JSON.stringify(newArr))
+            }).catch();
             this.$message({
               type: 'success',
-              message: response.data
+              message: '已提交!'
             });
-            console.log(JSON.stringify(newArr))
-          }).catch();
-          this.$message({
-            type: 'success',
-            message: '已提交!'
-          });
-          this.innerDrawer = false;
-          this.drawer = false;
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
-      },
-
-      addSCll() {
-      },
-      //抽屉内容
-      //设置表头的颜色
-      rowClass({row, rowIndex}) {
-        console.log(rowIndex) //表头行标号为0
-        return 'background:red'
-      },
-      //打开抽屉
-      drawerOpen(a, b) {
-        this.drawer = true;
-        this.productName = b.productName;
-        this.productId = b.productId;
-        this.dFileId = b.id;
-      },
-      //抽屉关闭方法
-      handleClose(done) {
-        this.$confirm('您可能会丢失未提交的数据哦！')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {
+            this.innerDrawer = false;
             this.drawer = false;
+          }).catch(() => {
+            this.$message({
+              type: 'info',
+              message: '已取消'
+            });
           });
+        },
+
+        addSCll() {
+        },
+        //抽屉内容
+        //设置表头的颜色
+        rowClass({row, rowIndex}) {
+          console.log(rowIndex) //表头行标号为0
+          return 'background:red'
+        },
+        //打开抽屉
+        drawerOpen(a, b) {
+          this.drawer = true;
+          this.productName = b.productName;
+          this.productId = b.productId;
+          this.dFileId = b.id;
+        },
+        //抽屉关闭方法
+        handleClose(done) {
+          this.$confirm('您可能会丢失未提交的数据哦！')
+            .then(_ => {
+              done();
+            })
+            .catch(_ => {
+              this.drawer = false;
+            });
+        },
+        //分页函数
+        handleSizeChange(val) {
+          console.log(`每页 ${val} 条`);
+        },
+        handleCurrentChange(val) {
+          console.log(`当前页: ${val}`);
+        },
+        //获取当前年月日
+        addDate() {
+          let date = new Date();
+          let Y = date.getFullYear();
+          let M = this.getStr(date.getMonth() + 1);
+          let D = this.getStr(date.getDate());
+          let hours = date.getHours();
+          let minutes = this.getStr(date.getMinutes());
+          let seconds = this.getStr(date.getSeconds());
+          var date1 = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
+          this.registrationTime = date1;
+        },
+        getStr(point) {
+          return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
+        },
+        //获取定制产品数据
+        getData() {
+          var params = new URLSearchParams();
+          params.append("pageNumber", this.pageNumber);
+          params.append("pageSize", this.pageSize);
+          params.append("designProcedureTag", "G001-0");
+          this.$axios.post("/DFile/queryByState.action", params).then(response => {
+            this.tableData = response.data.records;
+            this.total = response.data.total;
+            this.addDate();
+          }).catch();
+        }
       },
-      //分页函数
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
-      //获取当前年月日
-      addDate() {
-        let date = new Date();
-        let Y = date.getFullYear();
-        let M = this.getStr(date.getMonth() + 1);
-        let D = this.getStr(date.getDate());
-        let hours = date.getHours();
-        let minutes = this.getStr(date.getMinutes());
-        let seconds = this.getStr(date.getSeconds());
-        var date1 = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
-        this.registrationTime = date1;
-      },
-      getStr(point) {
-        return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
-      },
-      //获取定制产品数据
-      getData() {
-        var params = new URLSearchParams();
-        params.append("pageNumber", this.pageNumber);
-        params.append("pageSize", this.pageSize);
-        params.append("designProcedureTag", "G001-0");
-        this.$axios.post("/DFile/queryByState.action", params).then(response => {
-          this.tableData = response.data.records;
-          this.total = response.data.total;
-          this.addDate();
-        }).catch();
+      //钩子调用函数
+      created() {
+        this.getData();
       }
-    },
-    //钩子调用函数
-    created() {
-      this.getData();
     }
-  }
 </script>
 
 <style scoped>

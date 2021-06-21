@@ -3,7 +3,8 @@ import App from './App.vue'
 
 import 'element-ui/lib/theme-chalk/index.css'
 import EelementUi from "element-ui"
-
+import VueRouter from './config/router'
+import App2 from "./App2";
 Vue.use(EelementUi)
 
 import Axios from 'axios'
@@ -15,6 +16,7 @@ Vue.prototype.$axios = Axios;
 
 new Vue({
   el: '#app',
-  render: h => h(App)
+  render: h => h(App2),
+  router:VueRouter
 })
 
