@@ -105,6 +105,8 @@
   import OutboundScheduling from "./components/safety_stock/warehouse_management/OutboundScheduling";
   import WarehousingRegistration from "./components/safety_stock/put_in_storage/WarehousingRegistration";
   import WarehouseQueries from "./components/safety_stock/put_in_storage/WarehouseQueries";
+  import WarehouseCheck from "./components/safety_stock/put_in_storage/WarehouseCheck";
+
 
   export default {
     name: 'app',
@@ -188,7 +190,8 @@
       chouti,
       OutboundScheduling,
       WarehousingRegistration,
-      WarehouseQueries
+      WarehouseQueries,
+      WarehouseCheck
     },
     // 钩子调用函数
     created() {
