@@ -119,7 +119,11 @@
   import WarehousingRegistration from "./components/safety_stock/put_in_storage/WarehousingRegistration";
   import WarehouseQueries from "./components/safety_stock/put_in_storage/WarehouseQueries";
   import WarehouseCheck from "./components/safety_stock/put_in_storage/WarehouseCheck";
-
+  import OutboundReview from "./components/safety_stock/outbound_management/OutboundReview";
+  import OutboundQuery from "./components/safety_stock/outbound_management/OutboundQuery";
+  import OutboundRegistration from "./components/safety_stock/outbound_management/OutboundRegistration";
+  import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
+  import ProductionQuery from "./components/safety_stock/ProductionQuery";
 
   export default {
     name: 'app',
@@ -203,7 +207,6 @@
       chouti,
       OutboundScheduling,
       WarehousingRegistration,
-      WarehouseQueries,
       Product_file_query,
       Product_file_delete,
       Product_file_change,
@@ -212,9 +215,14 @@
       Make_material_composition_design_sheet,
       Review_of_material_composition_design_sheet,
       Material_composition_design_sheet_query,
-      Change_of_material_composition_design_order
+      Change_of_material_composition_design_order,
       WarehouseQueries,
-      WarehouseCheck
+      WarehouseCheck,
+      OutboundQuery,
+      OutboundReview,
+      OutboundRegistration,
+      WorkOrderInquiry,
+      ProductionQuery
     },
     // 钩子调用函数
     created() {
