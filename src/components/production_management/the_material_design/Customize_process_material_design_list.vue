@@ -3,8 +3,12 @@
     <!--  表格-->
     <template>
       <el-table
-        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+        :data="tableData"
         style="width: 100%">
+        <el-table-column
+          label="工序设计单编号"
+          prop="designId">
+        </el-table-column>
         <el-table-column
           label="产品编号"
           prop="productId">
@@ -14,33 +18,20 @@
           prop="productName">
         </el-table-column>
         <el-table-column
-          label="档次级别"
-          prop="productClass">
+          label="设计人"
+          prop="designer">
         </el-table-column>
         <el-table-column
-          label="I级分类"
-          prop="firstKindName">
+          label="登记时间"
+          prop="registerTime">
         </el-table-column>
         <el-table-column
-          label="II级分类"
-          prop="secondKindName">
+          label="工时总成本"
+          prop="costPriceSum">
         </el-table-column>
         <el-table-column
-          label="III级分类"
-          prop="thirdKindName">
-        </el-table-column>
-        <el-table-column
-          label="产品经理"
-          prop="responsiblePerson">
-        </el-table-column>
-        <el-table-column
-          align="right">
-          <template slot="header" slot-scope="scope">
-            <el-input
-              v-model="search"
-              size="mini"
-              placeholder="输入关键字搜索"/>
-          </template>
+          label="操作"
+          align="center">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -69,53 +60,60 @@
 
     <!--    抽屉样式-->
     <el-drawer
-      title="产品生产工序设计单"
+      title="定制工序物料设计单"
       :visible.sync="drawer"
       size="80%">
       <!--      内容-->
       <div class="content">
-        <el-form size="small" :inline="true" v-model="procedureForm">
+        <el-form size="small" :inline="true">
           <el-row>
-            <el-col :span="3">
-              <el-button size="mini" round type="success" icon="el-icon-circle-plus-outline"
-                         @click="getMDesignProcedureDetailsData()">添加工序
+<!--            <el-col :span="2" :offset="18">-->
+<!--              <el-button size="mini" round type="warning" icon="el-icon-close" @click="innerDrawer = false">驳回-->
+<!--              </el-button>-->
+<!--            </el-col>-->
+            <el-col :span="2" :offset="18">
+              <el-button size="mini" round type="success" icon="el-icon-check" @click="submit1">提交
               </el-button>
             </el-col>
-            <el-col :span="2">
-              <el-button size="mini" round type="success" icon="el-icon-delete" @click="">删除工序
+            <el-col :span="4">
+              <el-button size="mini" round type="info" icon="el-icon-close" @click="drawer = false">返回
               </el-button>
             </el-col>
           </el-row>
           <hr>
           <el-row>
-            <el-col :span="4">
-              <div></div>
-            </el-col>
             <el-col :span="7" :offset="3">
-              <div><!--产品名称：笔记本-->
-                <el-form-item label="产品名称:">
-                  <el-input type="text" v-model="productName" readonly="readonly"/>
+              <div>
+                <el-form-item label="工序单编号:">
+                  <el-input type="text" v-model="designId" readonly="readonly"/>
                 </el-form-item>
               </div>
             </el-col>
-            <el-col :span="7" :offset="2">
-              <div><!--产品编号：1000000-->
-                <el-form-item label="产品编号:">
-                  <el-input type="text" v-model="productId" readonly="readonly"/>
-                </el-form-item>
-              </div>
+            <el-col :span="8" :offset="2">
+              <el-form-item label="设计人:">
+                <!--                <div class="inline div02_01">-->
+                <el-input type="text" v-model="designer" readonly :clearable="true"/>
+                <!--                </div>-->
+              </el-form-item>
             </el-col>
             <el-col :span="6">
               <div></div>
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="10" :offset="2">
-              <el-form-item label="设计人:">
-                <div class="inline div02_01">
-                  <el-input type="text" v-model="procedureForm.designer" :clearable="true"/>
-                </div>
+            <el-col :span="9" :offset="2">
+              <el-form-item label="产品名称:">
+                <!--                <div class="inline div02_01">-->
+                <el-input type="text" v-model="productName" readonly :clearable="true"/>
+                <!--                </div>-->
               </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <div><!--产品编号：1000000-->
+                <el-form-item label="产品编号:">
+                  <el-input type="text" v-model="productId" readonly="readonly"/>
+                </el-form-item>
+              </div>
             </el-col>
           </el-row>
           <!--设计单表格-->
@@ -126,56 +124,139 @@
             <el-col :span="20" :offset="2">
               <div>
                 <el-table
-                  :data="processData"
+                  :data="mDPDData"
                   border
                   height="244"
                   style="width: 100%"
                   :header-cell-style="{background:'#eef1f6',color:'#606266'}">
                   <el-table-column
                     width="50"
-                    prop="id"
-                    label="选中">
+                    label="序号">
+<!--                    <template slot-scope="scope">-->
+<!--                      1-->
+<!--                    </template>-->
                   </el-table-column>
                   <el-table-column
                     width="100"
                     label="工序名称"
-                    prop="typeName">
+                    prop="procedureName">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     label="工序编号"
-                    prop="typeId">
+                    prop="procedureId">
                   </el-table-column>
                   <el-table-column
                     label="描述"
-                    prop="describe1">
-                  </el-table-column>
-                  <el-table-column
-                    width="100"
-                    label="工时数">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.manHour" style="height: 10px"></el-input>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    width="100"
-                    label="工时单位">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.manHourUnit"></el-input>
-                    </template>
+                    prop="procedureDescribe">
                   </el-table-column>
                   <el-table-column
                     width="120"
-                    label="单位工时成本">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.costPrice"></el-input>
-                    </template>
+                    label="工时数（小时）"
+                    prop="labourHourAmount">
                   </el-table-column>
                   <el-table-column
                     width="150"
-                    label="工时成本小计（元）">
+                    label="工时成本小计（元）"
+                    prop="subtotal">
+                  </el-table-column>
+                  <el-table-column
+                    width="120"
+                    label="物料成本小计"
+                  prop="moduleSubtotal">
+<!--                      <template slot-scope="scope">-->
+<!--                      <span>{{scope.row.moduleSubtotal}}</span>-->
+<!--                    </template>-->
+                  </el-table-column>
+                  <el-table-column
+                    align="center"
+                    label="设计">
                     <template slot-scope="scope">
-                      <el-input v-model="procedureForm.subtotal" readonly></el-input>
+                      <!--    定制工序物料设计单物料设计表格-->
+                      <el-popover
+                        placement="right"
+                        width="700"
+                        trigger="click"
+                        v-model="scope.row.visible">
+                        <div class="content1">
+                          <el-form size="small" :inline="true">
+                            <el-row>
+                              <el-col :span="4">
+                                <div>
+                                  <el-form-item label="工序单编号:">
+                                    <el-input type="text" v-model="designId" readonly="readonly"/>
+                                  </el-form-item>
+                                </div>
+                              </el-col>
+                              <el-col :span="4" :offset="2">
+                                <el-form-item label="工序名称:">
+                                  <!--                <div class="inline div02_01">-->
+                                  <el-input type="text" v-model="procedureName" readonly :clearable="true"/>
+                                  <!--                </div>-->
+                                </el-form-item>
+                              </el-col>
+                              <el-col :span="4" :offset="2">
+                                <el-form-item label="登记人:">
+                                  <!--                <div class="inline div02_01">-->
+                                  <el-input type="text" v-model="register" readonly :clearable="true"/>
+                                  <!--                </div>-->
+                                </el-form-item>
+                              </el-col>
+                              <el-col :span="6" :offset="2">
+                                <div><!--产品编号：1000000-->
+                                  <el-form-item label="登记时间:">
+                                    <el-input type="text" v-model="registrationTime1" readonly="readonly"/>
+                                  </el-form-item>
+                                </div>
+                              </el-col>
+                            </el-row>
+                          </el-form>
+                        </div>
+                        <el-table :data="dMDData">
+                          <el-table-column width="50" property="date" label="序号"></el-table-column>
+                          <el-table-column width="90" property="productName" label="物料名称"></el-table-column>
+                          <el-table-column width="90" property="productId" label="物料编号"></el-table-column>
+                          <el-table-column width="50" property="productDescribe" label="描述"></el-table-column>
+                          <el-table-column width="90" label="设计数量">
+                            <template slot-scope="scope">
+                              <span v-text="scope.row.NumberOfProcesses"></span>
+                            </template>
+                          </el-table-column>
+                          <el-table-column width="90" property="residualAmount" label="可用数量"></el-table-column>
+                          <el-table-column width="50" property="amountUnit" label="单位"></el-table-column>
+                          <el-table-column width="90" property="costPrice" label="单价（元）"></el-table-column>
+                          <el-table-column width="100" label="本工序数量">
+                            <template slot-scope="scope">
+                              <el-input v-model="scope.row.NumberOfProcesses"></el-input>
+                            </template>
+                          </el-table-column>
+                        </el-table>
+                        <br>
+                        <el-button
+                          size="mini"
+                          round
+                          type="primary"
+                          style="margin-left: 460px"
+                          @click="submit">提 交
+                        </el-button>
+                        <el-button
+                          size="mini"
+                          round
+                          type="info"
+                          style="margin-left: 36px"
+                          @click="scope.row.visible = false">取 消
+                        </el-button>
+                          <el-button
+                            size="mini"
+                            round
+                            type="primary"
+                            slot="reference"
+                            @click="popoverOpen(scope)">{{dZButton}}
+                          </el-button>
+
+                      </el-popover>
+                      <!--    定制工序物料设计单物料设计表格-->
+
                     </template>
                   </el-table-column>
                 </el-table>
@@ -187,414 +268,308 @@
           </el-row>
           <!--/-设计单表格-->
           <el-row>
-            <el-col :span="13" :push="1">
-              <el-form-item label="登记人:">
-                <div class="inline div02_01">
-                  <el-input type="text" v-model="procedureForm.registrant" readonly="readonly"/>
-                </div>
+            <el-col :span="7" :offset="3">
+              <div><!--产品名称：笔记本-->
+                <el-form-item label="工时总成本:">
+                  <el-input type="text" v-model="costPriceSum" readonly="readonly"/>
+                </el-form-item>
+              </div>
+            </el-col>
+            <el-col :span="7" :offset="3">
+              <div><!--产品名称：笔记本-->
+                <el-form-item label="物料总成本:">
+                  <el-input type="text" v-model="moduleCostPriceSum" readonly="readonly"/>
+                </el-form-item>
+              </div>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11" :push="1">
+
+              <el-form-item label="设计要求:">
+                <el-input type="text" v-model="procedureDescribe" readonly="readonly"/>
+              </el-form-item>
+
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="11" :push="1">
+              <el-form-item label="审核人:">
+                <!--                <div class="inline div02_01">-->
+                <el-input type="text" v-model="registrant" readonly="readonly"/>
+                <!--                </div>-->
               </el-form-item>
             </el-col>
-            <el-col :span="9" :pull="2">
+            <el-col :span="12" :pull="2">
               <!--<div class="inline">登记时间：</div>-->
-              <el-form-item label="登记时间:">
+              <el-form-item label="审核时间:">
                 <div class="inline">
                   <el-input type="text" v-model="registrationTime" readonly="readonly"/>
                 </div>
               </el-form-item>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="24" :offset="2">
-              <div class="aa">
-                <el-form-item label="设计要求:" style="width: 80%; display: block;">
-                  <el-input type="textarea" :rows="4" resize="none" placeholder="请输入内容" style="width: 100%"
-                            v-model="procedureForm.designRequirements">
-                  </el-input>
-                </el-form-item>
-              </div>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="14">
-              <el-button size="mini" round type="primary" icon="el-icon-zoom-in" @click="innerDrawer = true">预览
-              </el-button>
-            </el-col>
-            <el-col :span="6">
-              <el-button size="mini" round type="info" icon="el-icon-close" @click="handleClose">取消</el-button>
-            </el-col>
-          </el-row>
         </el-form>
       </div>
       <!--      /内容-->
-      <div>
-        <!--        <el-button @click="innerDrawer = true">打开里面的!</el-button>-->
-        <el-drawer
-          title="产品生产工序设计单预览"
-          :append-to-body="true"
-          :before-close="handleClose"
-          :visible.sync="innerDrawer"
-          size="80%">
-          <!--                    子内容-->
-          <div class="content">
-            <el-form size="small" :inline="true" v-model="procedureForm">
-              <hr>
-              <el-row>
-                <el-col :span="4">
-                  <div></div>
-                </el-col>
-                <el-col :span="7" :offset="3">
-                  <div><!--产品名称：笔记本-->
-                    <el-form-item label="产品名称:">
-                      <el-input type="text" v-model="productName" readonly="readonly"/>
-                    </el-form-item>
-                  </div>
-                </el-col>
-                <el-col :span="7" :offset="2">
-                  <div><!--产品编号：1000000-->
-                    <el-form-item label="产品编号:">
-                      <el-input type="text" v-model="productId" readonly="readonly"/>
-                    </el-form-item>
-                  </div>
-                </el-col>
-                <el-col :span="6">
-                  <div></div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="10" :offset="2">
-                  <el-form-item label="设计人:">
-                    <div class="inline div02_01">
-                      <el-input type="text" v-model="procedureForm.designer" readonly :clearable="true"/>
-                    </div>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-              <!--设计单表格-->
-              <el-row>
-                <el-col :span="2">
-                  <div></div>
-                </el-col>
-                <el-col :span="20" :offset="2">
-                  <div>
-                    <el-table
-                      :data="processData"
-                      border
-                      height="244"
-                      style="width: 100%"
-                      :header-cell-style="{background:'#eef1f6',color:'#606266'}">
-                      <el-table-column
-                        width="50"
-                        prop="id"
-                        label="选中">
-                      </el-table-column>
-                      <el-table-column
-                        width="100"
-                        label="工序名称"
-                        prop="typeName">
-                      </el-table-column>
-                      <el-table-column
-                        width="100"
-                        label="工序编号"
-                        prop="typeId">
-                        <!--                    <el-input v-model="" readonly="readonly"></el-input>-->
-                      </el-table-column>
-                      <el-table-column
-                        label="描述"
-                        prop="describe1">
-                        <!--                    <el-input v-model="describe1" readonly="readonly"></el-input>-->
-                      </el-table-column>
-                      <el-table-column
-                        width="100"
-                        label="工时数">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.manHour" readonly></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        width="100"
-                        label="工时单位">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.manHourUnit" readonly></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        width="120"
-                        label="单位工时成本">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.costPrice" readonly></el-input>
-                        </template>
-                      </el-table-column>
-                      <el-table-column
-                        width="150"
-                        label="工时成本小计（元）">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.subtotal" readonly></el-input>
-                        </template>
-                      </el-table-column>
-                    </el-table>
-                  </div>
-                </el-col>
-                <el-col :span="2">
-                  <div></div>
-                </el-col>
-              </el-row>
-              <!--/-设计单表格-->
-              <el-row>
-                <el-col :span="13" :push="1">
-                  <el-form-item label="登记人:">
-                    <div class="inline div02_01">
-                      <el-input type="text" v-model="procedureForm.registrant" readonly="readonly"/>
-                    </div>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="9" :pull="2">
-                  <!--<div class="inline">登记时间：</div>-->
-                  <el-form-item label="登记时间:">
-                    <div class="inline">
-                      <el-input type="text" v-model="registrationTime" readonly="readonly"/>
-                    </div>
-                  </el-form-item>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="24" :offset="2">
-                  <div class="aa">
-                    <el-form-item label="设计要求:" style="width: 80%; display: block;">
-                      <el-input type="textarea" :rows="4" resize="none" placeholder="请输入内容" style="width: 100%"
-                                v-model="procedureForm.designRequirements" readonly>
-                      </el-input>
-                    </el-form-item>
-                  </div>
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="14">
-                  <el-button size="mini" round type="primary" icon="el-icon-check" @click="submit">提交
-                  </el-button>
-                </el-col>
-                <el-col :span="6">
-                  <el-button size="mini" round type="info" icon="el-icon-close" @click="innerDrawer = false">取消
-                  </el-button>
-                </el-col>
-              </el-row>
-            </el-form>
-          </div>
-        </el-drawer>
-      </div>
     </el-drawer>
     <!--    /抽屉样式-->
 
-    <!-- 添加工序Dialog-Table -->
-    <el-dialog title="添加工序" :visible.sync="dialogTableVisible">
-      <el-table :data="manufactureConfigProcedureListData">
-        <el-table-column property="typeId" label="工序编号" width="150"></el-table-column>
-        <el-table-column property="typeName" label="工序名称" width="200"></el-table-column>
-        <el-table-column property="describe1" label="工序描述"></el-table-column>
-
-        <el-table-column label="操作">
-          <template slot-scope="scope">
-            <el-button size="mini" round type="primary" icon="el-icon-check"
-                       @click="addProcess(scope.$index, scope.row.id)">添加
-            </el-button>
-          </template>
-        </el-table-column>
-
-      </el-table>
-    </el-dialog>
-    <!-- /添加工序Dialog-Table -->
   </div>
 </template>
 
 <script>
-    export default {
-      //定制工序物料设计单
-        name: "Customize_process_material_design_list",
-      data() {
-        return {
-          //定制产品生产工序设计单id
-          dFileId: 0,
-          //工序制作单表单绑定
-          processData: [],
-          procedureForm: {
-            manHour: '',//工时数
-            manHourUnit: '',//工时单位
-            costPrice: '',//单位工时成本
-            subtotal: '',//工时成本小计
-            designRequirements: '',//设计要求
-            registrant: '何海云',//登记人
-            registrationTime: '',//登记时间
-            productName: '',//产品名称
-            productId: '',//产品编号
-            procedureName: '',//工序名称
-            procedureId: '',//工序编号
-            procedureDescribe: '',//工序描述
-          },
-          //设计单表格数据绑定
-          designer: '',//设计人
-          procedureName: '',//工序名称
-          procedureId: '',//工序编号
-          procedureDescribe: '',//工序描述
-          //点开设计单赋值绑定
-          productName: '',//产品名称
-          productId: '',//产品编号
-          registrationTime: '',//登记时间
-          // Dialog-Table
-          //工序选择数据
-          manufactureConfigProcedureListData: [],
-          dialogTableVisible: false,
-          //抽屉绑定
-          drawer: false,
-          innerDrawer: false,
-          // 表格绑定
-          tableData: [],
-          search: '',
-          //分页绑定
-          pageNumber: 1,//页码
-          pageSize: 10,//数据条数
-          total: 0,//总数据条数
-        }
-      },
-      methods: {
-        //添加工序
-        addProcess(index, ids) {
-          if (this.processData.length > 0) {
-            var obj = this.processData.find(item => {
-              return item.id == ids;
-            });
-            if (obj == null) {
-              this.processData.push(this.manufactureConfigProcedureListData[index]);
-            }
-          } else {
-            this.processData.push(this.manufactureConfigProcedureListData[index]);
-          }
-        },
-        //显示添加工序可选数据
-        getMDesignProcedureDetailsData() {
-          this.dialogTableVisible = true;
-          this.$axios.get("/ManufactureConfigProcedureList/queryAll.action").then(response => {
-            this.manufactureConfigProcedureListData = response.data;
-          }).catch();
-        },
-        //提交工序设计单
-        submit() {
-          var arr = this.processData;
-          let newArr = [];
-          arr.map((item, index)=>{
-            newArr.push(
-              Object.assign({}, item, {
-                  "productName":this.productName,
-                  "productId":this.productId,
-                  "designer":this.procedureForm.designer,
-                  "procedureName":item.typeName,
-                  "procedureId":item.typeId,
-                  "procedureDescribe":item.describe1,
-                  "labourHourAmount":this.procedureForm.manHour,
-                  "amountUnit":this.procedureForm.manHourUnit,
-                  "costPrice":this.procedureForm.costPrice,
-                  "register":this.procedureForm.registrant,
-                  "procedureDescribe1":this.procedureForm.designRequirements,
-                  "dFileId":this.dFileId
-                }
-              )
+  export default {
+    //定制工序物料设计单
+    name: "Customize_process_material_design_list",
+    data() {
+      return {
+        //定制按钮绑定
+        dZButton:'定制',
+        //id
+        mDPId: 0,
+        mDPDId: 0,
+        //工序设计表格数据绑定
+        dMDData: [],
+        //工序物料设计表单内表格设计表格本工序数量绑定
+        NumberOfProcesses: 0,
+        //工序物料设计表单内表格设计表格数据绑定
+        mDPMData: [],
+        //工序物料设计表单内表格数据绑定
+        mDPDData: [],
+        //工序制作单表单绑定
+        processData: [],
+        //设计单表格数据绑定
+        moduleSubtotal: 0,
+        //设计单数据绑定
+        designId: '',//工序设计单编号
+        register: '',//登记人
+        registrant: '何海云',//审核人
+        costPriceSum: 0,//工时总成本
+        moduleCostPriceSum: 0,//物料总成本
+        designer: '',//设计人
+        //设计物料数据绑定
+        procedureName: '',//工序名称
+        procedureId: '',//工序编号
+        procedureDescribe: '',//工序描述
+        //点开设计单赋值绑定
+        productName: '',//产品名称
+        productId: '',//产品编号
+        registrationTime: '',//登记时间
+        registrationTime1: '',//登记时间1
+        // Dialog-Table
+        //工序选择数据
+        manufactureConfigProcedureListData: [],
+        dialogTableVisible: false,
+        //抽屉绑定
+        drawer: false,
+        innerDrawer: false,
+        // 表格绑定
+        tableData: [],
+        search: '',
+        //分页绑定
+        pageNumber: 1,//页码
+        pageSize: 10,//数据条数
+        total: 0,//总数据条数
+      }
+    },
+    methods: {
+      //工序物料设计提交
+      submit1() {
+        var arr = this.mDPDData;
+        let newArr = [];
+        arr.map((item, index) => {
+          newArr.push(
+            Object.assign({}, item, {
+              "moduleSubtotal": item.moduleSubtotal,//物料成本小计
+                "mDPId": this.mDPId,//id
+              }
             )
-          });
+          )
+        });
 
-          this.$confirm('此操作将永久提交该文件, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$axios.post("/mDesignProcedure/insert.action", JSON.stringify(newArr),
-              {headers:{"Content-Type":"application/json"}}).then(response => {
-              // this.addDate();
-              this.$message({
-                type: 'success',
-                message: response.data
-              });
-              console.log(JSON.stringify(newArr))
-            }).catch();
+        this.$confirm('此操作将提交该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post("/mDesignProcedure/insert1.action", JSON.stringify(newArr),
+            {headers: {"Content-Type": "application/json"}}).then(response => {
             this.$message({
               type: 'success',
-              message: '已提交!'
+              message: response.data
             });
-            this.innerDrawer = false;
-            this.drawer = false;
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            });
-          });
-        },
-
-        addSCll() {
-        },
-        //抽屉内容
-        //设置表头的颜色
-        rowClass({row, rowIndex}) {
-          console.log(rowIndex) //表头行标号为0
-          return 'background:red'
-        },
-        //打开抽屉
-        drawerOpen(a, b) {
-          this.drawer = true;
-          this.productName = b.productName;
-          this.productId = b.productId;
-          this.dFileId = b.id;
-        },
-        //抽屉关闭方法
-        handleClose(done) {
-          this.$confirm('您可能会丢失未提交的数据哦！')
-            .then(_ => {
-              done();
-            })
-            .catch(_ => {
-              this.drawer = false;
-            });
-        },
-        //分页函数
-        handleSizeChange(val) {
-          console.log(`每页 ${val} 条`);
-        },
-        handleCurrentChange(val) {
-          console.log(`当前页: ${val}`);
-        },
-        //获取当前年月日
-        addDate() {
-          let date = new Date();
-          let Y = date.getFullYear();
-          let M = this.getStr(date.getMonth() + 1);
-          let D = this.getStr(date.getDate());
-          let hours = date.getHours();
-          let minutes = this.getStr(date.getMinutes());
-          let seconds = this.getStr(date.getSeconds());
-          var date1 = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
-          this.registrationTime = date1;
-        },
-        getStr(point) {
-          return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
-        },
-        //获取定制产品数据
-        getData() {
-          var params = new URLSearchParams();
-          params.append("pageNumber", this.pageNumber);
-          params.append("pageSize", this.pageSize);
-          params.append("designProcedureTag", "G001-0");
-          this.$axios.post("/DFile/queryByState.action", params).then(response => {
-            this.tableData = response.data.records;
-            this.total = response.data.total;
-            this.addDate();
+            console.log(JSON.stringify(newArr))
           }).catch();
-        }
+          this.$message({
+            type: 'success',
+            message: '已执行!'
+          });
+          this.drawer = false;
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
       },
-      //钩子调用函数
-      created() {
-        this.getData();
+      //工序物料设计
+      submit() {
+        var arr = this.dMDData;
+        let newArr = [];
+        arr.map((item, index) => {
+          newArr.push(
+            Object.assign({}, item, {
+                "procedureId": this.designId,//工序编号
+                "procedureName": this.procedureName,//工序名称
+                "register": this.register,//登记人
+                "productName": item.productName,//物料名称
+                "productId": item.productId,//物料编号
+                "procedureDescribe": item.productDescribe,//描述
+                "amountUnit": item.amountUnit,//单位
+                "costPrice": item.costPrice,//单价
+                "amount": item.amount,//本工序数量
+                "mDPId": this.mDPId,//id
+                "mDPDId": this.mDPDId,//id
+              }
+            )
+          )
+        });
+
+        this.$confirm('此操作将提交该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post("/dModuleDetails/insert.action", JSON.stringify(newArr),
+            {headers: {"Content-Type": "application/json"}}).then(response => {
+            this.$message({
+              type: 'success',
+              message: response.data
+            });
+            console.log(JSON.stringify(newArr))
+          }).catch();
+          this.$message({
+            type: 'success',
+            message: '已执行!'
+          });
+          // this.innerDrawer = false;
+          // this.drawer = false;
+          this.dZButton = '重新定制';
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+      //抽屉内容
+      //设置表头的颜色
+      rowClass({row, rowIndex}) {
+        console.log(rowIndex) //表头行标号为0
+        return 'background:red'
+      },
+
+      //打开popover
+      popoverOpen(a) {
+        this.procedureName = a.row.procedureName;
+        this.mDPDId = a.row.id;
+
+        var params = new URLSearchParams();
+        params.append("designId", this.designId);
+        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        this.$axios.post("/dModuleDetails/queryByParentId.action", params).then(response => {
+          this.dMDData = response.data;
+        }).catch();
+
+      },
+      //打开抽屉
+      drawerOpen(a, b) {
+        this.drawer = true;
+        this.productName = b.productName;
+        this.productId = b.productId;
+        this.designer = b.designer;
+        this.costPriceSum = b.costPriceSum;
+        this.procedureDescribe = b.procedureDescribe;
+        this.mDPId = b.id;
+        this.register = b.register;
+        this.designId = b.designId;
+
+        var params = new URLSearchParams();
+        params.append("parentId", b.id);
+        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
+          this.mDPDData = response.data;
+        }).catch();
+
+      },
+      //抽屉关闭方法
+      handleClose(done) {
+        this.$confirm('您可能会丢失未提交的数据哦！')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {
+            this.drawer = false;
+          });
+      },
+      //分页函数
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      },
+      //获取当前年月日
+      addDate() {
+        let date = new Date();
+        let Y = date.getFullYear();
+        let M = this.getStr(date.getMonth() + 1);
+        let D = this.getStr(date.getDate());
+        let hours = date.getHours();
+        let minutes = this.getStr(date.getMinutes());
+        let seconds = this.getStr(date.getSeconds());
+        var date1 = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
+        this.registrationTime = date1;
+        this.registrationTime1 = date1;
+      },
+      getStr(point) {
+        return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
+      },
+      //获取定制产品数据
+      getData() {
+        var params = new URLSearchParams();
+        params.append("pageNumber", this.pageNumber);
+        params.append("pageSize", this.pageSize);
+        params.append("designProcedureTag", "G001-0");
+        this.$axios.post("/mDesignProcedure/queryByState.action", params).then(response => {
+          this.tableData = response.data.records;
+          this.total = response.data.total;
+          this.addDate();
+        }).catch();
       }
+    },
+    watch: {
+
+    },
+    //钩子调用函数
+    created() {
+      this.getData();
     }
+  }
 </script>
 
 <style scoped>
+  .content1 {
+    font-weight: bold;
+    text-align: center;
+    color: #2c3e50;
+    /*margin-top: 2px;*/
+    border-radius: 1px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0);
+  }
 
   .content {
     font-weight: bold;

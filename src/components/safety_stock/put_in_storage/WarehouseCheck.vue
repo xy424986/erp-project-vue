@@ -40,10 +40,10 @@
           label="总金额(元)">
         </el-table-column>
         <el-table-column
-          label="入库登记"
+          label="入库复核"
           width="100">
           <template slot-scope="scope">
-            <el-button  size="mini" round type="primary" icon="el-icon-check" @click="openeditwin1(scope.row.gatherId)">登记</el-button>
+            <el-button  size="mini" round type="primary" icon="el-icon-check" @click="openeditwin1(scope.row.gatherId)">复核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -55,15 +55,15 @@
       <div>
         <el-form  size="small" :inline="true" v-model="scellform">
           <el-row>
-              <el-col :span="1">
-                <el-popconfirm
-                  title="确定提交吗？"
-                  @confirm="addSCll"
-                >
-                  <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">登记</el-button>
-                </el-popconfirm>
-              </el-col>
-            <el-col :span="18"><h3>入库单登记</h3></el-col>
+            <el-col :span="1">
+              <el-popconfirm
+                title="确定提交吗？"
+                @confirm="addSCll"
+              >
+                <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">复核</el-button>
+              </el-popconfirm>
+            </el-col>
+            <el-col :span="18"><h3>入库单复核</h3></el-col>
             <el-col :span="3">
               <el-button @click="handleClose"  size="mini" round type="primary" icon="el-icon-check">返回</el-button>
             </el-col>
@@ -126,7 +126,7 @@
                     label="产品名称">
                   </el-table-column>
                   <el-table-column
-                  label="库房名称">
+                    label="库房名称">
                     <span>成品库</span>
                   </el-table-column>
                   <el-table-column
@@ -139,16 +139,16 @@
                     label="应入库件数">
                   </el-table-column>
                   <el-table-column
+                    prop="gatheredAmount"
                     label="已入库件数">
-                    <span>0.0</span>
                   </el-table-column>
                   <el-table-column
-                    prop="gatheredAmount"
                     width="100"
+                    prop="gatheredAmount"
                     label="本次入库数量">
-                    <template slot-scope="scope">
-                      <el-input type="text" v-model="scope.row.gatheredAmount" v-on:input="subtotaledit(scope)"></el-input>
-                    </template>
+                    <!--                    <template slot-scope="scope">
+                                          <el-input type="text" v-model="gatheredAmount"></el-input>
+                                        </template>-->
                   </el-table-column>
                   <el-table-column
                     label="序列号">
@@ -188,12 +188,12 @@
           </el-row>
           <el-row>
             <el-col  :span="10" :push="2">
-              <el-form-item label="登记人:">
+              <el-form-item label="复核人:">
                 <div class="inline div02_01"><el-input type="text" v-model="scellform1.checker" readonly="readonly"/></div>
               </el-form-item>
             </el-col>
             <el-col :span="11" :push="3">
-              <el-form-item label="登记时间:">
+              <el-form-item label="复核时间:">
                 <div class="inline">
                   <el-input type="text" v-model="checkTime1" readonly="readonly"/>
                 </div>
@@ -208,7 +208,7 @@
 
 <script>
     export default {
-        name: "WarehousingRegistration",
+        name: "WarehouseCheck",
       data() {
         return {
           tableData: [],
@@ -250,10 +250,9 @@
           dfileform1: [],
           getgetpayId: "",
           scellformId: "",
-          sum: "0.0",
-          sumMoney: "0.0",
-          checkTime1:"",
-          gatheredAmount:""
+          sum: 0.0,
+          sumMoney: 0.0,
+          checkTime1:""
         }
       },
       methods: {
@@ -305,6 +304,13 @@
           console.log(productId)
           this.$axios.post("SGatherDetails/queryByParentIdSGatherEx.May", params).then(function (response) {
             _this.dfileform1=response.data;
+            for (var i=0;i<_this.dfileform1.length;i++){
+              _this.sum+=parseInt(_this.dfileform1[i].scAmount);
+              _this.sumMoney+=parseInt(_this.dfileform1[i].subtotal);
+              _this.sum=parseInt(_this.sum);
+              _this.sumMoney=parseInt(_this.sumMoney);
+              console.log("queryByParentId"+_this.dfileform1);
+            }
           }).catch();
         },
         //获取当前年月日
@@ -323,28 +329,14 @@
         getStr(point) {
           return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
         },
-        subtotaledit(scope){
-          this.gatheredAmount=scope.row.gatheredAmount;
-        },
         addSCll(){
           var _this=this;
-          let newArr = [];
-          var arr = this.dfileform1;
-          arr.map((item, index)=> {
-            newArr.push(
-              Object.assign({}, item, {
-                  "id": item.id,
-                  "register": _this.scellform1.register,
-                  "gatheredAmount": item.gatheredAmount,
-                  "gatherId": _this.scellform1.gatherId,
-                  "registerTime": _this.checkTime1
-                }
-              )
-            )
-          });
-
-          this.$axios.post("SGathers/addPutInStorage.May",JSON.stringify(newArr),
-        {headers:{"Content-Type":"application/json"}}).then(function (response) {
+          this.scellform.amount=0;
+          var params = new URLSearchParams();
+          params.append("id",_this.scellform1.id);//id
+          params.append("checker",_this.scellform1.checker);//复核人
+          params.append("checkTime",_this.checkTime1);//复核时间
+          this.$axios.post("SGathers/amendSGather.May",params).then(function (response) {
             if (response.data == true) {
               _this.$notify({
                 title: '成功',

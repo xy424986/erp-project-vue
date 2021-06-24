@@ -454,7 +454,6 @@
           console.log(productId)
           this.$axios.post("SGatherDetails/queryByParentIdSGatherEx.May", params).then(function (response) {
             _this.dfileform1=response.data;
-
             for  (var i=0;i<_this.dfileform1.length;i++){
               _this.sum+=parseInt(_this.dfileform1[i].scAmount);
               _this.sumMoney+=parseInt(_this.dfileform1[i].subtotal);
