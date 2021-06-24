@@ -126,6 +126,12 @@
   import OutboundScheduling from "./components/safety_stock/warehouse_management/OutboundScheduling";
   import WarehousingRegistration from "./components/safety_stock/put_in_storage/WarehousingRegistration";
   import WarehouseQueries from "./components/safety_stock/put_in_storage/WarehouseQueries";
+  import WarehouseCheck from "./components/safety_stock/put_in_storage/WarehouseCheck";
+  import OutboundReview from "./components/safety_stock/outbound_management/OutboundReview";
+  import OutboundQuery from "./components/safety_stock/outbound_management/OutboundQuery";
+  import OutboundRegistration from "./components/safety_stock/outbound_management/OutboundRegistration";
+  import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
+  import ProductionQuery from "./components/safety_stock/ProductionQuery";
 
   export default {
     name: 'app',
@@ -222,7 +228,13 @@
       Customize_process_material_design_list,
       Process_material_design_list_inquiry,
       Process_material_designList_change,
-      Review_process_material_design_list
+      Review_process_material_design_list,
+      WarehouseCheck,
+      OutboundQuery,
+      OutboundReview,
+      OutboundRegistration,
+      WorkOrderInquiry,
+      ProductionQuery
     },
     // 钩子调用函数
     created() {

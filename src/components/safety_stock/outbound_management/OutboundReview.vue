@@ -7,25 +7,24 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="gatherId"
-          label="入库单编号"
+          prop="payId"
+          label="出库单编号"
           width="180">
         </el-table-column>
         <el-table-column
           prop="reason"
-          label="入库理由"
+          label="出库理由"
           width="180">
           <template scope="scope">
-            <span v-if="scope.row.reason === 'R001-1'">生产入库</span>
-            <span v-else-if="scope.row.reason === 'R001-2'">库存初始</span>
-            <span v-else-if="scope.row.reason === 'R001-3'">赠送</span>
-            <span v-else-if="scope.row.reason === 'R001-4'">内部归还</span>
-            <span v-else-if="scope.row.reason === 'R001-5'">其他归还</span>
+            <span v-if="scope.row.reason === 'C002-1'">生产领料</span>
+            <span v-else-if="scope.row.reason === 'C002-2'">赠送</span>
+            <span v-else-if="scope.row.reason === 'C002-3'">内部借领</span>
+            <span v-else-if="scope.row.reason === 'C002-4'">其他借领</span>
           </template>
         </el-table-column>
         <el-table-column
           prop="reasonexact"
-          label="入库详细理由">
+          label="出库详细理由">
         </el-table-column>
         <el-table-column
           prop="registerTime"
@@ -40,10 +39,10 @@
           label="总金额(元)">
         </el-table-column>
         <el-table-column
-          label="入库登记"
+          label="出库复核"
           width="100">
           <template slot-scope="scope">
-            <el-button  size="mini" round type="primary" icon="el-icon-check" @click="openeditwin1(scope.row.gatherId)">登记</el-button>
+            <el-button  size="mini" round type="primary" icon="el-icon-check" @click="openeditwin1(scope.row.payId)">复核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -55,15 +54,15 @@
       <div>
         <el-form  size="small" :inline="true" v-model="scellform">
           <el-row>
-              <el-col :span="1">
-                <el-popconfirm
-                  title="确定提交吗？"
-                  @confirm="addSCll"
-                >
-                  <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">登记</el-button>
-                </el-popconfirm>
-              </el-col>
-            <el-col :span="18"><h3>入库单登记</h3></el-col>
+            <el-col :span="1">
+              <el-popconfirm
+                title="确定提交吗？"
+                @confirm="addSCll"
+              >
+                <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">复核</el-button>
+              </el-popconfirm>
+            </el-col>
+            <el-col :span="18"><h3>出库单复核</h3></el-col>
             <el-col :span="3">
               <el-button @click="handleClose"  size="mini" round type="primary" icon="el-icon-check">返回</el-button>
             </el-col>
@@ -71,8 +70,8 @@
           <el-row>
             <el-col :span="11" :offset="1">
               <div>
-                <el-form-item label="入库单编号:">
-                  <el-input type="text" v-model="scellform1.gatherId" readonly="readonly"/>
+                <el-form-item label="出库单编号:">
+                  <el-input type="text" v-model="scellform1.payId" readonly="readonly"/>
                 </el-form-item>
               </div>
             </el-col>
@@ -85,18 +84,16 @@
           <el-row>
             <el-col :span="14" >
               <div><!--产品名称：笔记本-->
-                <el-form-item label="入库理由:">
-                  <!-- <el-input type="text" v-model="scellform1.reason" readonly="readonly"/>
-                  --> <span v-if="scellform1.reason === 'R001-1'">生产入库</span>
-                  <span v-else-if="scellform1.reason === 'R001-2'">库存初始</span>
-                  <span v-else-if="scellform1.reason === 'R001-3'">赠送</span>
-                  <span v-else-if="scellform1.reason === 'R001-4'">内部归还</span>
-                  <span v-else-if="scellform1.reason === 'R001-5'">其他归还</span>
+                <el-form-item label="出库理由:">
+                  <span v-if="scellform1.reason === 'C002-1'">生产领料</span>
+                  <span v-else-if="scellform1.reason === 'C002-2'">赠送</span>
+                  <span v-else-if="scellform1.reason === 'C002-3'">内部借领</span>
+                  <span v-else-if="scellform1.reason === 'C002-4'">其他借领</span>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="7" >
-              <el-form-item label="入库详细理由:">
+              <el-form-item label="出库详细理由:">
                 <div class="inline">
                   <el-input type="text" v-model="scellform1.reasonexact" readonly="readonly"/>
                 </div>
@@ -126,30 +123,27 @@
                     label="产品名称">
                   </el-table-column>
                   <el-table-column
-                  label="库房名称">
+                    label="库房名称">
                     <span>成品库</span>
                   </el-table-column>
                   <el-table-column
                     width="110"
-                    prop="ass"
+                    prop="payAss"
                     label="存放地址">
                   </el-table-column>
                   <el-table-column
                     prop="amount"
-                    label="应入库件数">
+                    label="应出库件数">
                   </el-table-column>
                   <el-table-column
-                    label="已入库件数">
-                    <span>0.0</span>
+                    prop="paidAmount"
+                    label="已出库件数">
                   </el-table-column>
                   <el-table-column
-                    prop="gatheredAmount"
                     width="100"
-                    label="本次入库数量">
-                    <template slot-scope="scope">
-                      <el-input type="text" v-model="scope.row.gatheredAmount" v-on:input="subtotaledit(scope)"></el-input>
-                    </template>
-                  </el-table-column>
+                    prop="paidAmount"
+                    label="本次出库数量">
+                    </el-table-column>
                   <el-table-column
                     label="序列号">
                   </el-table-column>
@@ -160,12 +154,12 @@
           </el-row>
           <el-row>
             <el-col :span="10" :push="2">
-              <el-form-item label="应入总库数:">
+              <el-form-item label="应出总库数:">
                 <div class="inline"><el-input type="text" readonly="readonly" v-model="scellform1.amountSum" /></div>
               </el-form-item>
             </el-col>
             <el-col :span="11" :push="3">
-              <el-form-item label="已入总库数:">
+              <el-form-item label="已出总库数:">
                 <div class="inline">
                   <el-input type="text" v-model="sum" readonly="readonly"/>
                 </div>
@@ -174,12 +168,12 @@
           </el-row>
           <el-row>
             <el-col :span="10" :push="2">
-              <el-form-item label="应入库总成本:">
+              <el-form-item label="应出库总成本:">
                 <div class="inline"><el-input type="text" readonly="readonly" v-model="scellform1.costPriceSum" /></div>
               </el-form-item>
             </el-col>
             <el-col :span="11" :push="3">
-              <el-form-item label="已入库总成本:">
+              <el-form-item label="已出库总成本:">
                 <div class="inline">
                   <el-input type="text" v-model="sumMoney" readonly="readonly"/>
                 </div>
@@ -188,12 +182,12 @@
           </el-row>
           <el-row>
             <el-col  :span="10" :push="2">
-              <el-form-item label="登记人:">
+              <el-form-item label="复核人:">
                 <div class="inline div02_01"><el-input type="text" v-model="scellform1.checker" readonly="readonly"/></div>
               </el-form-item>
             </el-col>
             <el-col :span="11" :push="3">
-              <el-form-item label="登记时间:">
+              <el-form-item label="复核时间:">
                 <div class="inline">
                   <el-input type="text" v-model="checkTime1" readonly="readonly"/>
                 </div>
@@ -208,7 +202,7 @@
 
 <script>
     export default {
-        name: "WarehousingRegistration",
+        name: "OutboundReview",
       data() {
         return {
           tableData: [],
@@ -250,10 +244,9 @@
           dfileform1: [],
           getgetpayId: "",
           scellformId: "",
-          sum: "0.0",
-          sumMoney: "0.0",
-          checkTime1:"",
-          gatheredAmount:""
+          sum: 0.0,
+          sumMoney: 0.0,
+          checkTime1:""
         }
       },
       methods: {
@@ -262,7 +255,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SGathers/queryAllSGather.May", params).then(function (response) {
+          this.$axios.post("SPay/queryAllSPay.May", params).then(function (response) {
             _this.tableData = response.data.records;
             _this.total = response.data.total;
             for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData)}
@@ -284,12 +277,12 @@
               this.innerDrawer = false;
             });
         },
-        openeditwin1(gatherId){//获取数据
+        openeditwin1(payId){//获取数据
           var _this=this;
-          this.getgatherId=gatherId;
+          this.getgatherId=payId;
           var params = new URLSearchParams();
-          params.append("gatherId",gatherId);
-          this.$axios.post("SGathers/queryByGatherIdSGather.May", params).then(function (response) {
+          params.append("payId",payId);
+          this.$axios.post("SPay/queryByPayIdSPay.May", params).then(function (response) {
             _this.scellform1=response.data;
             _this.queryByParentId(_this.scellform1.id);
             _this.scellformId=_this.scellform1.id;
@@ -303,8 +296,15 @@
           var params = new URLSearchParams();
           params.append("parentId", productId);
           console.log(productId)
-          this.$axios.post("SGatherDetails/queryByParentIdSGatherEx.May", params).then(function (response) {
+          this.$axios.post("SPayDetails/queryByParentIdSPayDetails.May", params).then(function (response) {
             _this.dfileform1=response.data;
+            for (var i=0;i<_this.dfileform1.length;i++){
+              _this.sum+=parseInt(_this.dfileform1[i].paidAmount);
+              _this.sumMoney+=parseInt(_this.dfileform1[i].subtotal);
+              _this.sum=parseInt(_this.sum);
+              _this.sumMoney=parseInt(_this.sumMoney);
+              console.log("queryByParentId"+_this.dfileform1);
+            }
           }).catch();
         },
         //获取当前年月日
@@ -323,28 +323,14 @@
         getStr(point) {
           return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
         },
-        subtotaledit(scope){
-          this.gatheredAmount=scope.row.gatheredAmount;
-        },
         addSCll(){
           var _this=this;
-          let newArr = [];
-          var arr = this.dfileform1;
-          arr.map((item, index)=> {
-            newArr.push(
-              Object.assign({}, item, {
-                  "id": item.id,
-                  "register": _this.scellform1.register,
-                  "gatheredAmount": item.gatheredAmount,
-                  "gatherId": _this.scellform1.gatherId,
-                  "registerTime": _this.checkTime1
-                }
-              )
-            )
-          });
-
-          this.$axios.post("SGathers/addPutInStorage.May",JSON.stringify(newArr),
-        {headers:{"Content-Type":"application/json"}}).then(function (response) {
+          this.scellform.amount=0;
+          var params = new URLSearchParams();
+          params.append("id",_this.scellform1.id);//id
+          params.append("checker",_this.scellform1.checker);//复核人
+          params.append("checkTime",_this.checkTime1);//复核时间
+          this.$axios.post("SPay/amendSPay.May",params).then(function (response) {
             if (response.data == true) {
               _this.$notify({
                 title: '成功',
