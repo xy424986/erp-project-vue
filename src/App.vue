@@ -94,16 +94,24 @@
   import Product_file_registration_review from "./components/product design/Product_file_registration_review";
 
   //产品物料设计导入组件close
-  import Make_material_composition_design_sheet from './components/Product_material_composition_design/Make_material_composition_design_sheet'
-  import Review_of_material_composition_design_sheet from './components/Product_material_composition_design/Review_of_material_composition_design_sheet'
-  import Material_composition_design_sheet_query from './components/Product_material_composition_design/Material_composition_design_sheet_query'
-  import Change_of_material_composition_design_order from './components/Product_material_composition_design/Change_of_material_composition_design_order'
+  import Make_material_composition_design_sheet
+    from './components/Product_material_composition_design/Make_material_composition_design_sheet'
+  import Review_of_material_composition_design_sheet
+    from './components/Product_material_composition_design/Review_of_material_composition_design_sheet'
+  import Material_composition_design_sheet_query
+    from './components/Product_material_composition_design/Material_composition_design_sheet_query'
+  import Change_of_material_composition_design_order
+    from './components/Product_material_composition_design/Change_of_material_composition_design_order'
 
   // 生产管理导入组件start
   import Design_of_single from "./components/production_management/process_design/Design_of_single";
   import Design_bill_review from "./components/production_management/process_design/Design_bill_review";
   import Design_bill_change from "./components/production_management/process_design/Design_bill_change";
   import Design_list_query from "./components/production_management/process_design/Design_list_query";
+  import Customize_process_material_design_list from "./components/production_management/the_material_design/Customize_process_material_design_list";
+  import Process_material_design_list_inquiry from "./components/production_management/the_material_design/Process_material_design_list_inquiry";
+  import Process_material_designList_change from "./components/production_management/the_material_design/Process_material_designList_change";
+  import Review_process_material_design_list from "./components/production_management/the_material_design/Review_process_material_design_list";
   // 生产管理导入组件close
 
   /**
@@ -210,7 +218,11 @@
       Make_material_composition_design_sheet,
       Review_of_material_composition_design_sheet,
       Material_composition_design_sheet_query,
-      Change_of_material_composition_design_order
+      Change_of_material_composition_design_order,
+      Customize_process_material_design_list,
+      Process_material_design_list_inquiry,
+      Process_material_designList_change,
+      Review_process_material_design_list
     },
     // 钩子调用函数
     created() {
@@ -272,34 +284,40 @@
   }
 
   /*hhy*/
-  .inline{/*转换行内元素*/
+  .inline { /*转换行内元素*/
     display: inline-block;
   }
 
-  .div02_01{/*div下边框*/
-    border-bottom:1px solid black;
+  .div02_01 { /*div下边框*/
+    border-bottom: 1px solid black;
     width: 300px;
-    text-align:left;
+    text-align: left;
   }
-  .drop-downBox{
+
+  .drop-downBox {
     width: 333px;
   }
-  .el-input__inner{
+
+  .el-input__inner {
     border: none;
   }
+
   .aa .el-form-item--small .el-form-item__content,
   .el-form-item--small .el-form-item__labe {
     width: 83%;
   }
-  .yanse{
-    background-color:yellow;
+
+  .yanse {
+    background-color: yellow;
   }
-  .div03{
+
+  .div03 {
     position: absolute;
     left: 95px;
     background: pink;
   }
-  .div04{
+
+  .div04 {
     position: absolute;
     left: 1200px;
   }
@@ -307,7 +325,7 @@
   /**
   hhy
    */
-  a{
+  a {
     text-decoration: none;
     color: purple;
   }
