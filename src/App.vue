@@ -86,6 +86,9 @@
 </template>
 
 <script>
+  //生产调度管理导入组建close
+  import Make_production_dispatch_list from './components/Production_scheduling_management/Make_production_dispatch_list'
+  import Audit_of_production_dispatch_order from './components/Production_scheduling_management/Audit_of_production_dispatch_order'
   //产品档案导入组件close
   import Product_file_change from "./components/product design/Product_file_change";
   import Product_file_delete from "./components/product design/Product_file_delete";
@@ -210,7 +213,9 @@
       Make_material_composition_design_sheet,
       Review_of_material_composition_design_sheet,
       Material_composition_design_sheet_query,
-      Change_of_material_composition_design_order
+      Change_of_material_composition_design_order,
+      Make_production_dispatch_list,
+      Audit_of_production_dispatch_order
     },
     // 钩子调用函数
     created() {
