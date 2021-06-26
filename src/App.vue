@@ -86,6 +86,9 @@
 </template>
 
 <script>
+  //生产调度管理导入组建close
+  import Make_production_dispatch_list from './components/Production_scheduling_management/Make_production_dispatch_list'
+  import Audit_of_production_dispatch_order from './components/Production_scheduling_management/Audit_of_production_dispatch_order'
   //产品档案导入组件close
   import Product_file_change from "./components/product design/Product_file_change";
   import Product_file_delete from "./components/product design/Product_file_delete";
@@ -94,16 +97,24 @@
   import Product_file_registration_review from "./components/product design/Product_file_registration_review";
 
   //产品物料设计导入组件close
-  import Make_material_composition_design_sheet from './components/Product_material_composition_design/Make_material_composition_design_sheet'
-  import Review_of_material_composition_design_sheet from './components/Product_material_composition_design/Review_of_material_composition_design_sheet'
-  import Material_composition_design_sheet_query from './components/Product_material_composition_design/Material_composition_design_sheet_query'
-  import Change_of_material_composition_design_order from './components/Product_material_composition_design/Change_of_material_composition_design_order'
+  import Make_material_composition_design_sheet
+    from './components/Product_material_composition_design/Make_material_composition_design_sheet'
+  import Review_of_material_composition_design_sheet
+    from './components/Product_material_composition_design/Review_of_material_composition_design_sheet'
+  import Material_composition_design_sheet_query
+    from './components/Product_material_composition_design/Material_composition_design_sheet_query'
+  import Change_of_material_composition_design_order
+    from './components/Product_material_composition_design/Change_of_material_composition_design_order'
 
   // 生产管理导入组件start
   import Design_of_single from "./components/production_management/process_design/Design_of_single";
   import Design_bill_review from "./components/production_management/process_design/Design_bill_review";
   import Design_bill_change from "./components/production_management/process_design/Design_bill_change";
   import Design_list_query from "./components/production_management/process_design/Design_list_query";
+  import Customize_process_material_design_list from "./components/production_management/the_material_design/Customize_process_material_design_list";
+  import Process_material_design_list_inquiry from "./components/production_management/the_material_design/Process_material_design_list_inquiry";
+  import Process_material_designList_change from "./components/production_management/the_material_design/Process_material_designList_change";
+  import Review_process_material_design_list from "./components/production_management/the_material_design/Review_process_material_design_list";
   // 生产管理导入组件close
 
   /**
@@ -218,14 +229,19 @@
       Review_of_material_composition_design_sheet,
       Material_composition_design_sheet_query,
       Change_of_material_composition_design_order,
-      WarehouseQueries,
+      Customize_process_material_design_list,
+      Process_material_design_list_inquiry,
+      Process_material_designList_change,
+      Review_process_material_design_list,
       WarehouseCheck,
       OutboundQuery,
       OutboundReview,
       OutboundRegistration,
       WorkOrderInquiry,
       ProductionQuery,
-      DynamicInventoryQuery
+      DynamicInventoryQuery,
+      Make_production_dispatch_list,
+      Audit_of_production_dispatch_order
     },
     // 钩子调用函数
     created() {
