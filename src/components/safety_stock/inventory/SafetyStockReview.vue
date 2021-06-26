@@ -1,4 +1,5 @@
 <template>
+  <!--制作安全库配置单审核-->
   <div>
     <!--制作安全库配置单1复核-->
     <div id="div01" v-show="show">
@@ -57,7 +58,7 @@
       :visible.sync="drawer"
       :before-close="handleClose"
       size="80%">
-    <div id="div02" v-show="hidden">
+    <div id="div02" >
       <el-form  size="small" :inline="true" v-model="scellform">
         <el-row>
           <el-col :span="1">
@@ -70,7 +71,7 @@
           </el-col>
           <el-col :span="20"><h3>安全库存配置单</h3></el-col>
           <el-col :span="3">
-            <el-button @click="showHidden" size="mini" round type="primary" icon="el-icon-check">返回</el-button>
+            <el-button @click="handleClose" size="mini" round type="primary" icon="el-icon-check">返回</el-button>
           </el-col>
         </el-row>
         <el-row>
@@ -200,14 +201,14 @@
           <el-col :span="14" :push="1">
             <!--<div class="inline">登记人：</div>-->
             <el-form-item label="复核人:">
-              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.register" /></div>
+              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.checker" /></div>
             </el-form-item>
           </el-col>
           <el-col :span="7" :pull="2">
             <!--<div class="inline">登记时间：</div>-->
             <el-form-item label="复核时间:">
               <div class="inline">
-                <el-input type="text" v-model="scellform.registerTime" readonly="readonly"/>
+                <el-input type="text" v-model="scellform.checkTime" readonly="readonly"/>
               </div>
             </el-form-item>
           </el-col>
@@ -271,7 +272,7 @@
             storageUnitAbbreviation:"",//储存单元简称
             theDesigner:"",//设计人
             checkTime:"",//复核时间
-            checker:"",//复核人
+            checker:sessionStorage.getItem("loginId"),//复核人
             productClass:"",
             type:""
           },
@@ -283,6 +284,7 @@
       },
       methods: {
         getdata() {   //制作安全库配置单1获取数据
+
           var _this = this;
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
@@ -290,7 +292,6 @@
           this.$axios.post("SCell/queryAllSCell.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
-            console.log()
           }).catch();
         },
         handleSizeChange(val) {  //页size变更
@@ -303,11 +304,6 @@
           this.pageno = val;
           this.getdata();
         },
-        //设置表头的颜色
-        rowClass({row, rowIndex}) {
-          console.log(rowIndex) //表头行标号为0
-          return 'background:red'
-        },
         //设置指定行、列、具体单元格颜色
         cellStyle({row, column, rowIndex, columnIndex}) {
           var arr=[4,5,6];
@@ -316,11 +312,6 @@
               return 'background:yellow' //rgb(105,0,7)
             }
           }
-        },
-        //显示隐藏
-        showHidden(){
-          this.show=!this.show;
-          this.hidden=!this.hidden;
         },
         //获取当前年月日
         addDate(){
@@ -331,23 +322,22 @@
           let hours = date.getHours();
           let minutes = this.getStr(date.getMinutes());
           let seconds = this.getStr(date.getSeconds());
-          var date1 =Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
-          this.scellform.checkTime = date1;
+          this.scellform.checkTime =Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
+
         },
         getStr(point) {
           return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
         },
         openeditwin(productId){//获取数据
           var _this=this;
-          this.showHidden();
           var params = new URLSearchParams();
           params.append("productId", productId);
-          this.$axios.post("SCell/queryByIdSCell.May", params).then(function (response) {
+            this.$axios.post("SCell/queryByIdSCell.May", params).then(function (response) {
             _this.scellform=response.data;
             _this.ass=_this.scellform.firstKindName+"-"+_this.scellform.secondKindName+"-"+_this.scellform.thirdKindName;
             _this.css=_this.scellform.firstKindId+"-"+_this.scellform.secondKindId+"-"+_this.scellform.thirdKindId;
             _this.openeditwin2(productId);
-            _this.addDate(_this.scellform);
+            _this.addDate();
             _this.drawer=true;
           }).catch();
         },
@@ -363,6 +353,7 @@
         openeditwin2(productId){//获取数据
           var _this=this;
           var params = new URLSearchParams();
+          console.log("openeditwin2"+productId);
           params.append("productId", productId);
           this.$axios.post("SCell/queryByIdSCell2.May", params).then(function (response) {
             _this.dfileform=response.data;
@@ -373,7 +364,7 @@
           this.scellform.amount=0;
           var params = new URLSearchParams();
           params.append("id",_this.scellform.id);//id
-          params.append("checker",_this.scellform.register);//审核人
+          params.append("checker",_this.scellform.checker);//审核人
           params.append("checkTime",_this.scellform.checkTime);//审核时间
           console.log(this.scellform.storageUnit)
           this.$axios.post("SCell/amendCheckTag.May",params).then(function (response) {
@@ -390,7 +381,8 @@
                 type: 'danger'
               });
             }
-            this.getdata();
+            _this.drawer=false;
+            _this.getdata();
             _this.$forceUpdate();
           }).catch();
         }

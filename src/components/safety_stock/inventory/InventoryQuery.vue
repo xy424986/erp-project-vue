@@ -1,6 +1,6 @@
 <template>
+  <!--制作安全库配置单查询-->
   <div>
-    <!--制作安全库配置单1复核-->
     <div id="div01">
       <el-table
         :data="tableData"
@@ -46,9 +46,16 @@
           prop="thirdKindName"
           label="III及分类">
         </el-table-column>
+        <el-table-column
+          prop="checkTag"
+          label="审核状态">
+          <template scope="scope">
+            <span v-if="scope.row.checkTag === 'S001-1'">已审核</span>
+            <span v-else-if="scope.row.checkTag === 'S001-2'">审核未通过</span>
+          </template>
+        </el-table-column>
       </el-table>
     </div>
-    <!--制作安全库配置单2复核-->
     <!--    抽屉样式-->
     <el-drawer
       :visible.sync="drawer"
@@ -189,14 +196,14 @@
           <el-col :span="14" :push="1">
             <!--<div class="inline">登记人：</div>-->
             <el-form-item label="复核人:">
-              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.register" /></div>
+              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.checker" /></div>
             </el-form-item>
           </el-col>
           <el-col :span="7" :pull="2">
             <!--<div class="inline">登记时间：</div>-->
             <el-form-item label="复核时间:">
               <div class="inline">
-                <el-input type="text" v-model="scellform.registerTime" readonly="readonly"/>
+                <el-input type="text" v-model="scellform.checkTime" readonly="readonly"/>
               </div>
             </el-form-item>
           </el-col>

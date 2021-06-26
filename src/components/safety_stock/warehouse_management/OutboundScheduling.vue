@@ -475,6 +475,7 @@
             _this.scellAmount=0;
             _this.outQueryByPayIdSPay(_this.getgetpayId);
             console.log(_this.getgetpayId);
+            _this.innerDrawer = false;
             _this.$forceUpdate();
           }).catch();
         }

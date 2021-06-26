@@ -1,6 +1,7 @@
 <template>
+  <!--制作安全库配置单变更-->
   <div>
-    <!--制作安全库配置单1复核-->
+
     <div id="div01">
       <el-table
         :data="tableData"
@@ -201,14 +202,14 @@
             <el-col :span="14" :push="1">
               <!--<div class="inline">登记人：</div>-->
               <el-form-item label="变更人:">
-                <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.register" /></div>
+                <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.changeRen" /></div>
               </el-form-item>
             </el-col>
             <el-col :span="7" :pull="2">
               <!--<div class="inline">登记时间：</div>-->
               <el-form-item label="变更时间:">
                 <div class="inline">
-                  <el-input type="text" v-model="scellform.registerTime" readonly="readonly"/>
+                  <el-input type="text" v-model="scellform.changeRenTime" readonly="readonly"/>
                 </div>
               </el-form-item>
             </el-col>
@@ -231,7 +232,7 @@
 
 <script>
     export default {
-        name: "InventoryChanges",
+        name: "InventorychangeRens",
       data(){
         return {
           tableData:[],
@@ -252,7 +253,7 @@
           updateTime:"",
           scellform:{
             config:"",//配置要求
-            register:'',//登记人
+            changeRen:sessionStorage.getItem("loginId"),
             registerTime:"",//登记时间
             minAmount:0,//库存报警下限数
             maxAmount:0,//库存报警上限数
@@ -293,13 +294,13 @@
             console.log()
           }).catch();
         },
-        handleSizeChange(val) {  //页size变更
+        handleSizechangeRen(val) {  //页size变更
           this.pagesize = val;
           this.pageno = 1;
           this.getdata();
         },
         //以下方法是制作安全库配置单2的
-        handleCurrentChange(val) {  //页码变更
+        handleCurrentchangeRen(val) {  //页码变更
           this.pageno = val;
           this.getdata();
         },
@@ -317,11 +318,6 @@
             }
           }
         },
-        //显示隐藏
-        showHidden(){
-          this.show=!this.show;
-          this.hidden=!this.hidden;
-        },
         //获取当前年月日
         addDate(){
           let date = new Date();
@@ -332,14 +328,13 @@
           let minutes = this.getStr(date.getMinutes());
           let seconds = this.getStr(date.getSeconds());
           var date1 =Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
-          this.scellform.checkTime = date1;
+          this.scellform.changeRenTime = date1;
         },
         getStr(point) {
           return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
         },
         openeditwin(productId){//获取数据
           var _this=this;
-          this.showHidden();
           var params = new URLSearchParams();
           params.append("productId", productId);
           this.$axios.post("SCell/queryByIdSCell.May", params).then(function (response) {
@@ -380,6 +375,8 @@
           params.append("maxCapacityAmount",_this.scellform.maxCapacityAmount);//最大存储量
           params.append("storageUnit",_this.scellform.storageUnit);//储存单元
           params.append("storageUnitAbbreviation",_this.scellform.storageUnitAbbreviation);//储存单元简称
+          params.append("changeRen",_this.scellform.changeRen);//变更人
+          params.append("changeRenTime",_this.scellform.changeRenTime);//变更时间
           console.log(this.scellform.storageUnit)
           this.$axios.post("SCell/amendSCll.May",params).then(function (response) {
             if (response.data == true) {
@@ -395,7 +392,8 @@
                 type: 'danger'
               });
             }
-            this.getdata();
+            _this.drawer=false;
+            _this.getdata();
             _this.$forceUpdate();
           }).catch();
         }

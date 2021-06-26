@@ -124,6 +124,8 @@
   import OutboundRegistration from "./components/safety_stock/outbound_management/OutboundRegistration";
   import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
   import ProductionQuery from "./components/safety_stock/ProductionQuery";
+  import DynamicInventoryQuery from "./components/safety_stock/InventoryQuery/DynamicInventoryQuery";
+
 
   export default {
     name: 'app',
@@ -222,7 +224,8 @@
       OutboundReview,
       OutboundRegistration,
       WorkOrderInquiry,
-      ProductionQuery
+      ProductionQuery,
+      DynamicInventoryQuery
     },
     // 钩子调用函数
     created() {
