@@ -28,7 +28,7 @@
           width="170">
         </el-table-column>
         <el-table-column
-          prop="degisterTime"
+          prop="registerTime"
           label="制定时间"
           width="170"
           :formatter="zhuanghua">
@@ -346,7 +346,7 @@
         this.isshow=false;
       },
       zhuanghua(row){//将时间戳转成时间
-        return this.formatDate(row.checkTime);
+        return this.formatDate(row.registerTime);
       },
       formatDate(time) {  //时间转化
         var date = new Date(time);
