@@ -48,7 +48,7 @@
           label="复核"
           width="100">
           <template slot-scope="scope">
-            <el-button size="mini" round type="primary" icon="el-icon-check" @click="openeditwin(scope.row.productId)">复核</el-button>
+            <el-button size="mini" round type="primary" icon="el-icon-check" @click="openeditwin(scope.row.storeId)">复核</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -331,12 +331,13 @@
         openeditwin(productId){//获取数据
           var _this=this;
           var params = new URLSearchParams();
+          console.log(productId);
           params.append("productId", productId);
             this.$axios.post("SCell/queryByIdSCell.May", params).then(function (response) {
             _this.scellform=response.data;
             _this.ass=_this.scellform.firstKindName+"-"+_this.scellform.secondKindName+"-"+_this.scellform.thirdKindName;
             _this.css=_this.scellform.firstKindId+"-"+_this.scellform.secondKindId+"-"+_this.scellform.thirdKindId;
-            _this.openeditwin2(productId);
+            _this.openeditwin2(_this.scellform.productId);
             _this.addDate();
             _this.drawer=true;
           }).catch();
