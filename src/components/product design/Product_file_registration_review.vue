@@ -78,25 +78,25 @@
             <el-col :span="24">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 档案编号:
-                <input type="text" style="width: 193px"  v-model="reviewdatatwo.productId"></input>
+                <input type="text" style="width: 193px"  v-model="reviewdatatwo.productId" readonly="readonly"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 产品名称:
-                <input type="text" style="width: 193px"  v-model="reviewdatatwo.productName"></input>
+                <input type="text" style="width: 193px"  v-model="reviewdatatwo.productName" readonly="readonly"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 制造商:
-                <input type="text" style="width: 216px"  v-model="reviewdatatwo.factoryName"></input>
+                <input type="text" style="width: 216px"  v-model="reviewdatatwo.factoryName" readonly="readonly"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 I级分类:
-                <select style="width: 210px">
+                <select style="width: 210px"  readonly="readonly">
                   <option></option>
                   <option selected>01/电子</option>
                 </select>
@@ -105,7 +105,7 @@
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 II级分类:
-                <select style="width: 212px">
+                <select style="width: 212px"  readonly="readonly">
                   <option></option>
                   <option selected>01/计算机</option>
                 </select>
@@ -114,7 +114,7 @@
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 III级分类:
-                <select style="width: 200px">
+                <select style="width: 200px" readonly="readonly">
                   <option></option>
                   <option selected>01/服务器</option>
                 </select>
@@ -123,13 +123,13 @@
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 产品简介:
-                <input type="text" style="width: 200px" v-model="reviewdatatwo.productNick"></input>
+                <input type="text" style="width: 200px" v-model="reviewdatatwo.productNick" readonly="readonly"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 用途类型:
-                <select style="width: 198px" v-model="reviewdatatwo.type">
+                <select style="width: 198px" v-model="reviewdatatwo.type" readonly="readonly">
                   <option></option>
                   <option value="Y001-1">商品</option>
                   <option value="Y001-2">物料</option>
@@ -139,7 +139,7 @@
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 档次级别:
-                <select style="width: 205px" v-model="reviewdatatwo.productClass">
+                <select style="width: 205px"  readonly="readonly" v-model="reviewdatatwo.productClass">
                   <option></option>
                   <option value="D001-1">高档</option>
                   <option value="D001-2">中档</option>
@@ -150,25 +150,25 @@
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 计量单位:
-                <input type="text" style="width: 195px" v-model="reviewdatatwo.personalUnit"></input>
+                <input type="text"  readonly="readonly" style="width: 195px" v-model="reviewdatatwo.personalUnit"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 计量值:
-                <input type="text" style="width: 217px" v-model="reviewdatatwo.personalValue"></input>
+                <input type="text"  readonly="readonly" style="width: 217px" v-model="reviewdatatwo.personalValue"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 市场单价(元):
-                <input type="text" v-model="reviewdatatwo.listPrice"></input>
+                <input type="text"  readonly="readonly" v-model="reviewdatatwo.listPrice"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 计划成本单价:
-                <input type="text" v-model="reviewdatatwo.costPrice"></input>
+                <input type="text"  readonly="readonly" v-model="reviewdatatwo.costPrice"></input>
               </label>
             </el-col>
             <el-col :span="24">
@@ -177,55 +177,55 @@
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 保修期:
-                <input type="text" style="width: 212px"  v-model="reviewdatatwo.warranty"></input>
+                <input type="text" style="width: 212px"  readonly="readonly"  v-model="reviewdatatwo.warranty"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 替代品名称:
-                <input type="text"style="width: 185px"  v-model="reviewdatatwo.twinName"></input>
+                <input type="text"style="width: 185px"  readonly="readonly" v-model="reviewdatatwo.twinName"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 替代品编号:
-                <input type="text" style="width: 180px"  v-model="reviewdatatwo.twinId"></input>
+                <input type="text" style="width: 180px"  readonly="readonly" v-model="reviewdatatwo.twinId"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 生命周期(年):
-                <input type="text" style="width: 175px"  v-model="reviewdatatwo.lifecycle"></input>
+                <input type="text" style="width: 175px"  readonly="readonly" v-model="reviewdatatwo.lifecycle"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 单位:
-                <input type="text" style="width: 228px"  v-model="reviewdatatwo.amountUnit"></input>
+                <input type="text" style="width: 228px"  readonly="readonly" v-model="reviewdatatwo.amountUnit"></input>
               </label>
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 产品经理:
-                <input type="text" style="width: 202px"  v-model="reviewdatatwo.responsiblePerson"></input>
+                <input type="text" style="width: 202px"  readonly="readonly" v-model="reviewdatatwo.responsiblePerson"></input>
               </label>
             </el-col>
             <el-col :span="12" >
               <label class="p1" style="background-color:lightsteelblue;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 供应商集合:</label><br>
-              <input type="textarea"  style="width: 78%;height: 70px" v-model="reviewdatatwo.providerGroup"></input>
+              <input type="textarea"  style="width: 78%;height: 70px"  readonly="readonly" v-model="reviewdatatwo.providerGroup"></input>
 
             </el-col>
             <el-col :span="12" >
               <label class="p1" style="background-color:lightsteelblue;;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 产品描述:</label><br>
-              <input type="textarea"  style="width: 78%;height: 70px;" v-model="reviewdatatwo.productDescribe"></input>
+              <input type="textarea"  style="width: 78%;height: 70px;"  readonly="readonly" v-model="reviewdatatwo.productDescribe"></input>
 
             </el-col>
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 登记人:
-                <input type="text" style="width: 214px"  v-model="reviewdatatwo.register"></input>
+                <input type="text" style="width: 214px"  readonly="readonly"  v-model="reviewdatatwo.register"></input>
               </label>
             </el-col>
             <el-col :span="12">
@@ -238,7 +238,7 @@
             <el-col :span="12">
               <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 复核人:
-                <input type="text"  style="width: 214px"   v-model="checker"></input>
+                <input type="text"  style="width: 214px"  readonly="readonly"  v-model="checker"></input>
               </label>
             </el-col>
             <el-col :span="12">
