@@ -115,13 +115,13 @@
                 <hr>
                 <el-col :span="12">
                   <el-form-item label="制造商:">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.factoryName"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.factoryName"></el-input>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="12">
                   <el-form-item label="产品名称:">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.productName"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.productName"></el-input>
                   </el-form-item>
                 </el-col>
                 <hr>
@@ -150,28 +150,28 @@
                 <el-col :span="12">
                   <el-form-item label="产品简称:">
                     <el-col :span="20">
-                      <el-input type="text" style="width: 250px;" v-model="xiangxidata.productNick"></el-input>
+                      <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.productNick"></el-input>
                     </el-col>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="12">
                   <el-form-item label="计量单位:">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.personalUnit"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.personalUnit"></el-input>
                   </el-form-item>
                 </el-col>
                 <hr>
 
                 <el-col :span="12">
                   <el-form-item label="计量值:">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.personalValue"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.personalValue"></el-input>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="12">
                   <el-form-item label="市场单价(元):">
                 <el-col :span="19">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.listPrice"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.listPrice"></el-input>
                 </el-col>
                   </el-form-item>
                 </el-col>
@@ -179,14 +179,14 @@
                 <el-col :span="12">
                   <el-form-item label="计划成本单价:">
                     <el-col :span="18">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.costPrice"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.costPrice"></el-input>
                     </el-col>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="12">
                   <el-form-item label="成本单价:">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.realCostPrice"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.realCostPrice"></el-input>
                   </el-form-item>
                 </el-col>
                 <hr>
@@ -200,7 +200,7 @@
                 <el-col :span="12">
                   <el-form-item label="保修期:">
                       <el-col :span="18">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.warranty"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.warranty"></el-input>
                       </el-col>
                   </el-form-item>
                 </el-col>
@@ -208,7 +208,7 @@
                 <el-col :span="12">
                   <el-form-item label="替代品名称:">
                     <el-col :span="18">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.twinName"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.twinName"></el-input>
                     </el-col>
                   </el-form-item>
                 </el-col>
@@ -216,7 +216,7 @@
                 <el-col :span="12">
                   <el-form-item label="替代品编号:">
                     <el-col :span="16">
-                    <el-input type="text" style="width: 248px;" v-model="xiangxidata.twinId"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 248px;" v-model="xiangxidata.twinId"></el-input>
                   </el-col>
                   </el-form-item>
                 </el-col>
@@ -224,7 +224,7 @@
                 <el-col :span="12">
                   <el-form-item label="生命周期(年):">
                     <el-col :span="17">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.lifecycle"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.lifecycle"></el-input>
                     </el-col>
                   </el-form-item>
                 </el-col>
@@ -232,14 +232,14 @@
                 <el-col :span="12">
                   <el-form-item label="单位:">
                     <el-col :span="19">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.amountUnit"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.amountUnit"></el-input>
                     </el-col>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="产品经理:">
                     <el-col :span="19">
-                    <el-input type="text" style="width: 250px;" v-model="xiangxidata.responsiblePerson"></el-input>
+                    <el-input type="text" class="inline div02_01" style="width: 250px;" v-model="xiangxidata.responsiblePerson"></el-input>
                     </el-col>
                   </el-form-item>
                 </el-col>
@@ -567,7 +567,7 @@
     height: 600px;
     text-align: center;
     color: #2c3e50;
-    margin-top: 30px;
+    margin-top: 20px;
     border-radius: 1px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   }
