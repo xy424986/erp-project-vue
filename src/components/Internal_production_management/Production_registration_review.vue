@@ -109,42 +109,42 @@
                 <el-table
                   :data="shenhe_dispatchByIddata"
                   border
-                  height="160"
+                  height="190"
                   style="width: 100%"
                   :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                   :cell-style="cellStyle">
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="procedureName"
                     label="工序名称">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="labourHourAmount"
                     label="设计工时数">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="realLabourHourAmount"
                     label="实际工时数">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="subtotal"
                     label="设计工时成本(元)">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="realSubtotal"
                     label="实际工时成本(元)">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="moduleSubtotal"
                     label="设计物料成本(元)">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="realModuleSubtotal"
                     label="实际物料成本(元)">
                   </el-table-column>
@@ -247,7 +247,7 @@
 
               <el-col :span="18"><h3>生产登记单</h3></el-col>
               <el-col :span="3">
-                <el-button  size="mini" round type="primary" icon="el-icon-check" @click="falsedengjifuhe">不通过</el-button>
+                <el-button  size="mini" round type="warning" icon="el-icon-check" @click="falsedengjifuhe">不通过</el-button>
               </el-col>
               <el-col :span="3">
                 <el-button  size="mini" round type="primary" icon="el-icon-check" @click="adddengjifuhe">通过</el-button>

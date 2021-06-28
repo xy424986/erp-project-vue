@@ -109,42 +109,42 @@
                 <el-table
                   :data="shenhe_dispatchByIddata"
                   border
-                  height="160"
+                  height="190"
                   style="width: 100%"
                   :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                   :cell-style="cellStyle">
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="procedureName"
                     label="工序名称">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="labourHourAmount"
                     label="设计工时数">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="realLabourHourAmount"
                     label="实际工时数">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="subtotal"
                     label="设计工时成本(元)">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="realSubtotal"
                     label="实际工时成本(元)">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="moduleSubtotal"
                     label="设计物料成本(元)">
                   </el-table-column>
                   <el-table-column
-                    width="100"
+                    width="90"
                     prop="realModuleSubtotal"
                     label="实际物料成本(元)">
                   </el-table-column>
@@ -527,22 +527,52 @@
           this.registerTime = year+"/"+month+"/"+day+"  "+hour+":"+minute+":"+second;
         },
         dengjiquery(scope){//查询物料
-          this.dengjigongxu=scope.row;
-          var i = 0;
-          this.formatDatetwo();
-          this.sheettable=true;
-          this.procedureName=scope.row.procedureName;
-          this.labourHourAmount=scope.row.labourHourAmount;
-          this.realLabourHourAmount=scope.row.realLabourHourAmount;
           var _this = this;
-          var params = new URLSearchParams();
-          params.append("id",scope.row.id);
-          this.$axios.post("MManuFacture/dengji_Make_productionByparentid.action", params).then(function (response) {
-            for(i=0;i<response.data.length;i++){
-              response.data[i].rowamount=1;
-            }
-            _this.dengjiform = response.data;
-          }).catch();
+          var i = 0;
+          if(scope.row.detailsNumber>1){
+            var params = new URLSearchParams();
+            params.append("id",scope.row.id);
+            this.$axios.post("MManuFacture/dengjitiaojian_Make_productionByparentid.action", params).then(function (response) {
+              if(response.data==true){
+                _this.dengjigongxu=scope.row;
+                _this.formatDatetwo();
+                _this.sheettable=true;
+                _this.procedureName=scope.row.procedureName;
+                _this.labourHourAmount=scope.row.labourHourAmount;
+                _this.realLabourHourAmount=scope.row.realLabourHourAmount;
+                var params = new URLSearchParams();
+                params.append("id",scope.row.id);
+                _this.$axios.post("MManuFacture/dengji_Make_productionByparentid.action", params).then(function (response) {
+                  for(i=0;i<response.data.length;i++){
+                    response.data[i].rowamount=1;
+                  }
+                  _this.dengjiform = response.data;
+                }).catch();
+              }else if(response.data==false){
+                _this.$notify({
+                  title: '错误',
+                  message: '您上一道工序还未交接完成,暂无法登记本工序',
+                  type: 'warning'
+                });
+              }
+            }).catch();
+          }else if(scope.row.detailsNumber==1){
+            this.dengjigongxu=scope.row;
+            this.formatDatetwo();
+            this.sheettable=true;
+            this.procedureName=scope.row.procedureName;
+            this.labourHourAmount=scope.row.labourHourAmount;
+            this.realLabourHourAmount=scope.row.realLabourHourAmount;
+            var params = new URLSearchParams();
+            params.append("id",scope.row.id);
+            this.$axios.post("MManuFacture/dengji_Make_productionByparentid.action", params).then(function (response) {
+              for(i=0;i<response.data.length;i++){
+                response.data[i].rowamount=1;
+              }
+              _this.dengjiform = response.data;
+            }).catch();
+          }
+
         },
         jiaojiedengji(scope){//交接登记
           this.dialogTableVisible=true;
