@@ -52,6 +52,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageno"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
     <!--制作安全库配置单2复核-->
     <!--    抽屉样式-->
@@ -299,15 +309,14 @@
           this.pageno = 1;
           this.getdata();
         },
-        //以下方法是制作安全库配置单2的
-        handleCurrentchangeRen(val) {  //页码变更
-          this.pageno = val;
+        handleSizeChange(val) {  //页size变更
+          this.pagesize = val;
+          this.pageno = 1;
           this.getdata();
         },
-        //设置表头的颜色
-        rowClass({row, rowIndex}) {
-          console.log(rowIndex) //表头行标号为0
-          return 'background:red'
+        handleCurrentChange(val) {  //页码变更
+          this.pageno = val;
+          this.getdata();
         },
         //设置指定行、列、具体单元格颜色
         cellStyle({row, column, rowIndex, columnIndex}) {
