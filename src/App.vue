@@ -86,6 +86,9 @@
 </template>
 
 <script>
+  //生产登记导入组件close
+  import Production_registration from './components/Internal_production_management/Production_registration'
+  import Production_registration_review from './components/Internal_production_management/Production_registration_review'
   //生产调度管理导入组建close
   import Make_production_dispatch_list from './components/Production_scheduling_management/Make_production_dispatch_list'
   import Audit_of_production_dispatch_order from './components/Production_scheduling_management/Audit_of_production_dispatch_order'
@@ -241,7 +244,9 @@
       ProductionQuery,
       DynamicInventoryQuery,
       Make_production_dispatch_list,
-      Audit_of_production_dispatch_order
+      Audit_of_production_dispatch_order,
+      Production_registration,
+      Production_registration_review
     },
     // 钩子调用函数
     created() {
