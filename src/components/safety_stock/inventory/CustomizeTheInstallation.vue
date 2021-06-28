@@ -1,4 +1,5 @@
 <template>
+  <!--制作安全库配置单登记-->
   <div>
     <!--制作安全库配置单1-->
   <div id="div01">
@@ -191,7 +192,7 @@
         <el-col :span="14" :push="1">
           <!--<div class="inline">登记人：</div>-->
           <el-form-item label="登记人:">
-            <div class="inline div02_01"><el-input type="text" v-model="scellform.register" readonly="readonly"/></div>
+            <div class="inline div02_01"><el-input readonly="readonly" type="text" v-model="scellform.register" /></div>
           </el-form-item>
         </el-col>
         <el-col :span="7" :pull="2">
@@ -243,7 +244,7 @@
             updateTime:"",
             scellform:{
               config:"",//配置要求
-              register:'',//登记人
+              register:sessionStorage.getItem("loginId"),//登记人
               registerTime:"",//登记时间
               minAmount:0,//库存报警下限数
               maxAmount:0,//库存报警上限数
@@ -401,7 +402,8 @@
                 type: 'danger'
               });
             }
-            this.getdata();
+            _this.drawer=false;
+            _this.getdata();
             _this.$forceUpdate();
           }).catch();
         }

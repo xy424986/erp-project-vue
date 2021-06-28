@@ -138,6 +138,8 @@
   import OutboundRegistration from "./components/safety_stock/outbound_management/OutboundRegistration";
   import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
   import ProductionQuery from "./components/safety_stock/ProductionQuery";
+  import DynamicInventoryQuery from "./components/safety_stock/InventoryQuery/DynamicInventoryQuery";
+
 
   export default {
     name: 'app',
@@ -221,7 +223,6 @@
       chouti,
       OutboundScheduling,
       WarehousingRegistration,
-      WarehouseQueries,
       Product_file_query,
       Product_file_delete,
       Product_file_change,
@@ -241,6 +242,7 @@
       OutboundRegistration,
       WorkOrderInquiry,
       ProductionQuery,
+      DynamicInventoryQuery,
       Make_production_dispatch_list,
       Audit_of_production_dispatch_order,
       Production_registration,
@@ -306,40 +308,34 @@
   }
 
   /*hhy*/
-  .inline { /*转换行内元素*/
+  .inline{/*转换行内元素*/
     display: inline-block;
   }
 
-  .div02_01 { /*div下边框*/
-    border-bottom: 1px solid black;
+  .div02_01{/*div下边框*/
+    border-bottom:1px solid black;
     width: 300px;
-    text-align: left;
+    text-align:left;
   }
-
-  .drop-downBox {
+  .drop-downBox{
     width: 333px;
   }
-
-  .el-input__inner {
+  .el-input__inner{
     border: none;
   }
-
   .aa .el-form-item--small .el-form-item__content,
   .el-form-item--small .el-form-item__labe {
     width: 83%;
   }
-
-  .yanse {
-    background-color: yellow;
+  .yanse{
+    background-color:yellow;
   }
-
-  .div03 {
+  .div03{
     position: absolute;
     left: 95px;
     background: pink;
   }
-
-  .div04 {
+  .div04{
     position: absolute;
     left: 1200px;
   }
@@ -347,7 +343,7 @@
   /**
   hhy
    */
-  a {
+  a{
     text-decoration: none;
     color: purple;
   }

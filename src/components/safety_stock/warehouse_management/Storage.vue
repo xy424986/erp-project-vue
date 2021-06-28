@@ -1,4 +1,5 @@
 <template>
+  <!--入库调度-->
 <div>
   <div id="div01">
     <el-table
@@ -372,7 +373,7 @@
           show:true,
           hidden:false,
           scellform:{
-            register:'',//登记人
+            register:sessionStorage.getItem("login"),//调度人
             registerTime:"",//登记时间
             maxCapacityAmount:0,//最大存储量
             amount:0,//当前存储量
@@ -508,6 +509,7 @@
                 type: 'success'
               });
             _this.stoQueryByGatherIdSGather(_this.getgatherId);
+            _this.innerDrawer = false;
             console.log(_this.getgatherId);
             _this.$forceUpdate();
           }).catch();
