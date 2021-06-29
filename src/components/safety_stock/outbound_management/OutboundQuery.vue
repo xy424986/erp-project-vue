@@ -224,7 +224,7 @@
                 <el-col :span="11" :offset="3">
                   <div>
                     <el-form-item label="出库单编号:">
-                      <el-input type="text" v-model="scellform.gatherId" readonly="readonly"/>
+                      <el-input type="text" v-model="scellform1.payId" readonly="readonly"/>
                     </el-form-item>
                   </div>
                 </el-col>
@@ -366,7 +366,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SPay/queryAllSPay3.May", params).then(function (response) {
+          this.$axios.post("SPay/queryChuKuAllSPay.May", params).then(function (response) {
             _this.tableData = response.data.records;
             _this.total = response.data.total;
             for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData)}

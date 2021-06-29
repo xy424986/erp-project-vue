@@ -27,9 +27,9 @@
           prop="productClass"
           label="档次级别">
           <template scope="scope">
-            <span v-if="scope.row.productClass === '1'">高档</span>
-            <span v-else-if="scope.row.productClass === '2'">中档</span>
-            <span v-else-if="scope.row.productClass === '3'">低档</span>
+            <span v-if="scope.row.productClass === 'D001-1'">高档</span>
+            <span v-else-if="scope.row.productClass === 'D001-2'">中档</span>
+            <span v-else-if="scope.row.productClass === 'D001-3'">低档</span>
           </template>
         </el-table-column>
         <el-table-column

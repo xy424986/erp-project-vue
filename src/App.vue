@@ -246,7 +246,8 @@
       Make_production_dispatch_list,
       Audit_of_production_dispatch_order,
       Production_registration,
-      Production_registration_review
+      Production_registration_review,
+      WarehouseQueries
     },
     // 钩子调用函数
     created() {
