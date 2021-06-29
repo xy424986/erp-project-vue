@@ -54,6 +54,10 @@
       size="80%">
       <div>
         <el-form  size="small" :inline="true" v-model="scellform">
+          <template>
+            <el-radio v-model="scellform.checkTag" label="S001-1">通过</el-radio>
+            <el-radio v-model="scellform.checkTag" label="S001-2">未通过</el-radio>
+          </template>
           <el-row>
             <el-col :span="1">
               <el-popconfirm
@@ -235,7 +239,8 @@
             storageUnit: "",//储存单元
             storageUnitAbbreviation: "",//储存单元简称
             attemperTime: 0,
-            getpayId: ""
+            getpayId: "",
+            checkTag:"S001-1"
           },
           scellAmount: 0,
           scellAmount2: 0,
@@ -336,6 +341,7 @@
           params.append("id",_this.scellform1.id);//id
           params.append("checker",_this.scellform1.checker);//复核人
           params.append("checkTime",_this.checkTime1);//复核时间
+          params.append("checkTag",_this.scellform.checkTag);//审核状态
           this.$axios.post("SGathers/amendSGather.May",params).then(function (response) {
             if (response.data == true) {
               _this.$notify({

@@ -164,7 +164,7 @@
             <el-col :span="11" :push="3">
               <el-form-item label="已出总库数:">
                 <div class="inline">
-                  <el-input type="text", readonly="readonly"/>
+                  <el-input type="text" readonly="readonly"/>
                 </div>
               </el-form-item>
             </el-col>
@@ -259,7 +259,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SPay/queryAllSPay.May", params).then(function (response) {
+          this.$axios.post("SPay/queryAllSPay1.May", params).then(function (response) {
             _this.tableData = response.data.records;
             _this.total = response.data.total;
             for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData)}

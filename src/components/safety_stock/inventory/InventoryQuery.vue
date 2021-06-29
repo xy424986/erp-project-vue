@@ -362,7 +362,7 @@
           let minutes = this.getStr(date.getMinutes());
           let seconds = this.getStr(date.getSeconds());
           var date1 =Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
-          this.scellform.checkTime = date1;
+        //  this.scellform.checkTime = date1;
         },
         getStr(point) {
           return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）

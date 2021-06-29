@@ -298,7 +298,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SCell/queryAllSCell4.May", params).then(function (response) {
+          this.$axios.post("SCell/queryAllSCell2.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
             console.log()

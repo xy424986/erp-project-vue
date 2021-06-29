@@ -366,7 +366,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SPay/queryAllSPay.May", params).then(function (response) {
+          this.$axios.post("SPay/queryAllSPay3.May", params).then(function (response) {
             _this.tableData = response.data.records;
             _this.total = response.data.total;
             for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData)}

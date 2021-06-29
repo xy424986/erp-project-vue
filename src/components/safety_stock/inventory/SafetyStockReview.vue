@@ -2,7 +2,7 @@
   <!--制作安全库配置单审核-->
   <div>
     <!--制作安全库配置单1复核-->
-    <div id="div01" v-show="show">
+    <div id="div01" >
       <el-table
         :data="tableData"
         height="250"
@@ -252,8 +252,6 @@
             label: '否'
           }],
           value:"否",
-          show:true,
-          hidden:false,
           updateTime:"",
           scellform:{
             config:"",//配置要求
