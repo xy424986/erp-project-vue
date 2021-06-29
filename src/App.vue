@@ -112,6 +112,9 @@
   import Process_material_design_list_inquiry from "./components/production_management/the_material_design/Process_material_design_list_inquiry";
   import Process_material_designList_change from "./components/production_management/the_material_design/Process_material_designList_change";
   import Review_process_material_design_list from "./components/production_management/the_material_design/Review_process_material_design_list";
+  import Production_plan_registration from "./components/production_management/program_management/Production_plan_registration";
+  import Production_plan_review from "./components/production_management/program_management/Production_plan_review";
+  import Production_planning_enquiry from "./components/production_management/program_management/Production_planning_enquiry";
   // 生产管理导入组件close
 
   /**
@@ -234,7 +237,10 @@
       OutboundReview,
       OutboundRegistration,
       WorkOrderInquiry,
-      ProductionQuery
+      ProductionQuery,
+      Production_plan_registration,
+      Production_planning_enquiry,
+      Production_plan_review
     },
     // 钩子调用函数
     created() {

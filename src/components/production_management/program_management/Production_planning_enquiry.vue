@@ -6,39 +6,51 @@
         :data="tableData"
         style="width: 100%">
         <el-table-column
-          label="设计单编号"
-          prop="designId">
+          label="生产计划编号"
+          prop="applyId">
+          <template
+            slot-scope="scope">
+            <a v-on:click="drawerOpen()" v-text="scope.row.applyId"></a>
+          </template>
         </el-table-column>
         <el-table-column
-          label="产品编号"
-          prop="productId">
+          label="计划制定人">
         </el-table-column>
         <el-table-column
-          label="产品名称"
-          prop="productName">
-        </el-table-column>
-        <el-table-column
-          label="设计人"
-          prop="designer">
+          label="登记人"
+          prop="register">
         </el-table-column>
         <el-table-column
           label="登记时间"
           prop="registerTime">
         </el-table-column>
         <el-table-column
-          label="工时总成本"
-          prop="costPriceSum">
+          label="备注"
+          prop="remark">
         </el-table-column>
         <el-table-column
-          align="center"
-          label="操作">
+          label="计划单状态">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              round
-              type="primary"
-              @click="drawerOpen(scope.$index, scope.row)">审核
-            </el-button>
+            <div v-if="scope.row.checkTag === 'S001-1'" style="color: green">
+              完成
+            </div>
+            <div v-else-if="scope.row.checkTag === 'S001-2'" style="color: red">
+              驳回
+            </div>
+            <span v-else-if="scope.row.checkTag === 'S001-0'" style="color: orange">
+              执行
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="派工状态">
+          <template slot-scope="scope">
+            <div v-if="scope.row.manufactureTag === 'P001-0'" style="color: red">
+              <i class="el-icon-success">未派工</i>
+            </div>
+            <div v-else-if="scope.row.manufactureTag === 'P001-1'" style="color: green">
+              <i class="el-icon-error">已派工</i>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -65,10 +77,10 @@
       size="80%">
       <!--      内容-->
       <div class="content">
-        <el-form size="small" :inline="true">
+        <el-form size="small" :inline="true" v-model="procedureForm">
           <el-row>
             <el-col :span="2" :offset="18">
-              <el-button size="mini" round type="warning" icon="el-icon-close" @click="reject">驳回
+              <el-button size="mini" round type="warning" icon="el-icon-close" @click="innerDrawer = false">驳回
               </el-button>
             </el-col>
             <el-col :span="2">
@@ -124,7 +136,7 @@
             <el-col :span="20" :offset="2">
               <div>
                 <el-table
-                  :data="mDPDData"
+                  :data="processData"
                   border
                   height="244"
                   style="width: 100%"
@@ -137,37 +149,46 @@
                   <el-table-column
                     width="100"
                     label="工序名称"
-                    prop="procedureName">
+                    prop="typeName">
                   </el-table-column>
                   <el-table-column
                     width="100"
                     label="工序编号"
-                    prop="procedureId">
+                    prop="typeId">
+                    <!--                    <el-input v-model="" readonly="readonly"></el-input>-->
                   </el-table-column>
                   <el-table-column
                     label="描述"
-                    prop="procedureDescribe">
+                    prop="describe1">
+                    <!--                    <el-input v-model="describe1" readonly="readonly"></el-input>-->
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工时数"
-                    prop="labourHourAmount">
+                    label="工时数">
+                    <template slot-scope="scope">
+                      <el-input v-model="procedureForm.manHour" readonly></el-input>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工时单位"
-                    prop="amountUnit">
-
+                    label="工时单位">
+                    <template slot-scope="scope">
+                      <el-input v-model="procedureForm.manHourUnit" readonly></el-input>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     width="120"
-                    label="单位工时成本"
-                    prop="costPrice">
+                    label="单位工时成本">
+                    <template slot-scope="scope">
+                      <el-input v-model="procedureForm.costPrice" readonly></el-input>
+                    </template>
                   </el-table-column>
                   <el-table-column
                     width="150"
-                    label="工时成本小计（元）"
-                    prop="subtotal">
+                    label="工时成本小计（元）">
+                    <template slot-scope="scope">
+                      <el-input v-model="procedureForm.subtotal" readonly></el-input>
+                    </template>
                   </el-table-column>
                 </el-table>
               </div>
@@ -190,7 +211,7 @@
             <el-col :span="13" :push="1">
               <el-form-item label="审核人:">
                 <!--                <div class="inline div02_01">-->
-                <el-input type="text" v-model="registrant" readonly="readonly"/>
+                <el-input type="text" v-model="procedureForm.registrant" readonly="readonly"/>
                 <!--                </div>-->
               </el-form-item>
             </el-col>
@@ -243,18 +264,29 @@
 
 <script>
   export default {
-    //产品生产工序设计单审核
-    name: "Design_bill_review",
+    //生产计划查询
+    name: "Production_planning_enquiry",
     data() {
       return {
-        //审核表单内表格数据绑定
-        mDPDData: [],
         //定制产品生产工序设计单id
         dFileId: 0,
         //工序制作单表单绑定
         processData: [],
+        procedureForm: {
+          manHour: '',//工时数
+          manHourUnit: '',//工时单位
+          costPrice: '',//单位工时成本
+          subtotal: '',//工时成本小计
+          designRequirements: '',//设计要求
+          registrant: '何海云',//登记人
+          registrationTime: '',//登记时间
+          productName: '',//产品名称
+          productId: '',//产品编号
+          procedureName: '',//工序名称
+          procedureId: '',//工序编号
+          procedureDescribe: '',//工序描述
+        },
         //审核单表格数据绑定
-        registrant: '何海云',//审核人
         costPriceSum: 0,//工时总成本
         designer: '',//设计人
         procedureName: '',//工序名称
@@ -301,60 +333,47 @@
           this.manufactureConfigProcedureListData = response.data;
         }).catch();
       },
-      //驳回
-      reject(){
-        this.$confirm('审核通过进行下一环节, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          var params = new URLSearchParams();
-          params.append("id", this.mDPId);
-          params.append("checkTag", "S001-2");
-          params.append("designProcedureTag", "G001-0");
-          params.append("dFileId", this.dFileId);
-          this.$axios.post("/mDesignProcedure/reject.action", params).then(response => {
-            this.getData();
-            this.$message({
-              type: 'success',
-              message: response.data
-            });
-          }).catch();
-          this.$message({
-            type: 'success',
-            message: '已发送请求!'
-          });
-          this.innerDrawer = false;
-          this.drawer = false;
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
-      },
-      //审核工序设计单
+      //提交工序设计单
       submit() {
-        this.$confirm('审核通过进行下一环节, 是否继续?', '提示', {
+        var arr = this.processData;
+        let newArr = [];
+        arr.map((item, index) => {
+          newArr.push(
+            Object.assign({}, item, {
+                "productName": this.productName,
+                "productId": this.productId,
+                "designer": this.procedureForm.designer,
+                "procedureName": item.typeName,
+                "procedureId": item.typeId,
+                "procedureDescribe": item.describe1,
+                "labourHourAmount": this.procedureForm.manHour,
+                "amountUnit": this.procedureForm.manHourUnit,
+                "costPrice": this.procedureForm.costPrice,
+                "register": this.procedureForm.registrant,
+                "procedureDescribe1": this.procedureForm.designRequirements,
+                "dFileId": this.dFileId
+              }
+            )
+          )
+        });
+
+        this.$confirm('此操作将永久提交该文件, 是否继续?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          var params = new URLSearchParams();
-          params.append("id", this.mDPId);
-          params.append("checkTag", "S001-1");
-          params.append("designProcedureTag", "G001-1");
-          params.append("dFileId", this.dFileId);
-          this.$axios.post("/mDesignProcedure/audit.action", params).then(response => {
-            this.getData();
+          this.$axios.post("/mDesignProcedure/insert.action", JSON.stringify(newArr),
+            {headers: {"Content-Type": "application/json"}}).then(response => {
+            // this.addDate();
             this.$message({
               type: 'success',
               message: response.data
             });
+            console.log(JSON.stringify(newArr))
           }).catch();
           this.$message({
             type: 'success',
-            message: '已发送请求!'
+            message: '已提交!'
           });
           this.innerDrawer = false;
           this.drawer = false;
@@ -383,15 +402,6 @@
         this.costPriceSum = b.costPriceSum;
         this.procedureDescribe = b.procedureDescribe;
         this.dFileId = b.id;
-        this.mDPId = b.id;
-
-        var params = new URLSearchParams();
-        params.append("pId", b.id);
-        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
-        this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
-          this.mDPDData = response.data;
-        }).catch();
-
       },
       //抽屉关闭方法
       handleClose(done) {
@@ -430,8 +440,7 @@
         var params = new URLSearchParams();
         params.append("pageNumber", this.pageNumber);
         params.append("pageSize", this.pageSize);
-        params.append("checkTag", "S001-0");
-        this.$axios.post("/mDesignProcedure/queryByState.action", params).then(response => {
+        this.$axios.post("/mApply/queryAll.action", params).then(response => {
           this.tableData = response.data.records;
           this.total = response.data.total;
           this.addDate();

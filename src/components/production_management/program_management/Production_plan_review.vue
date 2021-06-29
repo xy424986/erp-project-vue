@@ -6,28 +6,20 @@
         :data="tableData"
         style="width: 100%">
         <el-table-column
-          label="设计单编号"
-          prop="designId">
+          label="生产计划编号"
+          prop="applyId">
         </el-table-column>
         <el-table-column
-          label="产品编号"
-          prop="productId">
-        </el-table-column>
-        <el-table-column
-          label="产品名称"
-          prop="productName">
-        </el-table-column>
-        <el-table-column
-          label="设计人"
-          prop="designer">
+          label="登记人"
+          prop="register">
         </el-table-column>
         <el-table-column
           label="登记时间"
           prop="registerTime">
         </el-table-column>
         <el-table-column
-          label="工时总成本"
-          prop="costPriceSum">
+          label="备注"
+          prop="remark">
         </el-table-column>
         <el-table-column
           align="center"
@@ -44,20 +36,6 @@
       </el-table>
     </template>
 
-    <!--    分页-->
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageNumber"
-        :page-sizes="[5, 10, 15, 30]"
-        :page-size="pageSize"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total">
-      </el-pagination>
-    </div>
-    <!--    /分页-->
-
     <!--    抽屉样式-->
     <el-drawer
       title="产品生产工序设计单审核"
@@ -68,7 +46,7 @@
         <el-form size="small" :inline="true">
           <el-row>
             <el-col :span="2" :offset="18">
-              <el-button size="mini" round type="warning" icon="el-icon-close" @click="reject">驳回
+              <el-button size="mini" round type="warning" icon="el-icon-close" @click="innerDrawer = false">驳回
               </el-button>
             </el-col>
             <el-col :span="2">
@@ -76,7 +54,7 @@
               </el-button>
             </el-col>
             <el-col :span="2">
-              <el-button size="mini" round type="info" icon="el-icon-close" @click="innerDrawer = false">返回
+              <el-button size="mini" round type="info" icon="el-icon-close" @click="drawer = false">返回
               </el-button>
             </el-col>
           </el-row>
@@ -85,14 +63,14 @@
             <el-col :span="7" :offset="3">
               <div>
                 <el-form-item label="设计单编号:">
-                  <el-input type="text" v-model="productName" readonly="readonly"/>
+                  <el-input type="text" v-model="applyId" readonly="readonly"/>
                 </el-form-item>
               </div>
             </el-col>
             <el-col :span="8" :offset="2">
               <el-form-item label="设计人:">
                 <!--                <div class="inline div02_01">-->
-                <el-input type="text" v-model="designer" readonly :clearable="true"/>
+                <el-input type="text" v-model="designer" readonly/>
                 <!--                </div>-->
               </el-form-item>
             </el-col>
@@ -118,79 +96,63 @@
           </el-row>
           <!--设计单表格-->
           <el-row>
-            <el-col :span="2">
-              <div></div>
-            </el-col>
             <el-col :span="20" :offset="2">
               <div>
                 <el-table
-                  :data="mDPDData"
+                  :data="productionPlan"
                   border
                   height="244"
                   style="width: 100%"
                   :header-cell-style="{background:'#eef1f6',color:'#606266'}">
                   <el-table-column
-                    width="50"
-                    prop="id"
-                    label="序号">
+                    width="150"
+                    label="产品编号"
+                    prop="productId">
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工序名称"
-                    prop="procedureName">
-                  </el-table-column>
-                  <el-table-column
-                    width="100"
-                    label="工序编号"
-                    prop="procedureId">
+                    label="产品名称"
+                    prop="productName">
                   </el-table-column>
                   <el-table-column
                     label="描述"
-                    prop="procedureDescribe">
+                    prop="productDescribe">
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工时数"
-                    prop="labourHourAmount">
+                    label="数量"
+                    prop="amount">
                   </el-table-column>
                   <el-table-column
                     width="100"
-                    label="工时单位"
-                    prop="amountUnit">
-
-                  </el-table-column>
-                  <el-table-column
-                    width="120"
-                    label="单位工时成本"
-                    prop="costPrice">
-                  </el-table-column>
-                  <el-table-column
-                    width="150"
-                    label="工时成本小计（元）"
-                    prop="subtotal">
+                    label="出库单编号集合">
                   </el-table-column>
                 </el-table>
               </div>
             </el-col>
-            <el-col :span="2">
-              <div></div>
-            </el-col>
           </el-row>
           <!--/-设计单表格-->
           <el-row>
-            <el-col :span="7" :offset="3">
-              <div><!--产品名称：笔记本-->
-                <el-form-item label="工时总成本:">
-                  <el-input type="text" v-model="costPriceSum" readonly="readonly"/>
-                </el-form-item>
-              </div>
+            <el-col :span="13" :push="1">
+              <el-form-item label="登记人:">
+                <!--                <div class="inline div02_01">-->
+                <el-input type="text" v-model="register" readonly/>
+                <!--                </div>-->
+              </el-form-item>
+            </el-col>
+            <el-col :span="9" :pull="2">
+              <el-form-item label="登记时间:">
+                <div class="inline">
+                  <el-input type="text" v-model="registrationTime" readonly="readonly"/>
+                </div>
+              </el-form-item>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span="13" :push="1">
               <el-form-item label="审核人:">
                 <!--                <div class="inline div02_01">-->
-                <el-input type="text" v-model="registrant" readonly="readonly"/>
+                <el-input type="text" v-model="register" readonly="readonly"/>
                 <!--                </div>-->
               </el-form-item>
             </el-col>
@@ -206,9 +168,9 @@
           <el-row>
             <el-col :span="24" :offset="2">
               <div class="aa">
-                <el-form-item label="设计要求:" style="width: 80%; display: block;">
+                <el-form-item label="备注:" style="width: 80%; display: block;">
                   <el-input type="textarea" :rows="4" resize="none" placeholder="请输入内容" style="width: 100%"
-                            v-model="procedureDescribe" readonly>
+                            v-model="remark" readonly>
                   </el-input>
                 </el-form-item>
               </div>
@@ -243,24 +205,28 @@
 
 <script>
   export default {
-    //产品生产工序设计单审核
-    name: "Design_bill_review",
+    // 生产计划审核
+    name: "Production_plan_review",
     data() {
       return {
+        productionPlan: '',//审核表格数据绑定
         //审核表单内表格数据绑定
         mDPDData: [],
-        //定制产品生产工序设计单id
-        dFileId: 0,
+        //id
+        mAId: 0,
         //工序制作单表单绑定
         processData: [],
         //审核单表格数据绑定
+        remark: '',//备注
+        register: '',//登记人
         registrant: '何海云',//审核人
         costPriceSum: 0,//工时总成本
         designer: '',//设计人
         procedureName: '',//工序名称
         procedureId: '',//工序编号
         procedureDescribe: '',//设计单要求
-        //点开设计单赋值绑定
+        //点审核赋值绑定
+        applyId: '',//计划单编号
         productName: '',//产品名称
         productId: '',//产品编号
         registrationTime: '',//登记时间
@@ -301,38 +267,6 @@
           this.manufactureConfigProcedureListData = response.data;
         }).catch();
       },
-      //驳回
-      reject(){
-        this.$confirm('审核通过进行下一环节, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          var params = new URLSearchParams();
-          params.append("id", this.mDPId);
-          params.append("checkTag", "S001-2");
-          params.append("designProcedureTag", "G001-0");
-          params.append("dFileId", this.dFileId);
-          this.$axios.post("/mDesignProcedure/reject.action", params).then(response => {
-            this.getData();
-            this.$message({
-              type: 'success',
-              message: response.data
-            });
-          }).catch();
-          this.$message({
-            type: 'success',
-            message: '已发送请求!'
-          });
-          this.innerDrawer = false;
-          this.drawer = false;
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消'
-          });
-        });
-      },
       //审核工序设计单
       submit() {
         this.$confirm('审核通过进行下一环节, 是否继续?', '提示', {
@@ -341,11 +275,9 @@
           type: 'warning'
         }).then(() => {
           var params = new URLSearchParams();
-          params.append("id", this.mDPId);
+          params.append("applyId", this.applyId);
           params.append("checkTag", "S001-1");
-          params.append("designProcedureTag", "G001-1");
-          params.append("dFileId", this.dFileId);
-          this.$axios.post("/mDesignProcedure/audit.action", params).then(response => {
+          this.$axios.post("/mApply/audit.action", params).then(response => {
             this.getData();
             this.$message({
               type: 'success',
@@ -377,19 +309,21 @@
       //打开抽屉
       drawerOpen(a, b) {
         this.drawer = true;
-        this.productName = b.productName;
-        this.productId = b.productId;
-        this.designer = b.designer;
-        this.costPriceSum = b.costPriceSum;
-        this.procedureDescribe = b.procedureDescribe;
-        this.dFileId = b.id;
-        this.mDPId = b.id;
+        this.addDate();
+        this.applyId = b.applyId;//计划单编号
+        this.registrant = b.registrant;//审核人
+        this.register = b.register;//登记人
+        this.registrationTime = b.registerTime;//登记时间
+        this.remark = b.remark;//备注
+        this.productName = b.productName;//产品名称
+        this.productId = b.productId;//产品编号
+        this.designer = b.designer;//设计人
+        // this.applyId = b.applyId;
 
         var params = new URLSearchParams();
-        params.append("pId", b.id);
-        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
-        this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
-          this.mDPDData = response.data;
+        params.append("applyId", b.applyId);
+        this.$axios.post("/mApply/queryById.action", params).then(response => {
+          this.productionPlan = response.data;
         }).catch();
 
       },
@@ -428,12 +362,9 @@
       //获取定制产品数据
       getData() {
         var params = new URLSearchParams();
-        params.append("pageNumber", this.pageNumber);
-        params.append("pageSize", this.pageSize);
         params.append("checkTag", "S001-0");
-        this.$axios.post("/mDesignProcedure/queryByState.action", params).then(response => {
-          this.tableData = response.data.records;
-          this.total = response.data.total;
+        this.$axios.post("/mApply/queryByState.action", params).then(response => {
+          this.tableData = response.data;
           this.addDate();
         }).catch();
       }
@@ -495,3 +426,4 @@
   /*}*/
 
 </style>
+
