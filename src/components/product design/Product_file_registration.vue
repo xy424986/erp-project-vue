@@ -151,7 +151,7 @@
           <el-col :span="12">
             <label style="background-color:lightsteelblue">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               登记人:
-              <input type="text" style="width: 214px"  v-model="register"></input>
+              <input type="text" style="width: 214px"  v-model="register" readonly="readonly"></input>
             </label>
           </el-col>
           <el-col :span="12">
