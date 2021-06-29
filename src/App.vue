@@ -86,6 +86,12 @@
 </template>
 
 <script>
+  //生产登记导入组件close
+  import Production_registration from './components/Internal_production_management/Production_registration'
+  import Production_registration_review from './components/Internal_production_management/Production_registration_review'
+  //生产调度管理导入组建close
+  import Make_production_dispatch_list from './components/Production_scheduling_management/Make_production_dispatch_list'
+  import Audit_of_production_dispatch_order from './components/Production_scheduling_management/Audit_of_production_dispatch_order'
   //产品档案导入组件close
   import Product_file_change from "./components/product design/Product_file_change";
   import Product_file_delete from "./components/product design/Product_file_delete";
@@ -135,6 +141,8 @@
   import OutboundRegistration from "./components/safety_stock/outbound_management/OutboundRegistration";
   import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
   import ProductionQuery from "./components/safety_stock/ProductionQuery";
+  import DynamicInventoryQuery from "./components/safety_stock/InventoryQuery/DynamicInventoryQuery";
+
 
   export default {
     name: 'app',
@@ -218,7 +226,6 @@
       chouti,
       OutboundScheduling,
       WarehousingRegistration,
-      WarehouseQueries,
       Product_file_query,
       Product_file_delete,
       Product_file_change,
@@ -238,6 +245,11 @@
       OutboundRegistration,
       WorkOrderInquiry,
       ProductionQuery,
+      DynamicInventoryQuery,
+      Make_production_dispatch_list,
+      Audit_of_production_dispatch_order,
+      Production_registration,
+      Production_registration_review,
       Production_plan_registration,
       Production_planning_enquiry,
       Production_plan_review

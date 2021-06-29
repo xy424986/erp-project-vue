@@ -1,7 +1,25 @@
 <template>
+  <!--制作安全库配置单查询-->
   <div>
-    <!--制作安全库配置单1复核-->
     <div id="div01">
+      <!--条件查询-->
+      <el-form :inline="true"  class="demo-form-inline" v-model="scellform">
+        <el-row>
+          <el-col :span="12"><div>
+            <el-form-item label="产品编号:">
+              <el-input type="text" v-model="scellform.productId" clearable placeholder="请输入产品编号!"></el-input>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="10" ><div>
+            <el-form-item label="产品名称:">
+              <el-input type="text" v-model="scellform.productName" clearable placeholder="请输入产品名称!"></el-input>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="2" ><div>
+            <el-button @click="sel">查询</el-button>
+          </div></el-col>
+        </el-row>
+      </el-form>
       <el-table
         :data="tableData"
         height="250"
@@ -46,9 +64,26 @@
           prop="thirdKindName"
           label="III及分类">
         </el-table-column>
+        <el-table-column
+          prop="checkTag"
+          label="审核状态">
+          <template scope="scope">
+            <span v-if="scope.row.checkTag === 'S001-1'">已审核</span>
+            <span v-else-if="scope.row.checkTag === 'S001-2'">审核未通过</span>
+          </template>
+        </el-table-column>
       </el-table>
+      <!-- 分页-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageno"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
-    <!--制作安全库配置单2复核-->
     <!--    抽屉样式-->
     <el-drawer
       :visible.sync="drawer"
@@ -189,14 +224,14 @@
           <el-col :span="14" :push="1">
             <!--<div class="inline">登记人：</div>-->
             <el-form-item label="复核人:">
-              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.register" /></div>
+              <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.checker" /></div>
             </el-form-item>
           </el-col>
           <el-col :span="7" :pull="2">
             <!--<div class="inline">登记时间：</div>-->
             <el-form-item label="复核时间:">
               <div class="inline">
-                <el-input type="text" v-model="scellform.registerTime" readonly="readonly"/>
+                <el-input type="text" v-model="scellform.checkTime" readonly="readonly"/>
               </div>
             </el-form-item>
           </el-col>
@@ -276,12 +311,15 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
+          params.append("productId", this.scellform.productId);//产品编号
+          params.append("productName", this.scellform.productName);//产品名称
           this.$axios.post("SCell/queryAllSCell2.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
             console.log()
           }).catch();
         },
+        sel(){this.getdata()},
         handleClose(done) {
           this.$confirm('确认关闭？')
             .then(_ => {
@@ -296,15 +334,9 @@
           this.pageno = 1;
           this.getdata();
         },
-        //以下方法是制作安全库配置单2的
         handleCurrentChange(val) {  //页码变更
           this.pageno = val;
           this.getdata();
-        },
-        //设置表头的颜色
-        rowClass({row, rowIndex}) {
-          console.log(rowIndex) //表头行标号为0
-          return 'background:red'
         },
         //设置指定行、列、具体单元格颜色
         cellStyle({row, column, rowIndex, columnIndex}) {

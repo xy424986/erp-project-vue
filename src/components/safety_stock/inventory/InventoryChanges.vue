@@ -1,6 +1,7 @@
 <template>
+  <!--制作安全库配置单变更-->
   <div>
-    <!--制作安全库配置单1复核-->
+
     <div id="div01">
       <el-table
         :data="tableData"
@@ -47,12 +48,22 @@
           label="变更"
           width="100">
           <template slot-scope="scope">
-            <el-button size="mini" round type="primary" icon="el-icon-check" @click="openeditwin(scope.row.productId)">变更</el-button>
+            <el-button size="mini" round type="primary" icon="el-icon-check" @click="openeditwin(scope.row.storeId)">变更</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageno"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
-    <!--制作安全库配置单2复核-->
+    <!--制作安全库配置单2修改-->
     <!--    抽屉样式-->
     <el-drawer
       :visible.sync="drawer"
@@ -66,7 +77,7 @@
                 title="确定提交吗？"
                 @confirm="addSCll"
               >
-                <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">复核</el-button>
+                <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">修改</el-button>
               </el-popconfirm>
             </el-col>
             <el-col :span="20"><h3>安全库存配置单</h3></el-col>
@@ -201,14 +212,14 @@
             <el-col :span="14" :push="1">
               <!--<div class="inline">登记人：</div>-->
               <el-form-item label="变更人:">
-                <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.register" /></div>
+                <div class="inline div02_01"><el-input type="text" readonly="readonly" v-model="scellform.changeRen" /></div>
               </el-form-item>
             </el-col>
             <el-col :span="7" :pull="2">
               <!--<div class="inline">登记时间：</div>-->
               <el-form-item label="变更时间:">
                 <div class="inline">
-                  <el-input type="text" v-model="scellform.registerTime" readonly="readonly"/>
+                  <el-input type="text" v-model="scellform.changeRenTime" readonly="readonly"/>
                 </div>
               </el-form-item>
             </el-col>
@@ -231,7 +242,7 @@
 
 <script>
     export default {
-        name: "InventoryChanges",
+        name: "InventorychangeRens",
       data(){
         return {
           tableData:[],
@@ -252,7 +263,7 @@
           updateTime:"",
           scellform:{
             config:"",//配置要求
-            register:'',//登记人
+            changeRen:sessionStorage.getItem("loginId"),
             registerTime:"",//登记时间
             minAmount:0,//库存报警下限数
             maxAmount:0,//库存报警上限数
@@ -270,8 +281,8 @@
             storageUnit:"",//储存单元
             storageUnitAbbreviation:"",//储存单元简称
             theDesigner:"",//设计人
-            checkTime:"",//复核时间
-            checker:"",//复核人
+            checkTime:"",//修改时间
+            checker:"",//修改人
             id:""
           },
           ass:"",
@@ -287,26 +298,25 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SCell/queryAllSCell2.May", params).then(function (response) {
+          this.$axios.post("SCell/queryAllSCell4.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
             console.log()
           }).catch();
+        },
+        handleSizechangeRen(val) {  //页size变更
+          this.pagesize = val;
+          this.pageno = 1;
+          this.getdata();
         },
         handleSizeChange(val) {  //页size变更
           this.pagesize = val;
           this.pageno = 1;
           this.getdata();
         },
-        //以下方法是制作安全库配置单2的
         handleCurrentChange(val) {  //页码变更
           this.pageno = val;
           this.getdata();
-        },
-        //设置表头的颜色
-        rowClass({row, rowIndex}) {
-          console.log(rowIndex) //表头行标号为0
-          return 'background:red'
         },
         //设置指定行、列、具体单元格颜色
         cellStyle({row, column, rowIndex, columnIndex}) {
@@ -316,11 +326,6 @@
               return 'background:yellow' //rgb(105,0,7)
             }
           }
-        },
-        //显示隐藏
-        showHidden(){
-          this.show=!this.show;
-          this.hidden=!this.hidden;
         },
         //获取当前年月日
         addDate(){
@@ -332,21 +337,20 @@
           let minutes = this.getStr(date.getMinutes());
           let seconds = this.getStr(date.getSeconds());
           var date1 =Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
-          this.scellform.checkTime = date1;
+          this.scellform.changeRenTime = date1;
         },
         getStr(point) {
           return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
         },
         openeditwin(productId){//获取数据
           var _this=this;
-          this.showHidden();
           var params = new URLSearchParams();
           params.append("productId", productId);
           this.$axios.post("SCell/queryByIdSCell.May", params).then(function (response) {
             _this.scellform=response.data;
             _this.ass=_this.scellform.firstKindName+"-"+_this.scellform.secondKindName+"-"+_this.scellform.thirdKindName;
             _this.css=_this.scellform.firstKindId+"-"+_this.scellform.secondKindId+"-"+_this.scellform.thirdKindId;
-            _this.openeditwin2(productId);
+            _this.openeditwin2(_this.scellform.productId);
             _this.addDate(_this.scellform);
             _this.drawer = true;
             console.log()
@@ -380,6 +384,8 @@
           params.append("maxCapacityAmount",_this.scellform.maxCapacityAmount);//最大存储量
           params.append("storageUnit",_this.scellform.storageUnit);//储存单元
           params.append("storageUnitAbbreviation",_this.scellform.storageUnitAbbreviation);//储存单元简称
+          params.append("changeRen",_this.scellform.changeRen);//变更人
+          params.append("changeRenTime",_this.scellform.changeRenTime);//变更时间
           console.log(this.scellform.storageUnit)
           this.$axios.post("SCell/amendSCll.May",params).then(function (response) {
             if (response.data == true) {
@@ -395,7 +401,8 @@
                 type: 'danger'
               });
             }
-            this.getdata();
+            _this.drawer=false;
+            _this.getdata();
             _this.$forceUpdate();
           }).catch();
         }

@@ -362,6 +362,8 @@
                 type: 'danger'
               });
             }
+            _this.drawer=false;
+            _this.getdata();
             _this.$forceUpdate();
           }).catch();
         }
