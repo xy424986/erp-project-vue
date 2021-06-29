@@ -132,9 +132,9 @@
                   <el-table-column
                     width="50"
                     label="序号">
-<!--                    <template slot-scope="scope">-->
-<!--                      1-->
-<!--                    </template>-->
+                    <template slot-scope="scope">
+                      {{scope.$index+1}}
+                    </template>
                   </el-table-column>
                   <el-table-column
                     width="100"
@@ -213,21 +213,25 @@
                           </el-form>
                         </div>
                         <el-table :data="dMDData">
-                          <el-table-column width="50" property="date" label="序号"></el-table-column>
+                          <el-table-column width="50" label="序号">
+                            <template slot-scope="scope">
+                              {{scope.$index+1}}
+                            </template>
+                          </el-table-column>
                           <el-table-column width="90" property="productName" label="物料名称"></el-table-column>
                           <el-table-column width="90" property="productId" label="物料编号"></el-table-column>
                           <el-table-column width="50" property="productDescribe" label="描述"></el-table-column>
-                          <el-table-column width="90" label="设计数量">
-                            <template slot-scope="scope">
-                              <span v-text="scope.row.NumberOfProcesses"></span>
-                            </template>
+                          <el-table-column width="90" label="设计数量" prop="amount">
+<!--                            <template slot-scope="scope">-->
+<!--                              <span v-text="scope.row.NumberOfProcesses"></span>-->
+<!--                            </template>-->
                           </el-table-column>
                           <el-table-column width="90" property="residualAmount" label="可用数量"></el-table-column>
                           <el-table-column width="50" property="amountUnit" label="单位"></el-table-column>
                           <el-table-column width="90" property="costPrice" label="单价（元）"></el-table-column>
                           <el-table-column width="100" label="本工序数量">
                             <template slot-scope="scope">
-                              <el-input v-model="scope.row.NumberOfProcesses"></el-input>
+                              <el-input v-model="scope.row.NumberOfProcesses" v-on:input="aa(scope)"></el-input>
                             </template>
                           </el-table-column>
                         </el-table>
@@ -278,7 +282,8 @@
             <el-col :span="7" :offset="3">
               <div><!--产品名称：笔记本-->
                 <el-form-item label="物料总成本:">
-                  <el-input type="text" v-model="moduleCostPriceSum" readonly="readonly"/>
+<!--                  <el-input type="text" v-model="moduleCostPriceSum" readonly="readonly"/>-->
+                  {{total1}}
                 </el-form-item>
               </div>
             </el-col>
@@ -332,7 +337,7 @@
         //工序设计表格数据绑定
         dMDData: [],
         //工序物料设计表单内表格设计表格本工序数量绑定
-        NumberOfProcesses: 0,
+        // NumberOfProcesses: 0,
         //工序物料设计表单内表格设计表格数据绑定
         mDPMData: [],
         //工序物料设计表单内表格数据绑定
@@ -374,6 +379,10 @@
       }
     },
     methods: {
+      //
+      aa(scope){
+        scope.row.amount = scope.row.NumberOfProcesses;
+      },
       //工序物料设计提交
       submit1() {
         var arr = this.mDPDData;
@@ -551,8 +560,14 @@
         }).catch();
       }
     },
-    watch: {
-
+    computed: {
+      total1(){
+        var i = 0;
+        this.mDPDData.forEach((item)=>{
+          i=i+Number(item.moduleSubtotal);
+        });
+        return i;
+      }
     },
     //钩子调用函数
     created() {
