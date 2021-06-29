@@ -48,7 +48,7 @@
           label="变更"
           width="100">
           <template slot-scope="scope">
-            <el-button size="mini" round type="primary" icon="el-icon-check" @click="openeditwin(scope.row.productId)">变更</el-button>
+            <el-button size="mini" round type="primary" icon="el-icon-check" @click="openeditwin(scope.row.storeId)">变更</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,7 +63,7 @@
         :total="total">
       </el-pagination>
     </div>
-    <!--制作安全库配置单2复核-->
+    <!--制作安全库配置单2修改-->
     <!--    抽屉样式-->
     <el-drawer
       :visible.sync="drawer"
@@ -77,7 +77,7 @@
                 title="确定提交吗？"
                 @confirm="addSCll"
               >
-                <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">复核</el-button>
+                <el-button slot="reference" size="mini" round type="primary" icon="el-icon-check">修改</el-button>
               </el-popconfirm>
             </el-col>
             <el-col :span="20"><h3>安全库存配置单</h3></el-col>
@@ -281,8 +281,8 @@
             storageUnit:"",//储存单元
             storageUnitAbbreviation:"",//储存单元简称
             theDesigner:"",//设计人
-            checkTime:"",//复核时间
-            checker:"",//复核人
+            checkTime:"",//修改时间
+            checker:"",//修改人
             id:""
           },
           ass:"",
@@ -298,7 +298,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SCell/queryAllSCell2.May", params).then(function (response) {
+          this.$axios.post("SCell/queryAllSCell4.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
             console.log()
@@ -350,7 +350,7 @@
             _this.scellform=response.data;
             _this.ass=_this.scellform.firstKindName+"-"+_this.scellform.secondKindName+"-"+_this.scellform.thirdKindName;
             _this.css=_this.scellform.firstKindId+"-"+_this.scellform.secondKindId+"-"+_this.scellform.thirdKindId;
-            _this.openeditwin2(productId);
+            _this.openeditwin2(_this.scellform.productId);
             _this.addDate(_this.scellform);
             _this.drawer = true;
             console.log()

@@ -3,6 +3,24 @@
   <div>
     <!--制作安全库配置单1-->
   <div id="div01">
+    <!--条件查询-->
+    <el-form :inline="true"  class="demo-form-inline">
+      <el-row>
+        <el-col :span="12"><div>
+          <el-form-item label="产品编号:">
+            <el-input type="text" v-model="scellform.productId" clearable placeholder="请输入产品编号!"></el-input>
+          </el-form-item>
+        </div></el-col>
+        <el-col :span="10" ><div>
+          <el-form-item label="产品名称:">
+            <el-input type="text" v-model="scellform.productName" clearable placeholder="请输入产品名称!"></el-input>
+          </el-form-item>
+        </div></el-col>
+        <el-col :span="2" ><div>
+          <el-button @click="sel">查询</el-button>
+        </div></el-col>
+      </el-row>
+    </el-form>
   <el-table
     :data="tableData"
     height="250"
@@ -52,8 +70,17 @@
       </template>
     </el-table-column>
   </el-table>
+    <!-- 分页-->
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="pageno"
+      :page-sizes="[5, 10, 15, 20]"
+      :page-size="pagesize"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total">
+    </el-pagination>
   </div>
-
     <!--制作安全库配置单2-->
     <!--    抽屉样式-->
     <el-drawer
@@ -275,14 +302,21 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
+          params.append("productId", this.scellform.productId);//产品编号
+          params.append("productName", this.scellform.productName);//产品名称
           this.$axios.post("DFile/queryAllDFile.May", params).then(function (response) {
             _this.tableData = response.data.records;
             _this.total = response.data.total;
           }).catch();
         },
+        sel(){this.getdata()},
         handleSizeChange(val) {  //页size变更
           this.pagesize = val;
           this.pageno = 1;
+          this.getdata();
+        },
+        handleCurrentChange(val) {  //页码变更
+          this.pageno = val;
           this.getdata();
         },
         handleClose(done) {
@@ -293,11 +327,6 @@
             .catch(_ => {
               this.drawer=false;
             });
-        },
-        //以下方法是制作安全库配置单2的
-        handleCurrentChange(val) {  //页码变更
-          this.pageno = val;
-          this.getdata();
         },
         //设置表头的颜色
         rowClass({row, rowIndex}) {
@@ -312,11 +341,6 @@
               return 'background:yellow' //rgb(105,0,7)
             }
           }
-        },
-        //显示隐藏
-        showHidden(){
-              this.show=!this.show;
-              this.hidden=!this.hidden;
         },
         //获取当前年月日
         addDate(){
@@ -335,7 +359,6 @@
         },
         openeditwin(productId){//获取数据
           var _this=this;
-          this.showHidden();
           var params = new URLSearchParams();
           params.append("productId", productId);
           this.$axios.post("DFile/queryByIdDFile.May", params).then(function (response) {
@@ -402,6 +425,8 @@
                 type: 'danger'
               });
             }
+            _this.scellform.productId=""//产品编号
+            _this.scellform.productName=""//产品名称
             _this.drawer=false;
             _this.getdata();
             _this.$forceUpdate();

@@ -60,6 +60,10 @@
       size="80%">
     <div id="div02" >
       <el-form  size="small" :inline="true" v-model="scellform">
+        <template>
+          <el-radio v-model="scellform.checkTag" label="S001-1">通过</el-radio>
+          <el-radio v-model="scellform.checkTag" label="S001-2">未通过</el-radio>
+        </template>
         <el-row>
           <el-col :span="1">
             <el-popconfirm
@@ -274,7 +278,8 @@
             checkTime:"",//复核时间
             checker:sessionStorage.getItem("loginId"),//复核人
             productClass:"",
-            type:""
+            type:"",
+            checkTag:"S001-1"
           },
           ass:"",
           css:"",
@@ -364,9 +369,11 @@
           var _this=this;
           this.scellform.amount=0;
           var params = new URLSearchParams();
+          console.log("sss"+_this.scellform.checkTag)
           params.append("id",_this.scellform.id);//id
           params.append("checker",_this.scellform.checker);//审核人
           params.append("checkTime",_this.scellform.checkTime);//审核时间
+          params.append("checkTag",_this.scellform.checkTag);//审核状态
           console.log(this.scellform.storageUnit)
           this.$axios.post("SCell/amendCheckTag.May",params).then(function (response) {
             if (response.data == true) {
