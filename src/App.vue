@@ -86,6 +86,9 @@
 </template>
 
 <script>
+  //入库登记导入组件close
+  import ApplyForDelivery from './components/Warehousing_application/ApplyForDelivery'
+  import WarehousingAudit from './components/Warehousing_application/WarehousingAudit'
   //生产登记导入组件close
   import Production_registration from './components/Internal_production_management/Production_registration'
   import Production_registration_review from './components/Internal_production_management/Production_registration_review'
@@ -252,7 +255,9 @@
       Production_registration_review,
       Production_plan_registration,
       Production_planning_enquiry,
-      Production_plan_review
+      Production_plan_review,
+      ApplyForDelivery,
+      WarehousingAudit
     },
     // 钩子调用函数
     created() {
