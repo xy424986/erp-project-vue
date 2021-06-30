@@ -441,7 +441,7 @@
         var params = new URLSearchParams();
         params.append("pageNumber", this.pageNumber);
         params.append("pageSize", this.pageSize);
-        this.$axios.post("/mApply/queryAll.action", params).then(response => {
+        this.$axios.post("/MApply/queryAll.action", params).then(response => {
           this.tableData = response.data.records;
           this.total = response.data.total;
           this.addDate();

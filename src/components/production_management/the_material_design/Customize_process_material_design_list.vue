@@ -429,6 +429,7 @@
                 "amountUnit": item.amountUnit,//单位
                 "costPrice": item.costPrice,//单价
                 "amount": item.amount,//设计数量
+                "residualAmount": item.residualAmount,//可用数量
                 "amount1": item.amount1,//本工序数量
                 "mDPId": this.mDPId,//id
                 "mDPDId": this.mDPDId,//id

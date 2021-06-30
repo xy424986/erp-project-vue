@@ -277,7 +277,7 @@
           var params = new URLSearchParams();
           params.append("applyId", this.applyId);
           params.append("checkTag", "S001-1");
-          this.$axios.post("/mApply/audit.action", params).then(response => {
+          this.$axios.post("/MApply/audit.action", params).then(response => {
             this.getData();
             this.$message({
               type: 'success',
@@ -322,7 +322,7 @@
 
         var params = new URLSearchParams();
         params.append("applyId", b.applyId);
-        this.$axios.post("/mApply/queryById.action", params).then(response => {
+        this.$axios.post("/MApply/queryById.action", params).then(response => {
           this.productionPlan = response.data;
         }).catch();
 
@@ -365,7 +365,7 @@
       getData() {
         var params = new URLSearchParams();
         params.append("checkTag", "S001-0");
-        this.$axios.post("/mApply/queryByState.action", params).then(response => {
+        this.$axios.post("/MApply/queryByState.action", params).then(response => {
           this.tableData = response.data;
           this.addDate();
         }).catch();
