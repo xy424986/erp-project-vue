@@ -453,7 +453,7 @@
           }
         }).catch();
       },
-      adddispatchtwo(id){//制定单通过
+      adddispatchtwo(id){//制定单不通过
         var _this = this;
         var params = new URLSearchParams();
         params.append("id",id);

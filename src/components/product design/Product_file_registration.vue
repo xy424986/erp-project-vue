@@ -254,10 +254,17 @@
           this.$axios.post("DFile/addProductFile.action",params).then(function (response) {
             console.log(response.data)
             if (response.data==true){
-              alert("提交成功");
-
+              _this.$notify({
+                title: '成功',
+                message: '提交成功',
+                type: 'success'
+              })
             }else {
-              alert("提交失败")
+              _this.$notify({
+                title: '成功',
+                message: '提交失败',
+                type: 'warning'
+              })
             }
           }).catch()
         },

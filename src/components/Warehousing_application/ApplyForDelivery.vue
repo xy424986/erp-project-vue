@@ -161,12 +161,12 @@
       <el-row>
         <el-col :span="8" :push="1" >
           <el-form-item label="总数量：" v-model="amountSum">
-            <div class="inline"></div>
+            <div class="inline"> <span>{{shuliang}}</span> </div>
           </el-form-item>
         </el-col>
         <el-col :span="10" :push="1">
           <el-form-item label="总金额" >
-            <div class="inline" v-model="costPriceSum"></div>
+            <div class="inline"> <span>{{jine}}</span> </div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -225,6 +225,8 @@
           costPrice:'',//成本单价
           subtotal:'',//小计
           remark:'',//备注
+          shuliang:0,//总数量
+          jine:0,//总金额
           reasons: [{
             value: 'R001-1',
             label: '生产入库',
@@ -263,33 +265,15 @@
         addDelivery(){
           var _this=this;
           let newArr1 = [];
-          var arr = this.adddata;
-/*          var  param = new URLSearchParams();
-          param.append("storer",this.storer);
-          param.append("register",this.register);
-          param.append("registerTime",this.registerTime);
-          param.append("amountSum",this.amountSum);
-          param.append("costPriceSum",this.costPriceSum);
-          param.append("time",this.time);
-          param.append("table",this.table);
-          param.append("reason",this.reason);
-          param.append("productName",this.productName);
-          param.append("productId",this.productId);
-          param.append("productDescribe",this.productDescribe);
-          param.append("amount",this.amount);
-          param.append("amountUnit",this.amountUnit);
-          param.append("costPrice",this.costPrice);
-          param.append("subtotal",this.subtotal);
-          param.append("remark",this.remark);
-          */
+          var arr = this.tableData;
           arr.map((item, index)=> {
             newArr1.push(
               Object.assign({}, item, {
                 "storer":_this.storer,//入库人
                 "register":_this.register,//登记人
                 "registerTime":_this.registerTime,//登记时间
-                "amountSum":_this.amountSum,//总数量
-                "costPriceSum":_this.costPriceSum,//总金额
+                "amountSum":_this.shuliang,//总数量
+                "costPriceSum":_this.jine,//总金额
                 "time":_this.time,//
                 "table":_this.table,//
                 "reason":_this.reason,//入库理由
@@ -305,7 +289,7 @@
               )
             )
           });
-          this.$axios.post("SGathers//addApplyForDelivery.May",JSON.stringify(newArr1),{headers:{"Content-Type":"application/json"}}).then(function(response){
+          this.$axios.post("SGathers/addApplyForDelivery.May",JSON.stringify(newArr1),{headers:{"Content-Type":"application/json"}}).then(function(response){
             console.log(response.data)
             if(response.data==true){
               alert("提交成功")
@@ -319,10 +303,19 @@
             .then(_=>{
               done();
             })
-            .catch(_=>{});
+            .catch(_=>{
+              for ( i=0;i<this.tableData.length;i++){
+                this.shuliang+=this.tableData[i].amount;
+                this.jine+=this.tableData[i].subtotal;
+              }
+            });
         },
         del(index,rows){
           rows.splice(index,1)
+          for (var i=0;i<this.tableData.length;i++){
+            this.shuliang-=this.tableData[i].amount;
+            this.jine-=this.tableData[i].subtotal;
+          }
         },
         //获取数据
         add1(){
@@ -330,28 +323,16 @@
           var params = new URLSearchParams();
           this.$axios.post("/SGatherDetails/queryAll.May",params).then(function (response) {
             _this.adddata=response.data;
-            /*for(var i=0;i<_this.adddata.length;i++) {
-              console.log(_this.adddata)
-              }*/
-            // for (var i = 0;i<_this.adddata.length;i++){
-            //   _this.
-            // }
             _this.table=true;
           })
         },
-        // queryAll(){
-        //   var _this= this;
-        //   var param = new URLSearchParams();
-        //   this.$axios.post("SGatherDetails/queyrAll.May",param).then(function (response) {
-        //    _this.adddata=response.data;
-        //   })
-        // },
         addWarehouse(id){
           var i = 0;
           for(i=0;i<this.adddata.length;i++)
             if (this.adddata[i].productId==id){
             this.tableData.push(this.adddata[i]);
           }
+
         },
 
         //获取当前年月日
@@ -363,7 +344,7 @@
           let hours = date.getHours();
           let minutes = this.getStr(date.getMinutes());
           let seconds = this.getStr(date.getSeconds());
-          this.registerTime = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
+          this.registerTime = Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
           console.log(this.registerTime)
         },
       getStr(point) {

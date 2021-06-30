@@ -113,7 +113,7 @@
                 <el-table
                   :data="query_dispatchByIddata"
                   border
-                  height="140"
+                  height="180"
                   style="width: 100%"
                   :header-cell-style="{background:'#eef1f6',color:'#606266'}"
                   :cell-style="cellStyle">
