@@ -86,9 +86,14 @@
 </template>
 
 <script>
+  //入库登记导入组件close
+  import ApplyForDelivery from './components/Warehousing_application/ApplyForDelivery'
+  import WarehousingAudit from './components/Warehousing_application/WarehousingAudit'
   //生产登记导入组件close
   import Production_registration from './components/Internal_production_management/Production_registration'
   import Production_registration_review from './components/Internal_production_management/Production_registration_review'
+  import InternalProductionAdd from './components/Internal_production_management/InternalProductionAdd'
+  import InternalProductionShenhe from './components/Internal_production_management/InternalProductionShenhe'
   //生产调度管理导入组建close
   import Make_production_dispatch_list from './components/Production_scheduling_management/Make_production_dispatch_list'
   import Audit_of_production_dispatch_order from './components/Production_scheduling_management/Audit_of_production_dispatch_order'
@@ -142,7 +147,7 @@
   import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
   import ProductionQuery from "./components/safety_stock/ProductionQuery";
   import DynamicInventoryQuery from "./components/safety_stock/InventoryQuery/DynamicInventoryQuery";
-
+  import InboundQuery from "./components/Warehousing_application/InboundQuery";
 
   export default {
     name: 'app',
@@ -249,10 +254,16 @@
       Make_production_dispatch_list,
       Audit_of_production_dispatch_order,
       Production_registration,
+      WarehouseQueries,
       Production_registration_review,
       Production_plan_registration,
       Production_planning_enquiry,
-      Production_plan_review
+      Production_plan_review,
+      ApplyForDelivery,
+      WarehousingAudit,
+      InboundQuery,
+      InternalProductionAdd,
+      InternalProductionShenhe
     },
     // 钩子调用函数
     created() {

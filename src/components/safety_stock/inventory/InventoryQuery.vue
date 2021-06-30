@@ -30,7 +30,7 @@
           label="产品编号"
           width="180">
           <template slot-scope="scope">
-            <span type="text" v-text="scope.row.productId" @click="openeditwin(scope.row.productId)"></span>
+            <span type="text" v-text="scope.row.productId" @click="openeditwin(scope.row.storeId)"></span>
           </template>
         </el-table-column>
         <el-table-column
@@ -47,9 +47,9 @@
           prop="productClass"
           label="档次级别">
           <template scope="scope">
-            <span v-if="scope.row.productClass === '1'">高档</span>
-            <span v-else-if="scope.row.productClass === '2'">中档</span>
-            <span v-else-if="scope.row.productClass === '3'">低档</span>
+            <span v-if="scope.row.productClass === 'D001-1'">高档</span>
+            <span v-else-if="scope.row.productClass === 'D001-2'">中档</span>
+            <span v-else-if="scope.row.productClass === 'D001-3'">低档</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -271,8 +271,6 @@
             label: '否'
           }],
           value:"否",
-          show:true,
-          hidden:false,
           updateTime:"",
           scellform:{
             config:"",//配置要求
@@ -327,6 +325,8 @@
             })
             .catch(_ => {
               this.drawer=false;
+              this.scellform.productId="";
+              this.scellform.productName="";
             });
         },
         handleSizeChange(val) {  //页size变更
@@ -347,11 +347,7 @@
             }
           }
         },
-        //显示隐藏
-        showHidden(){
-          this.show=!this.show;
-          this.hidden=!this.hidden;
-        },
+
         //获取当前年月日
         addDate(){
           let date = new Date();
@@ -369,14 +365,13 @@
         },
         openeditwin(productId){//获取数据
           var _this=this;
-          this.showHidden();
           var params = new URLSearchParams();
           params.append("productId", productId);
           this.$axios.post("SCell/queryByIdSCell.May", params).then(function (response) {
             _this.scellform=response.data;
             _this.ass=_this.scellform.firstKindName+"-"+_this.scellform.secondKindName+"-"+_this.scellform.thirdKindName;
             _this.css=_this.scellform.firstKindId+"-"+_this.scellform.secondKindId+"-"+_this.scellform.thirdKindId;
-            _this.openeditwin2(productId);
+            _this.openeditwin2(_this.scellform.productId);
             _this.addDate(_this.scellform);
             _this.drawer=true;
             console.log()

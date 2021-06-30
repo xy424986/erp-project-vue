@@ -3,6 +3,24 @@
   <div>
 
     <div id="div01">
+      <!--条件查询-->
+      <el-form :inline="true"  class="demo-form-inline" v-model="scellform">
+        <el-row>
+          <el-col :span="12"><div>
+            <el-form-item label="产品编号:">
+              <el-input type="text" v-model="scellform.productId" clearable placeholder="请输入产品编号!"></el-input>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="10" ><div>
+            <el-form-item label="产品名称:">
+              <el-input type="text" v-model="scellform.productName" clearable placeholder="请输入产品名称!"></el-input>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="2" ><div>
+            <el-button @click="sel">查询</el-button>
+          </div></el-col>
+        </el-row>
+      </el-form>
       <el-table
         :data="tableData"
         height="250"
@@ -27,9 +45,9 @@
           prop="productClass"
           label="档次级别">
           <template scope="scope">
-            <span v-if="scope.row.productClass === '1'">高档</span>
-            <span v-else-if="scope.row.productClass === '2'">中档</span>
-            <span v-else-if="scope.row.productClass === '3'">低档</span>
+            <span v-if="scope.row.productClass === 'D001-1'">高档</span>
+            <span v-else-if="scope.row.productClass === 'D001-2'">中档</span>
+            <span v-else-if="scope.row.productClass === 'D001-3'">低档</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -298,7 +316,7 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SCell/queryAllSCell4.May", params).then(function (response) {
+          this.$axios.post("SCell/queryAllSCell2.May", params).then(function (response) {
             _this.tableData = response.data.rows;
             _this.total = response.data.total;
             console.log()
