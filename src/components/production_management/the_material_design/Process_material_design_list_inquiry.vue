@@ -6,7 +6,7 @@
         :data="tableData"
         style="width: 100%">
         <el-table-column
-          label="工序设计单编号"
+          label="设计单编号"
           prop="designId">
         </el-table-column>
         <el-table-column
@@ -18,27 +18,31 @@
           prop="productName">
         </el-table-column>
         <el-table-column
-          label="设计人"
-          prop="designer">
-        </el-table-column>
-        <el-table-column
-          label="登记时间"
-          prop="registerTime">
-        </el-table-column>
-        <el-table-column
-          label="工时总成本"
-          prop="costPriceSum">
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          align="center">
+          label="设计单状态">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              round
-              type="primary"
-              @click="drawerOpen(scope.$index, scope.row)">审核
-            </el-button>
+            <div v-if="scope.row.designModuleTag === 'G002-2'" style="color: green">
+              完成
+            </div>
+            <div v-else-if="scope.row.designModuleTag === 'G002-0'" style="color: red">
+              未设计
+            </div>
+            <span v-else-if="scope.row.designModuleTag === 'G002-1'" style="color: orange">
+              等待
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="审核状态">
+          <template slot-scope="scope">
+            <div v-if="scope.row.designModuleTag === 'G002-1'" style="color: orange">
+              <i class="el-icon-success">待审核</i>
+            </div>
+            <div v-else-if="scope.row.designModuleTag === 'G002-2'" style="color: green">
+              <i class="el-icon-error">通过</i>
+            </div>
+            <div v-else-if="scope.row.designModuleTag === 'G002-0'" style="color: red">
+              <i class="el-icon-error">已驳回</i>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -324,256 +328,258 @@
 </template>
 
 <script>
-    export default {
-      //工序物料设计单查询
-        name: "Process_material_design_list_inquiry",
-      data() {
-        return {
-          //定制按钮绑定
-          dZButton:'定制',
-          //id
-          mDPId: 0,
-          mDPDId: 0,
-          //工序设计表格数据绑定
-          dMDData: [],
-          //工序物料设计表单内表格设计表格本工序数量绑定
-          // NumberOfProcesses: 0,
-          //工序物料设计表单内表格设计表格数据绑定
-          mDPMData: [],
-          //工序物料设计表单内表格数据绑定
-          mDPDData: [],
-          //工序制作单表单绑定
-          processData: [],
-          //设计单表格数据绑定
-          moduleSubtotal: 0,
-          //设计单数据绑定
-          designId: '',//工序设计单编号
-          register: '',//登记人
-          registrant: '何海云',//审核人
-          costPriceSum: 0,//工时总成本
-          moduleCostPriceSum: 0,//物料总成本
-          designer: '',//设计人
-          //设计物料数据绑定
-          procedureName: '',//工序名称
-          procedureId: '',//工序编号
-          procedureDescribe: '',//工序描述
-          //点开设计单赋值绑定
-          productName: '',//产品名称
-          productId: '',//产品编号
-          registrationTime: '',//登记时间
-          registrationTime1: '',//登记时间1
-          // Dialog-Table
-          //工序选择数据
-          manufactureConfigProcedureListData: [],
-          dialogTableVisible: false,
-          //抽屉绑定
-          drawer: false,
-          innerDrawer: false,
-          // 表格绑定
-          tableData: [],
-          search: '',
-          //分页绑定
-          pageNumber: 1,//页码
-          pageSize: 10,//数据条数
-          total: 0,//总数据条数
-        }
-      },
-      methods: {
-        //
-        aa(scope){
-          scope.row.amount = scope.row.NumberOfProcesses;
-        },
-        //工序物料设计提交
-        submit1() {
-          var arr = this.mDPDData;
-          let newArr = [];
-          arr.map((item, index) => {
-            newArr.push(
-              Object.assign({}, item, {
-                  "moduleSubtotal": item.moduleSubtotal,//物料成本小计
-                  "mDPId": this.mDPId,//id
-                }
-              )
-            )
-          });
-
-          this.$confirm('此操作将提交该文件, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$axios.post("/mDesignProcedure/insert1.action", JSON.stringify(newArr),
-              {headers: {"Content-Type": "application/json"}}).then(response => {
-              this.$message({
-                type: 'success',
-                message: response.data
-              });
-              console.log(JSON.stringify(newArr))
-            }).catch();
-            this.$message({
-              type: 'success',
-              message: '已执行!'
-            });
-            this.drawer = false;
-
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            });
-          });
-        },
-        //工序物料设计
-        submit() {
-          var arr = this.dMDData;
-          let newArr = [];
-          arr.map((item, index) => {
-            newArr.push(
-              Object.assign({}, item, {
-                  "procedureId": this.designId,//工序编号
-                  "procedureName": this.procedureName,//工序名称
-                  "register": this.register,//登记人
-                  "productName": item.productName,//物料名称
-                  "productId": item.productId,//物料编号
-                  "procedureDescribe": item.productDescribe,//描述
-                  "amountUnit": item.amountUnit,//单位
-                  "costPrice": item.costPrice,//单价
-                  "amount": item.amount,//本工序数量
-                  "mDPId": this.mDPId,//id
-                  "mDPDId": this.mDPDId,//id
-                }
-              )
-            )
-          });
-
-          this.$confirm('此操作将提交该文件, 是否继续?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            this.$axios.post("/dModuleDetails/insert.action", JSON.stringify(newArr),
-              {headers: {"Content-Type": "application/json"}}).then(response => {
-              this.$message({
-                type: 'success',
-                message: response.data
-              });
-              console.log(JSON.stringify(newArr))
-            }).catch();
-            this.$message({
-              type: 'success',
-              message: '已执行!'
-            });
-            // this.innerDrawer = false;
-            // this.drawer = false;
-            this.dZButton = '重新定制';
-
-          }).catch(() => {
-            this.$message({
-              type: 'info',
-              message: '已取消'
-            });
-          });
-        },
-        //抽屉内容
-        //设置表头的颜色
-        rowClass({row, rowIndex}) {
-          console.log(rowIndex) //表头行标号为0
-          return 'background:red'
-        },
-
-        //打开popover
-        popoverOpen(a) {
-          this.procedureName = a.row.procedureName;
-          this.mDPDId = a.row.id;
-
-          var params = new URLSearchParams();
-          params.append("designId", this.designId);
-          // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
-          this.$axios.post("/dModuleDetails/queryByParentId.action", params).then(response => {
-            this.dMDData = response.data;
-          }).catch();
-
-        },
-        //打开抽屉
-        drawerOpen(a, b) {
-          this.drawer = true;
-          this.productName = b.productName;
-          this.productId = b.productId;
-          this.designer = b.designer;
-          this.costPriceSum = b.costPriceSum;
-          this.procedureDescribe = b.procedureDescribe;
-          this.mDPId = b.id;
-          this.register = b.register;
-          this.designId = b.designId;
-
-          var params = new URLSearchParams();
-          params.append("parentId", b.id);
-          // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
-          this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
-            this.mDPDData = response.data;
-          }).catch();
-
-        },
-        //抽屉关闭方法
-        handleClose(done) {
-          this.$confirm('您可能会丢失未提交的数据哦！')
-            .then(_ => {
-              done();
-            })
-            .catch(_ => {
-              this.drawer = false;
-            });
-        },
-        //分页函数
-        handleSizeChange(val) {
-          console.log(`每页 ${val} 条`);
-        },
-        handleCurrentChange(val) {
-          console.log(`当前页: ${val}`);
-        },
-        //获取当前年月日
-        addDate() {
-          let date = new Date();
-          let Y = date.getFullYear();
-          let M = this.getStr(date.getMonth() + 1);
-          let D = this.getStr(date.getDate());
-          let hours = date.getHours();
-          let minutes = this.getStr(date.getMinutes());
-          let seconds = this.getStr(date.getSeconds());
-          var date1 = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
-          this.registrationTime = date1;
-          this.registrationTime1 = date1;
-        },
-        getStr(point) {
-          return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
-        },
-        //获取定制产品数据
-        getData() {
-          var params = new URLSearchParams();
-          params.append("pageNumber", this.pageNumber);
-          params.append("pageSize", this.pageSize);
-          params.append("designModuleTag", "G002-1");
-          this.$axios.post("/mDesignProcedure/queryByState.action", params).then(response => {
-            this.tableData = response.data.records;
-            this.total = response.data.total;
-            this.addDate();
-          }).catch();
-        }
-      },
-      computed: {
-        total1(){
-          var i = 0;
-          this.mDPDData.forEach((item)=>{
-            i=i+Number(item.moduleSubtotal);
-          });
-          return i;
-        }
-      },
-      //钩子调用函数
-      created() {
-        this.getData();
+  export default {
+    //工序物料设计单查询
+    name: "Process_material_design_list_inquiry",
+    data() {
+      return {
+        //定制按钮绑定
+        dZButton: '定制',
+        //id
+        mDPId: 0,
+        mDPDId: 0,
+        //工序设计表格数据绑定
+        dMDData: [],
+        //工序物料设计表单内表格设计表格本工序数量绑定
+        // NumberOfProcesses: 0,
+        //工序物料设计表单内表格设计表格数据绑定
+        mDPMData: [],
+        //工序物料设计表单内表格数据绑定
+        mDPDData: [],
+        //工序制作单表单绑定
+        processData: [],
+        //设计单表格数据绑定
+        moduleSubtotal: 0,
+        //设计单数据绑定
+        designId: '',//工序设计单编号
+        register: '',//登记人
+        registrant: '何海云',//审核人
+        costPriceSum: 0,//工时总成本
+        moduleCostPriceSum: 0,//物料总成本
+        designer: '',//设计人
+        //设计物料数据绑定
+        procedureName: '',//工序名称
+        procedureId: '',//工序编号
+        procedureDescribe: '',//工序描述
+        //点开设计单赋值绑定
+        productName: '',//产品名称
+        productId: '',//产品编号
+        registrationTime: '',//登记时间
+        registrationTime1: '',//登记时间1
+        // Dialog-Table
+        //工序选择数据
+        manufactureConfigProcedureListData: [],
+        dialogTableVisible: false,
+        //抽屉绑定
+        drawer: false,
+        innerDrawer: false,
+        // 表格绑定
+        tableData: [],
+        search: '',
+        //分页绑定
+        pageNumber: 1,//页码
+        pageSize: 10,//数据条数
+        total: 0,//总数据条数
       }
+    },
+    methods: {
+      //
+      aa(scope) {
+        scope.row.amount = scope.row.NumberOfProcesses;
+      },
+      //工序物料设计提交
+      submit1() {
+        var arr = this.mDPDData;
+        let newArr = [];
+        arr.map((item, index) => {
+          newArr.push(
+            Object.assign({}, item, {
+                "moduleSubtotal": item.moduleSubtotal,//物料成本小计
+                "mDPId": this.mDPId,//id
+              }
+            )
+          )
+        });
+
+        this.$confirm('此操作将提交该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post("/mDesignProcedure/insert1.action", JSON.stringify(newArr),
+            {headers: {"Content-Type": "application/json"}}).then(response => {
+            this.$message({
+              type: 'success',
+              message: response.data
+            });
+            console.log(JSON.stringify(newArr))
+          }).catch();
+          this.$message({
+            type: 'success',
+            message: '已执行!'
+          });
+          this.drawer = false;
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+      //工序物料设计
+      submit() {
+        var arr = this.dMDData;
+        let newArr = [];
+        arr.map((item, index) => {
+          newArr.push(
+            Object.assign({}, item, {
+                "procedureId": this.designId,//工序编号
+                "procedureName": this.procedureName,//工序名称
+                "register": this.register,//登记人
+                "productName": item.productName,//物料名称
+                "productId": item.productId,//物料编号
+                "procedureDescribe": item.productDescribe,//描述
+                "amountUnit": item.amountUnit,//单位
+                "costPrice": item.costPrice,//单价
+                "amount": item.amount,//本工序数量
+                "mDPId": this.mDPId,//id
+                "mDPDId": this.mDPDId,//id
+              }
+            )
+          )
+        });
+
+        this.$confirm('此操作将提交该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$axios.post("/dModuleDetails/insert.action", JSON.stringify(newArr),
+            {headers: {"Content-Type": "application/json"}}).then(response => {
+            this.$message({
+              type: 'success',
+              message: response.data
+            });
+            console.log(JSON.stringify(newArr))
+          }).catch();
+          this.$message({
+            type: 'success',
+            message: '已执行!'
+          });
+          // this.innerDrawer = false;
+          // this.drawer = false;
+          this.dZButton = '重新定制';
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });
+        });
+      },
+      //抽屉内容
+      //设置表头的颜色
+      rowClass({row, rowIndex}) {
+        console.log(rowIndex) //表头行标号为0
+        return 'background:red'
+      },
+
+      //打开popover
+      popoverOpen(a) {
+        this.procedureName = a.row.procedureName;
+        this.mDPDId = a.row.id;
+
+        var params = new URLSearchParams();
+        params.append("designId", this.designId);
+        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        this.$axios.post("/dModuleDetails/queryByParentId.action", params).then(response => {
+          this.dMDData = response.data;
+        }).catch();
+
+      },
+      //打开抽屉
+      drawerOpen(a, b) {
+        this.drawer = true;
+        this.productName = b.productName;
+        this.productId = b.productId;
+        this.designer = b.designer;
+        this.costPriceSum = b.costPriceSum;
+        this.procedureDescribe = b.procedureDescribe;
+        this.mDPId = b.id;
+        this.register = b.register;
+        this.designId = b.designId;
+
+        var params = new URLSearchParams();
+        params.append("parentId", b.id);
+        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
+          this.mDPDData = response.data;
+        }).catch();
+
+      },
+      //抽屉关闭方法
+      handleClose(done) {
+        this.$confirm('您可能会丢失未提交的数据哦！')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {
+            this.drawer = false;
+          });
+      },
+      //分页函数
+      handleSizeChange(val) {
+        this.pageSize = val;
+        this.getData();
+      },
+      handleCurrentChange(val) {
+        this.pageNumber = val;
+        this.getData();
+      },
+      //获取当前年月日
+      addDate() {
+        let date = new Date();
+        let Y = date.getFullYear();
+        let M = this.getStr(date.getMonth() + 1);
+        let D = this.getStr(date.getDate());
+        let hours = date.getHours();
+        let minutes = this.getStr(date.getMinutes());
+        let seconds = this.getStr(date.getSeconds());
+        var date1 = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
+        this.registrationTime = date1;
+        this.registrationTime1 = date1;
+      },
+      getStr(point) {
+        return ("00" + point).slice(-2); // 从字符串的倒数第二个字符开始截取，一直截取到最后一个字符；（在这里永远截取该字符串的最后两个字符）
+      },
+      //获取定制产品数据
+      getData() {
+        var params = new URLSearchParams();
+        params.append("pageNumber", this.pageNumber);
+        params.append("pageSize", this.pageSize);
+        params.append("checkTag", "S001-1");
+        this.$axios.post("/mDesignProcedure/queryByState.action", params).then(response => {
+          this.tableData = response.data.records;
+          this.total = response.data.total;
+          this.addDate();
+        }).catch();
+      }
+    },
+    computed: {
+      total1() {
+        var i = 0;
+        this.mDPDData.forEach((item) => {
+          i = i + Number(item.moduleSubtotal);
+        });
+        return i;
+      }
+    },
+    //钩子调用函数
+    created() {
+      this.getData();
     }
+  }
 </script>
 
 <style scoped>

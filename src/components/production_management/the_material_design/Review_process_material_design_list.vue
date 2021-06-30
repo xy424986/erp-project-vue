@@ -378,7 +378,6 @@
           var params = new URLSearchParams();
           params.append("id", this.mDPId);
           params.append("designModuleTag", "G002-2");
-          // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
           this.$axios.post("/mDesignProcedure/audit.action", params).then(response => {
             this.getData();
             this.$message({
@@ -450,10 +449,12 @@
       },
       //分页函数
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageSize = val;
+        this.getData();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.pageNumber = val;
+        this.getData();
       },
       //获取当前年月日
       addDate() {

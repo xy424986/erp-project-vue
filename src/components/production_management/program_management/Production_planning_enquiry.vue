@@ -415,11 +415,12 @@
       },
       //分页函数
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageSize = val;
+        this.getData();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
+        this.pageNumber = val;
+        this.getData();      },
       //获取当前年月日
       addDate() {
         let date = new Date();
