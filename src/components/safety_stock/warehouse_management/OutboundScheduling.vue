@@ -435,7 +435,7 @@
             _this.ass = _this.scellform.firstKindName + "-" + _this.scellform.secondKindName + "-" + _this.scellform.thirdKindName;
             _this.css = _this.scellform.firstKindId + "-" + _this.scellform.secondKindId + "-" + _this.scellform.thirdKindId;
             console.log("openeditwin4")
-            console.log(_this.dfileform1)
+            console.log("sss"+_this.dfileform1)
             _this.outQueryByIdSCell2(_this.scellform.productId);
             _this.yiMoney = 0.0;
             _this.yiNumber = 0.0;

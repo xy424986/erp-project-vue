@@ -393,7 +393,8 @@
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
           params.append("gatherId", this.scellform.gatherId);
-          this.$axios.post("SGathers/queryRuKuAllSGather.May", params).then(function (response) {
+
+          this.$axios.post("", params).then(function (response) {
             _this.tableData = response.data.records;
             _this.total = response.data.total;
             for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData)}
