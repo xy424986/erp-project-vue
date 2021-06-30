@@ -162,7 +162,6 @@
           </el-col>
           <el-button @click="addfile">提交</el-button>
           <button type="reset">重置</button>
-            <el-button @click="resetLoginForm">重置</el-button>
         </el-form>
       </el-row>
 

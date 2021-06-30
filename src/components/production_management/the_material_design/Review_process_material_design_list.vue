@@ -225,7 +225,6 @@
                           <el-table-column width="90" property="residualAmount" label="可用数量"></el-table-column>
                           <el-table-column width="50" property="amountUnit" label="单位"></el-table-column>
                           <el-table-column width="90" property="costPrice" label="单价（元）"></el-table-column>
-                          <el-table-column width="100" label="本工序数量" prop="subtotal"></el-table-column>
                         </el-table>
                         <br>
                         <el-button
@@ -334,7 +333,7 @@
         //设计单数据绑定
         designId: '',//工序设计单编号
         register: '',//登记人
-        registrant: '何海云',//审核人
+        registrant: sessionStorage.getItem("loginId"),//审核人
         costPriceSum: 0,//工时总成本
         moduleCostPriceSum: 0,//物料总成本
         designer: '',//设计人
@@ -410,8 +409,7 @@
         this.mDPDId = a.row.id;
 
         var params = new URLSearchParams();
-        params.append("PARENT_ID", this.mDPDId);
-        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        params.append("parentId", this.mDPDId);
         this.$axios.post("/MDesignProcedureModule/queryByPId.action", params).then(response => {
           this.dMDData = response.data;
         }).catch();

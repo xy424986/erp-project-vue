@@ -396,7 +396,7 @@
           costPrice: '',//单位工时成本
           subtotal: '',//工时成本小计
           designRequirements: '',//设计要求
-          registrant: '何海云',//登记人
+          registrant: sessionStorage.getItem("loginId"),//登记人
           registrationTime: '',//登记时间
           productName: '',//产品名称
           productId: '',//产品编号
@@ -517,7 +517,7 @@
               type: 'success',
               message: response.data
             });
-            console.log(JSON.stringify(newArr))
+            this.getData();
           }).catch();
           this.$message({
             type: 'success',

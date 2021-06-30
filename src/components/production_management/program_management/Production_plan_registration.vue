@@ -161,7 +161,7 @@
         },
         //设计单表格数据绑定
         remark: '',//备注
-        registrant: '何海云',//登记人
+        registrant: sessionStorage.getItem("loginId"),//登记人
         designer: '',//设计人
         procedureName: '',//工序名称
         procedureId: '',//工序编号

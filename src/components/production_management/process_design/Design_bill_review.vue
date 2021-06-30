@@ -254,7 +254,7 @@
         //工序制作单表单绑定
         processData: [],
         //审核单表格数据绑定
-        registrant: '何海云',//审核人
+        registrant: sessionStorage.getItem("loginId"),//审核人
         costPriceSum: 0,//工时总成本
         designer: '',//设计人
         procedureName: '',//工序名称
@@ -386,8 +386,7 @@
         this.mDPId = b.id;
 
         var params = new URLSearchParams();
-        params.append("pId", b.id);
-        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        params.append("parentId", b.id);
         this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
           this.mDPDData = response.data;
         }).catch();

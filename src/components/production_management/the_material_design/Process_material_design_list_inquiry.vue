@@ -353,7 +353,7 @@
         //设计单数据绑定
         designId: '',//工序设计单编号
         register: '',//登记人
-        registrant: '何海云',//审核人
+        registrant: sessionStorage.getItem("loginId"),//审核人
         costPriceSum: 0,//工时总成本
         moduleCostPriceSum: 0,//物料总成本
         designer: '',//设计人
