@@ -277,7 +277,7 @@
           var params = new URLSearchParams();
           params.append("applyId", this.applyId);
           params.append("checkTag", "S001-1");
-          this.$axios.post("/mApply/audit.action", params).then(response => {
+          this.$axios.post("/MApply/audit.action", params).then(response => {
             this.getData();
             this.$message({
               type: 'success',
@@ -322,7 +322,7 @@
 
         var params = new URLSearchParams();
         params.append("applyId", b.applyId);
-        this.$axios.post("/mApply/queryById.action", params).then(response => {
+        this.$axios.post("/MApply/queryById.action", params).then(response => {
           this.productionPlan = response.data;
         }).catch();
 
@@ -339,10 +339,12 @@
       },
       //分页函数
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageSize = val;
+        this.getData();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.pageNumber = val;
+        this.getData();
       },
       //获取当前年月日
       addDate() {
@@ -363,7 +365,7 @@
       getData() {
         var params = new URLSearchParams();
         params.append("checkTag", "S001-0");
-        this.$axios.post("/mApply/queryByState.action", params).then(response => {
+        this.$axios.post("/MApply/queryByState.action", params).then(response => {
           this.tableData = response.data;
           this.addDate();
         }).catch();

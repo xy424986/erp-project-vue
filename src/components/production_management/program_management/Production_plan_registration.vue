@@ -239,7 +239,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$axios.post("/mApply/insert.action", JSON.stringify(newArr),
+          this.$axios.post("/MApply/insert.action", JSON.stringify(newArr),
             {headers: {"Content-Type": "application/json"}}).then(response => {
             // this.addDate();
             this.$message({

@@ -3,7 +3,7 @@
     <!--  表格-->
     <template>
       <el-table
-        :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+        :data="tableData.filter(data => !search || data.productName.toLowerCase().includes(search.toLowerCase()))"
         style="width: 100%">
         <el-table-column
           label="产品编号"
@@ -39,7 +39,7 @@
             <el-input
               v-model="search"
               size="mini"
-              placeholder="输入关键字搜索"/>
+              placeholder="输入产品名称搜索"/>
           </template>
           <template slot-scope="scope">
             <el-button
@@ -82,15 +82,12 @@
               </el-button>
             </el-col>
             <el-col :span="2">
-              <el-button size="mini" round type="success" icon="el-icon-delete" @click="">删除工序
+              <el-button size="mini" round type="success" icon="el-icon-delete" @click="deleteProcess">删除工序
               </el-button>
             </el-col>
           </el-row>
           <hr>
           <el-row>
-            <el-col :span="4">
-              <div></div>
-            </el-col>
             <el-col :span="7" :offset="3">
               <div><!--产品名称：笔记本-->
                 <el-form-item label="产品名称:">
@@ -105,9 +102,6 @@
                 </el-form-item>
               </div>
             </el-col>
-            <el-col :span="6">
-              <div></div>
-            </el-col>
           </el-row>
           <el-row>
             <el-col :span="10" :offset="2">
@@ -120,9 +114,6 @@
           </el-row>
           <!--设计单表格-->
           <el-row>
-            <el-col :span="2">
-              <div></div>
-            </el-col>
             <el-col :span="20" :offset="2">
               <div>
                 <el-table
@@ -130,10 +121,12 @@
                   border
                   height="244"
                   style="width: 100%"
-                  :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+                  :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+                  ref="table"
+                  @selection-change='selectRow'>
                   <el-table-column
                     width="50"
-                    prop="id"
+                    type="selection"
                     label="选中">
                   </el-table-column>
                   <el-table-column
@@ -154,35 +147,33 @@
                     width="100"
                     label="工时数">
                     <template slot-scope="scope">
-                      <el-input v-model="procedureForm.manHour" style="height: 10px"></el-input>
+                      <el-input v-model="scope.row.manHour" v-on:input="chen(scope)" style="height: 10px"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     width="100"
                     label="工时单位">
                     <template slot-scope="scope">
-                      <el-input v-model="procedureForm.manHourUnit"></el-input>
+                      <el-input v-model="scope.row.manHourUnit"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     width="120"
                     label="单位工时成本">
                     <template slot-scope="scope">
-                      <el-input v-model="procedureForm.costPrice"></el-input>
+                      <el-input v-model="scope.row.costPrice" v-on:input="chen(scope)"></el-input>
                     </template>
                   </el-table-column>
                   <el-table-column
                     width="150"
-                    label="工时成本小计（元）">
-                    <template slot-scope="scope">
-                      <el-input v-model="procedureForm.subtotal" readonly></el-input>
-                    </template>
+                    label="工时成本小计（元）"
+                    prop="subtotal">
+                    <!--                    <template slot-scope="scope">-->
+                    <!--                      <el-input v-model="scope.row.subtotal" readonly></el-input>-->
+                    <!--                    </template>-->
                   </el-table-column>
                 </el-table>
               </div>
-            </el-col>
-            <el-col :span="2">
-              <div></div>
             </el-col>
           </el-row>
           <!--/-设计单表格-->
@@ -234,14 +225,11 @@
           :before-close="handleClose"
           :visible.sync="innerDrawer"
           size="80%">
-<!--                    子内容-->
+          <!--                    子内容-->
           <div class="content">
             <el-form size="small" :inline="true" v-model="procedureForm">
               <hr>
               <el-row>
-                <el-col :span="4">
-                  <div></div>
-                </el-col>
                 <el-col :span="7" :offset="3">
                   <div><!--产品名称：笔记本-->
                     <el-form-item label="产品名称:">
@@ -256,9 +244,6 @@
                     </el-form-item>
                   </div>
                 </el-col>
-                <el-col :span="6">
-                  <div></div>
-                </el-col>
               </el-row>
               <el-row>
                 <el-col :span="10" :offset="2">
@@ -271,9 +256,6 @@
               </el-row>
               <!--设计单表格-->
               <el-row>
-                <el-col :span="2">
-                  <div></div>
-                </el-col>
                 <el-col :span="20" :offset="2">
                   <div>
                     <el-table
@@ -305,38 +287,31 @@
                       </el-table-column>
                       <el-table-column
                         width="100"
-                        label="工时数">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.manHour" readonly></el-input>
-                        </template>
+                        label="工时数"
+                        prop="manHour">
                       </el-table-column>
                       <el-table-column
                         width="100"
-                        label="工时单位">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.manHourUnit" readonly></el-input>
-                        </template>
+                        label="工时单位"
+                        prop="manHourUnit">
                       </el-table-column>
                       <el-table-column
                         width="120"
-                        label="单位工时成本">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.costPrice" readonly></el-input>
-                        </template>
+                        label="单位工时成本"
+                        prop="costPrice">
                       </el-table-column>
                       <el-table-column
                         width="150"
-                        label="工时成本小计（元）">
-                        <template slot-scope="scope">
-                          <el-input v-model="procedureForm.subtotal" readonly></el-input>
-                        </template>
+                        label="工时成本小计（元）"
+                        prop="subtotal">
+                        <!--                        <template slot-scope="scope">-->
+                        <!--                          <el-input v-model="procedureForm.subtotal" readonly></el-input>-->
+                        <!--                        </template>-->
                       </el-table-column>
                     </el-table>
                   </div>
                 </el-col>
-                <el-col :span="2">
-                  <div></div>
-                </el-col>
+
               </el-row>
               <!--/-设计单表格-->
               <el-row>
@@ -416,7 +391,7 @@
         //工序制作单表单绑定
         processData: [],
         procedureForm: {
-          manHour: '',//工时数
+          manHour1: '',//工时数
           manHourUnit: '',//工时单位
           costPrice: '',//单位工时成本
           subtotal: '',//工时成本小计
@@ -450,11 +425,42 @@
         search: '',
         //分页绑定
         pageNumber: 1,//页码
-        pageSize: 10,//数据条数
+        pageSize: 5,//数据条数
         total: 0,//总数据条数
+        subtotal: 0,//
+        selectlistRow:[],
+        rowNum:1
       }
     },
     methods: {
+      // 获取表格选中时的数据
+      selectRow (val) {
+        this.selectlistRow = val;
+      },
+      //计算小计
+      chen(scope) {
+        scope.row.subtotal = Number(scope.row.manHour * scope.row.costPrice);
+      },
+
+      //删除工序
+      deleteProcess(){
+        for (let i = 0; i < this.selectlistRow.length; i++) {
+          let val = this.selectlistRow
+          // 获取选中行的索引的方法
+          // 遍历表格中tableData数据和选中的val数据，比较它们的rowNum,相等则输出选中行的索引
+          // rowNum的作用主要是为了让每一行有一个唯一的数据，方便比较，可以根据个人的开发需求从后台传入特定的数据
+          val.forEach((val, index) => {
+            this.processData.forEach((v, i) => {
+              if (val.rowNum === v.rowNum) {
+                // i 为选中的索引
+                this.processData.splice(i, 1)
+              }
+            })
+          })
+        }
+        // 删除完数据之后清除勾选框
+        this.$refs.table.clearSelection();
+      },
       //添加工序
       addProcess(index, ids) {
         if (this.processData.length > 0) {
@@ -479,21 +485,21 @@
       submit() {
         var arr = this.processData;
         let newArr = [];
-        arr.map((item, index)=>{
+        arr.map((item, index) => {
           newArr.push(
             Object.assign({}, item, {
-              "productName":this.productName,
-              "productId":this.productId,
-              "designer":this.procedureForm.designer,
-              "procedureName":item.typeName,
-              "procedureId":item.typeId,
-              "procedureDescribe":item.describe1,
-              "labourHourAmount":this.procedureForm.manHour,
-              "amountUnit":this.procedureForm.manHourUnit,
-              "costPrice":this.procedureForm.costPrice,
-              "register":this.procedureForm.registrant,
-              "procedureDescribe1":this.procedureForm.designRequirements,
-              "dFileId":this.dFileId
+                "productName": this.productName,
+                "productId": this.productId,
+                "designer": this.procedureForm.designer,
+                "procedureName": item.typeName,
+                "procedureId": item.typeId,
+                "procedureDescribe": item.describe1,
+                "labourHourAmount": item.manHour,
+                "amountUnit": item.manHourUnit,
+                "costPrice": item.costPrice,
+                "register": this.procedureForm.registrant,
+                "procedureDescribe1": this.procedureForm.designRequirements,
+                "dFileId": this.dFileId
               }
             )
           )
@@ -505,7 +511,7 @@
           type: 'warning'
         }).then(() => {
           this.$axios.post("/mDesignProcedure/insert.action", JSON.stringify(newArr),
-            {headers:{"Content-Type":"application/json"}}).then(response => {
+            {headers: {"Content-Type": "application/json"}}).then(response => {
             // this.addDate();
             this.$message({
               type: 'success',
@@ -554,10 +560,13 @@
       },
       //分页函数
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageSize = val;
+        // this.pageNumber = 1;
+        this.getData();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.pageNumber = val;
+        this.getData();
       },
       //获取当前年月日
       addDate() {
@@ -580,6 +589,7 @@
         params.append("pageNumber", this.pageNumber);
         params.append("pageSize", this.pageSize);
         params.append("designProcedureTag", "G001-0");
+        params.append("type", "Y001-1");
         this.$axios.post("/DFile/queryByState.action", params).then(response => {
           this.tableData = response.data.records;
           this.total = response.data.total;

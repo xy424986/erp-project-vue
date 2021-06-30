@@ -67,10 +67,6 @@
       <div class="content">
         <el-form size="small" :inline="true">
           <el-row>
-<!--            <el-col :span="2" :offset="18">-->
-<!--              <el-button size="mini" round type="warning" icon="el-icon-close" @click="innerDrawer = false">驳回-->
-<!--              </el-button>-->
-<!--            </el-col>-->
             <el-col :span="2" :offset="18">
               <el-button size="mini" round type="success" icon="el-icon-check" @click="submit1">提交
               </el-button>
@@ -163,10 +159,10 @@
                   <el-table-column
                     width="120"
                     label="物料成本小计"
-                  prop="moduleSubtotal">
-<!--                      <template slot-scope="scope">-->
-<!--                      <span>{{scope.row.moduleSubtotal}}</span>-->
-<!--                    </template>-->
+                    prop="moduleSubtotal">
+                    <!--                      <template slot-scope="scope">-->
+                    <!--                      <span>{{scope.row.moduleSubtotal}}</span>-->
+                    <!--                    </template>-->
                   </el-table-column>
                   <el-table-column
                     align="center"
@@ -214,24 +210,18 @@
                         </div>
                         <el-table :data="dMDData">
                           <el-table-column width="50" label="序号">
-                            <template slot-scope="scope">
-                              {{scope.$index+1}}
-                            </template>
+                            <template slot-scope="scope">{{scope.$index+1}}</template>
                           </el-table-column>
                           <el-table-column width="90" property="productName" label="物料名称"></el-table-column>
-                          <el-table-column width="90" property="productId" label="物料编号"></el-table-column>
+                          <el-table-column width="150" property="productId" label="物料编号"></el-table-column>
                           <el-table-column width="50" property="productDescribe" label="描述"></el-table-column>
-                          <el-table-column width="90" label="设计数量" prop="amount">
-<!--                            <template slot-scope="scope">-->
-<!--                              <span v-text="scope.row.NumberOfProcesses"></span>-->
-<!--                            </template>-->
-                          </el-table-column>
-                          <el-table-column width="90" property="residualAmount" label="可用数量"></el-table-column>
+                          <el-table-column width="90" label="设计数量" prop="amount"></el-table-column>
+                          <el-table-column width="90" prop="residualAmount" label="可用数量"></el-table-column>
                           <el-table-column width="50" property="amountUnit" label="单位"></el-table-column>
                           <el-table-column width="90" property="costPrice" label="单价（元）"></el-table-column>
-                          <el-table-column width="100" label="本工序数量">
+                          <el-table-column width="100" label="本工序数量" prop="amount1">
                             <template slot-scope="scope">
-                              <el-input v-model="scope.row.NumberOfProcesses" v-on:input="aa(scope)"></el-input>
+                              <el-input v-model="scope.row.amount1"></el-input>
                             </template>
                           </el-table-column>
                         </el-table>
@@ -241,7 +231,7 @@
                           round
                           type="primary"
                           style="margin-left: 460px"
-                          @click="submit">提 交
+                          @click="submit(scope)">提 交
                         </el-button>
                         <el-button
                           size="mini"
@@ -250,13 +240,13 @@
                           style="margin-left: 36px"
                           @click="scope.row.visible = false">取 消
                         </el-button>
-                          <el-button
-                            size="mini"
-                            round
-                            type="primary"
-                            slot="reference"
-                            @click="popoverOpen(scope)">{{dZButton}}
-                          </el-button>
+                        <el-button
+                          size="mini"
+                          round
+                          type="primary"
+                          slot="reference"
+                          @click="popoverOpen(scope)">{{dZButton}}
+                        </el-button>
 
                       </el-popover>
                       <!--    定制工序物料设计单物料设计表格-->
@@ -282,7 +272,7 @@
             <el-col :span="7" :offset="3">
               <div><!--产品名称：笔记本-->
                 <el-form-item label="物料总成本:">
-<!--                  <el-input type="text" v-model="moduleCostPriceSum" readonly="readonly"/>-->
+                  <!--                  <el-input type="text" v-model="moduleCostPriceSum" readonly="readonly"/>-->
                   {{total1}}
                 </el-form-item>
               </div>
@@ -330,7 +320,7 @@
     data() {
       return {
         //定制按钮绑定
-        dZButton:'定制',
+        dZButton: '定制',
         //id
         mDPId: 0,
         mDPDId: 0,
@@ -380,8 +370,8 @@
     },
     methods: {
       //
-      aa(scope){
-        scope.row.amount = scope.row.NumberOfProcesses;
+      aa(scope) {
+        scope.row.NumberOfProcesses = scope.row.amount1;
       },
       //工序物料设计提交
       submit1() {
@@ -390,7 +380,7 @@
         arr.map((item, index) => {
           newArr.push(
             Object.assign({}, item, {
-              "moduleSubtotal": item.moduleSubtotal,//物料成本小计
+                "moduleSubtotal": item.moduleSubtotal,//物料成本小计
                 "mDPId": this.mDPId,//id
               }
             )
@@ -408,7 +398,7 @@
               type: 'success',
               message: response.data
             });
-            console.log(JSON.stringify(newArr))
+            this.getData();
           }).catch();
           this.$message({
             type: 'success',
@@ -424,7 +414,7 @@
         });
       },
       //工序物料设计
-      submit() {
+      submit(scope) {
         var arr = this.dMDData;
         let newArr = [];
         arr.map((item, index) => {
@@ -438,7 +428,9 @@
                 "procedureDescribe": item.productDescribe,//描述
                 "amountUnit": item.amountUnit,//单位
                 "costPrice": item.costPrice,//单价
-                "amount": item.amount,//本工序数量
+                "amount": item.amount,//设计数量
+                "residualAmount": item.residualAmount,//可用数量
+                "amount1": item.amount1,//本工序数量
                 "mDPId": this.mDPId,//id
                 "mDPDId": this.mDPDId,//id
               }
@@ -457,7 +449,7 @@
               type: 'success',
               message: response.data
             });
-            console.log(JSON.stringify(newArr))
+            this.drawerOpen();
           }).catch();
           this.$message({
             type: 'success',
@@ -465,7 +457,7 @@
           });
           // this.innerDrawer = false;
           // this.drawer = false;
-          this.dZButton = '重新定制';
+          scope.row.dZButton = '重新定制';
 
         }).catch(() => {
           this.$message({
@@ -482,17 +474,18 @@
       },
 
       //打开popover
-      popoverOpen(a) {
-        this.procedureName = a.row.procedureName;
-        this.mDPDId = a.row.id;
+      popoverOpen(scope) {
+        this.procedureName = scope.row.procedureName;
+        this.mDPDId = scope.row.id;
 
         var params = new URLSearchParams();
-        params.append("designId", this.designId);
-        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
+        params.append("productId", this.productId);
         this.$axios.post("/dModuleDetails/queryByParentId.action", params).then(response => {
           this.dMDData = response.data;
+          // this.dMDData.forEach((item) => {
+          //   item.residualAmount = item.amount;
+          // })
         }).catch();
-
       },
       //打开抽屉
       drawerOpen(a, b) {
@@ -508,7 +501,6 @@
 
         var params = new URLSearchParams();
         params.append("parentId", b.id);
-        // JSON.stringify(newArr), {headers: {"Content-Type": "application/json"}}
         this.$axios.post("/MDesignProcedureDetails/queryByPId.action", params).then(response => {
           this.mDPDData = response.data;
         }).catch();
@@ -526,10 +518,12 @@
       },
       //分页函数
       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+        this.pageSize = val;
+        this.getData();
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.pageNumber = val;
+        this.getData();
       },
       //获取当前年月日
       addDate() {
@@ -552,7 +546,7 @@
         var params = new URLSearchParams();
         params.append("pageNumber", this.pageNumber);
         params.append("pageSize", this.pageSize);
-        params.append("designProcedureTag", "G001-0");
+        params.append("designModuleTag", "G002-0");
         this.$axios.post("/mDesignProcedure/queryByState.action", params).then(response => {
           this.tableData = response.data.records;
           this.total = response.data.total;
@@ -561,10 +555,10 @@
       }
     },
     computed: {
-      total1(){
+      total1() {
         var i = 0;
-        this.mDPDData.forEach((item)=>{
-          i=i+Number(item.moduleSubtotal);
+        this.mDPDData.forEach((item) => {
+          i = i + Number(item.moduleSubtotal);
         });
         return i;
       }
