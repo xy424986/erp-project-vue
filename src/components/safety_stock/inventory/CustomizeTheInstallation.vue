@@ -380,7 +380,7 @@
         },
         addSCll(){
           var _this=this;
-          this.scellform.amount=0;
+          this.scellform.amount=1000;
           var params = new URLSearchParams();
          /*
          this.scellform.checkTime="0000/00/00 00:00:00";
