@@ -265,6 +265,7 @@
         addDelivery(){
           var _this=this;
           let newArr1 = [];
+          var arr = this.adddata;
           var arr = this.tableData;
           arr.map((item, index)=> {
             newArr1.push(

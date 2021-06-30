@@ -147,7 +147,7 @@
   import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
   import ProductionQuery from "./components/safety_stock/ProductionQuery";
   import DynamicInventoryQuery from "./components/safety_stock/InventoryQuery/DynamicInventoryQuery";
-
+  import InboundQuery from "./components/Warehousing_application/InboundQuery";
 
   export default {
     name: 'app',
@@ -254,12 +254,14 @@
       Make_production_dispatch_list,
       Audit_of_production_dispatch_order,
       Production_registration,
+      WarehouseQueries,
       Production_registration_review,
       Production_plan_registration,
       Production_planning_enquiry,
       Production_plan_review,
       ApplyForDelivery,
       WarehousingAudit,
+      InboundQuery,
       InternalProductionAdd,
       InternalProductionShenhe
     },

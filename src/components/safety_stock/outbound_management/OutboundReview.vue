@@ -1,6 +1,19 @@
 <template>
   <div>
     <div id="div01">
+      <!--条件查询-->
+      <el-form :inline="true"  class="demo-form-inline" v-model="scellform">
+        <el-row>
+          <el-col :span="12"><div>
+            <el-form-item label="出库单编号:">
+              <el-input type="text" v-model="scellform.payId" clearable placeholder="请输入入库单编号!"></el-input>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="2" ><div>
+            <el-button @click="sel">查询</el-button>
+          </div></el-col>
+        </el-row>
+      </el-form>
       <el-table
         :data="tableData"
         height="250"
@@ -46,6 +59,16 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 分页-->
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageno"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pagesize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
     <!--    抽屉样式-->
     <el-drawer
@@ -53,6 +76,10 @@
       size="80%">
       <div>
         <el-form  size="small" :inline="true" v-model="scellform">
+          <template>
+            <el-radio v-model="scellform.checkTag" label="S001-1">通过</el-radio>
+            <el-radio v-model="scellform.checkTag" label="S001-2">未通过</el-radio>
+          </template>
           <el-row>
             <el-col :span="1">
               <el-popconfirm
@@ -229,7 +256,8 @@
             storageUnit: "",//储存单元
             storageUnitAbbreviation: "",//储存单元简称
             attemperTime: 0,
-            getpayId: ""
+            getpayId: "",
+            checkTag:"S001-1"
           },
           scellAmount: 0,
           scellAmount2: 0,
@@ -255,11 +283,21 @@
           var params = new URLSearchParams();
           params.append("pageno", this.pageno);
           params.append("pagesize", this.pagesize);
-          this.$axios.post("SPay/queryAllSPay.May", params).then(function (response) {
+          params.append("payId", this.scellform.payId);
+          this.$axios.post("SPay/queryAllSPay2.May", params).then(function (response) {
             _this.tableData = response.data.records;
             _this.total = response.data.total;
             for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData)}
           }).catch();
+        }, sel(){this.getdata()},
+        handleSizeChange(val) {  //页size变更
+          this.pagesize = val;
+          this.pageno = 1;
+          this.getdata();
+        },
+        handleCurrentChange(val) {  //页码变更
+          this.pageno = val;
+          this.getdata();
         },
         //设置指定行、列、具体单元格颜色
         cellStyle({row, column, rowIndex, columnIndex}) {
@@ -330,6 +368,7 @@
           params.append("id",_this.scellform1.id);//id
           params.append("checker",_this.scellform1.checker);//复核人
           params.append("checkTime",_this.checkTime1);//复核时间
+          params.append("checkTag",_this.scellform.checkTag);//审核状态
           this.$axios.post("SPay/amendSPay.May",params).then(function (response) {
             if (response.data == true) {
               _this.$notify({
