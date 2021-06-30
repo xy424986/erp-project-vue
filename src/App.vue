@@ -145,7 +145,7 @@
   import WorkOrderInquiry from "./components/safety_stock/WorkOrderInquiry";
   import ProductionQuery from "./components/safety_stock/ProductionQuery";
   import DynamicInventoryQuery from "./components/safety_stock/InventoryQuery/DynamicInventoryQuery";
-
+  import InboundQuery from "./components/Warehousing_application/InboundQuery";
 
   export default {
     name: 'app',
@@ -258,7 +258,8 @@
       Production_planning_enquiry,
       Production_plan_review,
       ApplyForDelivery,
-      WarehousingAudit
+      WarehousingAudit,
+      InboundQuery
     },
     // 钩子调用函数
     created() {

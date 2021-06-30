@@ -291,9 +291,14 @@
           params.append("pagesize", this.pagesize);
           params.append("gatherId", this.scellform.gatherId);
           this.$axios.post("SGathers/queryAllSGather2.May", params).then(function (response) {
+            console.log(response.data.records);
+            console.log(response.data);
+            console.log(response);
             _this.tableData = response.data.records;
             _this.total = response.data.total;
-            for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData)}
+
+            console.log("getdata")
+            for (var i=0;i<_this.tableData.length;i++){console.log("getdata"+_this.tableData[i]);}
           }).catch();
         },handleSizeChange(val) {  //页size变更
           this.pagesize = val;

@@ -3,6 +3,24 @@
   <div>
 
     <div id="div01">
+      <!--条件查询-->
+      <el-form :inline="true"  class="demo-form-inline" v-model="scellform">
+        <el-row>
+          <el-col :span="12"><div>
+            <el-form-item label="产品编号:">
+              <el-input type="text" v-model="scellform.productId" clearable placeholder="请输入产品编号!"></el-input>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="10" ><div>
+            <el-form-item label="产品名称:">
+              <el-input type="text" v-model="scellform.productName" clearable placeholder="请输入产品名称!"></el-input>
+            </el-form-item>
+          </div></el-col>
+          <el-col :span="2" ><div>
+            <el-button @click="sel">查询</el-button>
+          </div></el-col>
+        </el-row>
+      </el-form>
       <el-table
         :data="tableData"
         height="250"

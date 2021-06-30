@@ -2,7 +2,7 @@
   <div>
   <div id="WAudit" v-show="istrue">
     <el-row>
-      <el-col span="24">
+      <el-col :span="24">
         <h5>入库审核</h5>
       </el-col>
     </el-row>
@@ -12,13 +12,20 @@
       style="width: 100%">
         <el-table-column
         prop="gatherId"
-        label="申请订单编号"
+        label="入库单编号"
         show-overflow-tooltip>
         </el-table-column>
         <el-table-column
           prop="reason"
           label="入库理由"
           show-overflow-tooltip>
+          <template scope="scope">
+            <span v-if="scope.row.reason === 'R001-1'">生产入库</span>
+            <span v-else-if="scope.row.reason === 'R001-2'">库存初始</span>
+            <span v-else-if="scope.row.reason === 'R001-3'">赠送</span>
+            <span v-else-if="scope.row.reason === 'R001-4'">内部归还</span>
+            <span v-else-if="scope.row.reason === 'R001-5'">其他归还</span>
+          </template>
         </el-table-column>
         <el-table-column
           prop="registerTime"
@@ -31,14 +38,16 @@
           show-overflow-tooltip>
         </el-table-column>
         <el-table-column
-          prop="cost_priceSum"
+          prop="costPriceSum"
           label="总金额"
           show-overflow-tooltip>
         </el-table-column>
         <el-table-column
           label="操作"
           show-overflow-tooltip>
+          <template scope="scope">
           <el-button  @click="change(scope.row.gatherId)"  type="audit" plain>审核</el-button>
+          </template>
         </el-table-column>
       </el-table>
   </div>
@@ -46,32 +55,28 @@
     <el-form size="small" :inline="true">
       <el-row>
         <el-col :span="2" ><el-button @click="change2" type="primary" plain icon="el-icon-arrow-left"></el-button></el-col>
-        <el-col :span="20"><h4>审核入库申请单</h4></el-col>
+        <el-col :span="22"><h4>审核入库申请单</h4></el-col>
       </el-row>
       <el-row>
-        <el-col :span="10" :offset="1">
+        <el-col :span="10" :offset="2">
           <el-form-item label="入库人:"  >
-            <div class="inline div01"><el-input v-model="warehouse.storer" type="text" :clearable="true"/></div>
+            <div class="inline "><el-input v-model="warehouse.storer" type="text" :clearable="true"/></div>
           </el-form-item>
         </el-col>
         <el-col :span="10" :offset="1">
+          入库理由:
           <div class="inline">
-            <el-form-item label="入库理由">
-              <el-select   v-model="warehouse.reason" class="drop-downBox ">
-                <el-option
-                  v-for="item in reasons"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
+            <span v-if="warehouse.reason === 'R001-1'">生产入库</span>
+            <span v-else-if="warehouse.reason === 'R001-2'">库存初始</span>
+            <span v-else-if="warehouse.reason === 'R001-3'">赠送</span>
+            <span v-else-if="warehouse.reason === 'R001-4'">内部归还</span>
+            <span v-else-if="warehouse.reason === 'R001-5'">其他归还</span>
           </div>
         </el-col>
       </el-row>
       <!--表格-->
       <el-row>
-        <el-col :span='2'><div></div></el-col>
+        <el-col :span="2"><div></div></el-col>
         <el-col :span="20" :offset="2">
           <div>
             <el-table
@@ -125,26 +130,26 @@
       </el-row>
       <!--计算总金额总数量-->
       <el-row>
-        <el-col :span="8" :push="1" >
-          <el-form-item label="总数量：" v-model="amountSum">
-            <div class="inline"></div>
+        <el-col :span="12" :push="1" >
+          <el-form-item label="总数量：" >
+            <el-input type="text" v-model="amountSum" readonly="readonly"/>
           </el-form-item>
         </el-col>
-        <el-col :span="10" :push="1">
+        <el-col :span="12" :push="1">
           <el-form-item label="总金额" >
-            <div class="inline" v-model="costPriceSum"></div>
+            <el-input type="text" v-model="costPriceSum" readonly="readonly"/>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="11" :push="2">
-          <el-form-item label="登记人:">
-            <div class="inline div01"><el-input type="text" v-model="register" :clearable="true"/></div>
+        <el-col :span="12" :push="2">
+          <el-form-item label="审核人:">
+            <div class="inline "><el-input type="text" v-model="register" :clearable="true"/></div>
           </el-form-item>
         </el-col>
-        <el-col :span="10" :pull="1">
-          <el-form-item label="登记时间:">
-            <div class="inline" v-model="warehouse.registerTime" ></div>
+        <el-col :span="12" :pull="1">
+          <el-form-item label="审核时间:">
+            <span>{{registerTime}}</span>
           </el-form-item>
         </el-col>
       </el-row>
@@ -157,16 +162,16 @@
         </el-col>
       </el-row>
       <el-row>
-       <el-col span="24">
+       <el-col :span="24">
          <el-button
            round
            plain
-           @click="pass"
+           @click="addSCll1"
            type="success">通过</el-button>
          <el-button
            round
            plain
-           @click="nopass"
+           @click="addSCll2"
            type="warning">不通过</el-button>
        </el-col>
       </el-row>
@@ -202,27 +207,21 @@
             warehouseId:"",
           }
       },
-      reasons: [{
-              value: 'R001-1',
-              label: '生产入库',
-            }, {
-              value: 'R001-2',
-              label: '库存初始',
-            },{
-              value: 'R001-3',
-              label: '赠送',
-            },{
-              value: 'R001-4',
-              label: '内部归还',
-            },{
-              value: 'R001-5',
-              label: '其他归还',
-            }],
       methods: {
-            //根据入库申请编号查询
-              change(gatherId) {
+         getdata1() {   //制作安全库配置单1获取数据
+          var _this = this;
+          var params = new URLSearchParams();
+          params.append("pageno", this.pageno);
+          params.append("pagesize", this.pagesize);
+          this.$axios.post("SGathers/queryAllSGather2.May", params).then(function (response) {
+            _this.warehousingaudit = response.data.records;
+            _this.total = response.data.total;
+            for (var i=0;i<_this.warehousingaudit.length;i++){console.log("warehousingaudit"+_this.warehousingaudit)}
+          }).catch();
+        },
+        //根据入库申请编号查询
+        change(gatherId) {
               var _this= this;
-              this.getgatherId=gatherId;
               var params = new URLSearchParams();
               params.append("gatherId",gatherId);
                this.$axios.post("SGathers/queryByGatherIdSGather.May",params).then(function (response) {
@@ -234,7 +233,7 @@
                  _this.addDate();
                }).catch();
             },
-            queryByParentId(){
+        queryByParentId(productId){
               var _this=this;
               var params = new URLSearchParams();
               params.append("parentId",productId);
@@ -242,7 +241,7 @@
               this.$axios.post("SGatherDetails/queryByParentIdSGatherEx.May",params).then(function (response) {
                 _this.tableData=response.data;
                 for (var i =0;i<_this.tableData.length;i++){
-                  _this.amountSum+=parseInt(_this.tableData[i].scellAmount);
+                  _this.amountSum+=parseInt(_this.tableData[i].amount);
                   _this.costPriceSum+=parseInt(_this.tableData[i].subtotal);
                   _this.amountSum=parseInt(_this.amountSum);
                   _this.costPriceSum=parseInt(_this.costPriceSum);
@@ -250,27 +249,30 @@
                 }
               })
             },
-            change2() {
+        change2() {
               this.istrue = true;
               this.isshow = false;
             },
-            pass() {
+     /*   pass() {
                 var _this = this;
                 this.warehouse.amountSum=0;
                 var params = new URLSearchParams();
                 this.$axios.post("updataByCheckTag1.May",params).then(function (response) {
                   if (response.data == true){
-                    _this.$notify({
+                    /!*_this.$notify({
                       title: '成功',
                       message: '审核通过',
                       type: 'success',
-                    });
+                    });*!/
+                    alert("审核通过")
+                  }else {
+                    alert("修改失败")
                   }
                 })
               this.istrue = true;
               this.isshow = false;
-            },
-            nopass() {
+            },*/
+      /*  nopass() {
               var _this = this;
               _this.warehouse.amountSum=0;
               var params = new URLSearchParams();
@@ -285,9 +287,63 @@
               })
               this.istrue = true;
               this.isshow = false;
-            },
-            //申请数据
-            getdata(){
+            },*/
+        addSCll1(){
+          var _this=this;
+          var params = new URLSearchParams();
+          params.append("id",_this.warehouse.id);//id
+          params.append("checker",_this.register);//复核人
+          params.append("checkTime",_this.registerTime);//复核时间
+          params.append("checkTag","S001-1");//审核状态
+          this.$axios.post("SGathers/amendSGather.May",params).then(function (response) {
+            if (response.data == true) {
+             /* _this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success'
+              });*/
+              alert("审核通过")
+            } else {
+              /*_this.$notify({
+                title: '失败',
+                message: '修改失败',
+                type: 'danger'
+              });*/
+              alert("修改失败")
+            }
+            _this.drawer=false;
+            _this.getdata1();
+            _this.$forceUpdate();
+          }).catch();
+        },
+        addSCll2(){
+          var _this=this;
+          var params = new URLSearchParams();
+          params.append("id",_this.id);//id
+          params.append("checker",_this.register);//复核人
+          params.append("checkTime",_this.registerTime);//复核时间
+          params.append("checkTag","S001-2");//审核状态
+          this.$axios.post("SGathers/amendSGather.May",params).then(function (response) {
+            if (response.data == true) {
+              _this.$notify({
+                title: '成功',
+                message: '修改成功',
+                type: 'success'
+              });
+            } else {
+              _this.$notify({
+                title: '失败',
+                message: '修改失败',
+                type: 'danger'
+              });
+            }
+            _this.drawer=false;
+            _this.getdata1();
+            _this.$forceUpdate();
+          }).catch();
+        },
+        //申请数据
+        getdata(){
               var _this=this;
               var params = new URLSearchParams();
               params.append("pageno" ,this.pageno)
@@ -300,8 +356,6 @@
                  }
               }).catch();
             },
-
-
         //获取当前年月日
         addDate() {
           let date = new Date();
@@ -311,7 +365,7 @@
           let hours = date.getHours();
           let minutes = this.getStr(date.getMinutes());
           let seconds = this.getStr(date.getSeconds());
-          this.registerTime = Y + "-" + M + "-" + D + " " + hours + ":" + minutes + ":" + seconds;
+          this.registerTime = Y + "/" + M + "/" + D + " " + hours + ":" + minutes + ":" + seconds;
           console.log(this.registerTime)
         },
         getStr(point) {
@@ -319,9 +373,9 @@
         }
       },
       created() {
+        this.getdata1();
         this.addDate();
       }
-
     }
 </script>
 

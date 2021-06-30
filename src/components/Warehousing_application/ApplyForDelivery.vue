@@ -264,24 +264,6 @@
           var _this=this;
           let newArr1 = [];
           var arr = this.adddata;
-/*          var  param = new URLSearchParams();
-          param.append("storer",this.storer);
-          param.append("register",this.register);
-          param.append("registerTime",this.registerTime);
-          param.append("amountSum",this.amountSum);
-          param.append("costPriceSum",this.costPriceSum);
-          param.append("time",this.time);
-          param.append("table",this.table);
-          param.append("reason",this.reason);
-          param.append("productName",this.productName);
-          param.append("productId",this.productId);
-          param.append("productDescribe",this.productDescribe);
-          param.append("amount",this.amount);
-          param.append("amountUnit",this.amountUnit);
-          param.append("costPrice",this.costPrice);
-          param.append("subtotal",this.subtotal);
-          param.append("remark",this.remark);
-          */
           arr.map((item, index)=> {
             newArr1.push(
               Object.assign({}, item, {
@@ -330,22 +312,9 @@
           var params = new URLSearchParams();
           this.$axios.post("/SGatherDetails/queryAll.May",params).then(function (response) {
             _this.adddata=response.data;
-            /*for(var i=0;i<_this.adddata.length;i++) {
-              console.log(_this.adddata)
-              }*/
-            // for (var i = 0;i<_this.adddata.length;i++){
-            //   _this.
-            // }
             _this.table=true;
           })
         },
-        // queryAll(){
-        //   var _this= this;
-        //   var param = new URLSearchParams();
-        //   this.$axios.post("SGatherDetails/queyrAll.May",param).then(function (response) {
-        //    _this.adddata=response.data;
-        //   })
-        // },
         addWarehouse(id){
           var i = 0;
           for(i=0;i<this.adddata.length;i++)
